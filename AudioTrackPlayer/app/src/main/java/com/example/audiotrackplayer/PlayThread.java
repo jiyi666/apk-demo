@@ -12,11 +12,10 @@ public class PlayThread implements Runnable{
 
     private final String TAG = "PlaybackThread";
 
-
-    private int mTempBufferSize;
-    private byte[] mTempBuffer = null;
     private AudioTrack mTrack;
-    private FileInputStream mFileInputStream;
+    public FileInputStream mFileInputStream;
+    public int mTempBufferSize;
+    public byte[] mTempBuffer = null;
 
     /* 线程结束标志位 */
     private boolean mFlag = true;

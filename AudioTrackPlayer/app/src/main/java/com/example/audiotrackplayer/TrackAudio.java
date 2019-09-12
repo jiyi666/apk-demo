@@ -4,6 +4,8 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 
+import java.io.IOException;
+
 public class TrackAudio {
 
     private static final int SAMPLERATE = 44100;
@@ -21,6 +23,9 @@ public class TrackAudio {
     TrackAudio(){
         trackConfig();
         trackCreate();
+    }
+    TrackAudio(boolean flag){
+        trackCreateStatic();
     }
 
     public void trackConfig(){
@@ -55,9 +60,38 @@ public class TrackAudio {
             mTrack.release();
             mThread.stop();
         }
-
     }
     public void trackPause(){
         mTrack.pause();
+    }
+
+    /* static类型的track创建 */
+    public void trackCreateStatic(){
+        trackConfig();
+
+        /* 1.获取最小buffersize */
+        mMinBufferSize = AudioTrack.getMinBufferSize(mSampleRate,
+                mChannelCount, mBitwidth);
+
+        /* 2.创建audiotrack */
+        mTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
+                mSampleRate, mChannelCount, mBitwidth,
+                mMinBufferSize * 100, AudioTrack.MODE_STATIC);
+
+        /* 3.获取输入文件流 */
+        mThread = new  PlayThread(mTrack, mMinBufferSize * 100);
+        mThread.getFileStream();
+        int readCnt = 0;
+        try {
+            readCnt = mThread.mFileInputStream.read(mThread.mTempBuffer);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        /* 4.先往track中写入数据 */
+        mTrack.write(mThread.mTempBuffer, 0, readCnt);
+
+        /* 5.置track状态为play */
+        mTrack.play();
     }
 }

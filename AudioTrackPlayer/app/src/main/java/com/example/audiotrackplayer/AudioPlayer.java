@@ -3,6 +3,7 @@ package com.example.audiotrackplayer;
 public class AudioPlayer {
 
     private TrackAudio mTrack = null;
+    private final boolean staticTrack = false;
 
     public final int prepared = 1;
     public final int playing = 2;
@@ -15,10 +16,14 @@ public class AudioPlayer {
 
     public void play() throws Exception{
         /* 只支持一个track，暂不做多track混音 */
-        if (mTrack == null){
-            mTrack = new TrackAudio();
+        if (staticTrack){       //static模式单独创建track
+            mTrack = new TrackAudio(staticTrack);
+        } else {
+            if (mTrack == null){
+                mTrack = new TrackAudio();
+            }
+            mTrack.trackPlay();
         }
-        mTrack.trackPlay();
     }
     public void pasue() throws Exception{
         mTrack.trackPause();
