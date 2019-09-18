@@ -25,6 +25,30 @@ JNIEXPORT jint JNICALL Java_com_example_jnitest_JNITest_add
 
 /*
  * Class:     com_example_jnitest_JNITest
+ * Method:    changeNum
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_example_jnitest_JNITest_changeNum
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_example_jnitest_JNITest
+ * Method:    changeStr
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_example_jnitest_JNITest_changeStr
+        (JNIEnv *, jobject);
+
+/*
+ * Class:     com_example_jnitest_JNITest
+ * Method:    changeAge
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_example_jnitest_JNITest_changeAge
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_example_jnitest_JNITest
  * Method:    stringAdd
  * Signature: (Ljava/lang/String;)Ljava/lang/String;
  */

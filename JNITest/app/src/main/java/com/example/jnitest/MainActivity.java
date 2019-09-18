@@ -3,6 +3,7 @@ package com.example.jnitest;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -25,8 +26,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.JNITest:
-                new JNITest().callStrFromJni();
-                Toast.makeText(MainActivity.this, "OK", Toast.LENGTH_SHORT).show();
+                int[] arrays = {1, 2, 3};
+                JNITest obj = new JNITest();
+                int[] arraysNew = obj.intMathod(arrays);
+                for (int i = 0; i < arraysNew.length; i++)
+                {
+                    Log.e(TAG, "onClick: arrys:" + arraysNew[i]);
+                }
+
+                Toast.makeText(MainActivity.this, obj.str, Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
