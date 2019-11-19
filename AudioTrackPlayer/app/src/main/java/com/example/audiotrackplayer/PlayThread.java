@@ -3,6 +3,7 @@ package com.example.audiotrackplayer;
 import android.media.AudioTrack;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +32,10 @@ public class PlayThread implements Runnable{
     public void run(){
         if (mTrack != null){
             /* 获取输入流 */
-            getFileStream();
+            if (!getFileStream()){
+                mFlag = false;
+                mTrack.release();
+            }
 
             /* 线程不停止则一直写数据 */
             while (mFlag){
@@ -46,12 +50,13 @@ public class PlayThread implements Runnable{
         this.mFlag = false;
     }
 
-    public void getFileStream(){
+    public boolean getFileStream(){
         /* 1.获取文件 */
         File file = new File(Environment.getExternalStorageDirectory(),
-                "test.wav");
+                "test1.wav");
         if (!file.exists())  {
             Log.e(TAG, "file don't exist!");
+            return false;
         }
         /* 2.获取输入文件流 */
         try {
@@ -59,6 +64,7 @@ public class PlayThread implements Runnable{
         } catch (IOException e){
             e.printStackTrace();
         }
+        return true;
     }
 
     public void writeData(){
