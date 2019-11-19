@@ -53,7 +53,7 @@ public class PlayThread implements Runnable{
     public boolean getFileStream(){
         /* 1.获取文件 */
         File file = new File(Environment.getExternalStorageDirectory(),
-                "test1.wav");
+                "test.wav");
         if (!file.exists())  {
             Log.e(TAG, "file don't exist!");
             return false;
