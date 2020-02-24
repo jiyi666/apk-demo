@@ -2,6 +2,7 @@ package com.example.audiotrackplayer;
 
 import android.media.AudioTrack;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -70,6 +71,8 @@ public class PlayThread implements Runnable{
     public void writeData(){
         try {
             while (mFileInputStream.available() > 0) {
+                /* 线程睡眠时间设置用于调试underrun内容 */
+                Thread.sleep(21);
                 int readCount = mFileInputStream.read(mTempBuffer);
                 if (readCount == AudioTrack.ERROR_INVALID_OPERATION ||
                         readCount == AudioTrack.ERROR_BAD_VALUE) {
@@ -78,11 +81,14 @@ public class PlayThread implements Runnable{
 
                 if (readCount != 0 && readCount != -1) {
                     if (mTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING){
+                        //Log.e(TAG,"jy:AudioTrack java write size = " + readCount);
                         mTrack.write(mTempBuffer, 0, readCount);
                     }
                 }
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

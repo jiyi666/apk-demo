@@ -3,12 +3,13 @@ package com.example.audiotrackplayer;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.util.Log;
 
 import java.io.IOException;
 
 public class TrackAudio {
 
-    private static final int SAMPLERATE = 44100;
+    private static final int SAMPLERATE = 48000;
     private static final int CHANNEL_CONFIG = AudioFormat.CHANNEL_OUT_STEREO;
     private static final int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
 
@@ -38,14 +39,18 @@ public class TrackAudio {
         /* 1.获取最小buffersize */
         mMinBufferSize = AudioTrack.getMinBufferSize(mSampleRate,
                 mChannelCount, mBitwidth);
+        Log.e("APP","jy:mMinBufferSize = " + mMinBufferSize);
         /* 2.创建audiotrack */
         mTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 mSampleRate, mChannelCount, mBitwidth,
                 mMinBufferSize, AudioTrack.MODE_STREAM);
+        /* 修改mMinBufferSize */
+        mMinBufferSize = 10584;//mMinBufferSize本来的值为10584，这里改为1960，帧数为480帧，一次write不能达到起播线；
         /* 3.创建数据读取线程 */
         mThread = new PlayThread(mTrack, mMinBufferSize);
     }
 
+    /* stream类型的track创建及播放过程请看这里 */
     public void trackPlay(){
         /* stream模式要先playtrack然后再去write数据 */
         mTrack.play();
@@ -65,7 +70,7 @@ public class TrackAudio {
         mTrack.pause();
     }
 
-    /* static类型的track创建 */
+    /* static类型的track创建过程请看这里 */
     public void trackCreateStatic(){
         trackConfig();
 

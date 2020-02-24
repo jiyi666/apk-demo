@@ -19,9 +19,10 @@ public class AudioPlayer {
         if (staticTrack){       //static模式单独创建track
             mTrack = new TrackAudio(staticTrack);
         } else {
-            if (mTrack == null){
+            //if (mTrack == null){
                 mTrack = new TrackAudio();
-            }
+            //}
+            //Thread.currentThread().sleep(1000);//毫秒
             mTrack.trackPlay();
         }
     }
