@@ -10,7 +10,6 @@ package com.example.financialfreedom
 class StockData(val name: String, val nowPrice: Double,
                val ttmPrice: Double, val drcPrice: Double, val detailes: String) {
 }
-
 /*
 class StockData(val name: String, val nowPrice: Double){
     var ttmPrice : String
