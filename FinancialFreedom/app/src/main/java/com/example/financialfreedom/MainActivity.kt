@@ -2,11 +2,9 @@ package com.example.financialfreedom
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.financialfreedom.utils.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.StringBuilder
-import kotlin.concurrent.fixedRateTimer
+
 
 class MainActivity : BaseActivity() {
 
@@ -63,5 +61,21 @@ class MainActivity : BaseActivity() {
             73.31, 110.95, "详情>>"))
         stockList.add(StockData("东港股份", 10.40,
             6.41, 14.79, "详情>>"))
+
+        /*
+        stockList.add(StockData("安图生物", 149.84))
+        stockList.add(StockData("海天味业", 116.4))
+        stockList.add(StockData("贵州茅台", 1358.00))
+        stockList.add(StockData("浙江美大", 10.74))
+        stockList.add(StockData("济川药业", 21.78))
+        stockList.add(StockData("伟星新材", 12.70))
+        stockList.add(StockData("伟明环保", 30.10))
+        stockList.add(StockData("老板电器", 30.07))
+        stockList.add(StockData("联美控股", 15.30))
+        stockList.add(StockData("爱尔眼科", 50.02))
+        stockList.add(StockData("洋河股份", 104.43))
+        stockList.add(StockData("东港股份", 10.40))
+
+         */
     }
 }

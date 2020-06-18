@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 /** RecyclerView的适配器 */
-class StockDataAdapter(val maindataList : List<StockData>) :
+class StockDataAdapter(val stockdataList : List<StockData>) :
     RecyclerView.Adapter <StockDataAdapter.ViewHolder>() {
 
     /*
@@ -36,7 +36,7 @@ class StockDataAdapter(val maindataList : List<StockData>) :
      * 对RecyclerView滚入屏幕的子项数据赋值
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val stockData = maindataList[position]
+        val stockData = stockdataList[position]
         holder.stockName.text = stockData.name
         holder.stockNowPrice.setText(stockData.nowPrice.toString())
         holder.stockTtmPrice.setText(stockData.ttmPrice.toString())
@@ -47,5 +47,5 @@ class StockDataAdapter(val maindataList : List<StockData>) :
     /*
      * 返回数据源长度
      */
-    override fun getItemCount() = maindataList.size
+    override fun getItemCount() = stockdataList.size
 }
