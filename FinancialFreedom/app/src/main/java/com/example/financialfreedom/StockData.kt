@@ -25,5 +25,4 @@ class StockData(val name: String, val nowPrice: Double){
         drcPrice = String.format("%.2f", perDividend / tenYearNationalDebt)
     }
 }
-
  */
