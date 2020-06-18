@@ -11,37 +11,44 @@
 
         <TextView
             android:id="@+id/stockName"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="30dp"
+            android:layout_weight="1.5"
             android:gravity="center"
             android:text="股票名称" />
 
         <TextView
             android:id="@+id/nowPrice"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="30dp"
+            android:layout_weight="1.5"
             android:gravity="center"
             android:text="当前价格" />
 
         <TextView
             android:id="@+id/ttmPrice"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="30dp"
+            android:layout_weight="2"
+            android:textSize="11dp"
             android:gravity="center"
             android:text="TTM市盈率好价" />
 
         <TextView
             android:id="@+id/drcPrice"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="30dp"
+            android:layout_weight="2"
+            android:textSize="11dp"
             android:gravity="center"
             android:text="动态股息率好价"
             />
 
         <TextView
             android:id="@+id/other"
-            android:layout_width="50dp"
+            android:layout_width="0dp"
             android:layout_height="30dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="更多" />
 
@@ -54,39 +61,41 @@
 
         <TextView
             android:id="@+id/stock01"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_weight="1.5"
             android:gravity="center"
             android:text="安图生物" />
 
         <EditText
             android:id="@+id/stockNowPrice01"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:textAlignment="center"
-            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:layout_weight="1.5"
             />
 
         <EditText
             android:id="@+id/stockTtmPrice01"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:textAlignment="center"
-            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:layout_weight="2"
             />
 
         <EditText
             android:id="@+id/stockDrcPrice01"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:textAlignment="center"
-            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:gravity="center"
             />
 
         <TextView
             android:id="@+id/stockDetail01"
-            android:layout_width="50dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="详情>>" />
 
@@ -99,39 +108,41 @@
 
         <TextView
             android:id="@+id/stock02"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_weight="1.5"
             android:gravity="center"
             android:text="海天味业" />
 
         <EditText
             android:id="@+id/stockNowPrice02"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:textAlignment="center"
-            android:layout_gravity="center_vertical"
+            android:layout_weight="1.5"
+            android:gravity="center"
             />
 
         <EditText
             android:id="@+id/stockTtmPrice02"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:textAlignment="center"
-            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:gravity="center"
             />
 
         <EditText
             android:id="@+id/stockDrcPrice02"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:textAlignment="center"
-            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:gravity="center"
             />
 
         <TextView
             android:id="@+id/stockDetail02"
-            android:layout_width="50dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="详情>>" />
 
@@ -144,39 +155,41 @@
 
         <TextView
             android:id="@+id/stock03"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_weight="1.5"
             android:gravity="center"
             android:text="贵州茅台" />
 
         <EditText
             android:id="@+id/stockNowPrice03"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:textAlignment="center"
-            android:layout_gravity="center_vertical"
+            android:layout_weight="1.5"
+            android:gravity="center"
             />
 
         <EditText
             android:id="@+id/stockTtmPrice03"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:textAlignment="center"
-            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:gravity="center"
             />
 
         <EditText
             android:id="@+id/stockDrcPrice03"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:textAlignment="center"
-            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:gravity="center"
             />
 
         <TextView
             android:id="@+id/stockDetail03"
-            android:layout_width="50dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="详情>>" />
 
@@ -189,39 +202,417 @@
 
         <TextView
             android:id="@+id/stock04"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_weight="1.5"
             android:gravity="center"
             android:text="浙江美大" />
 
         <EditText
             android:id="@+id/stockNowPrice04"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:textAlignment="center"
-            android:layout_gravity="center_vertical"
+            android:layout_weight="1.5"
+            android:gravity="center"
             />
 
         <EditText
             android:id="@+id/stockTtmPrice04"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:textAlignment="center"
-            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:gravity="center"
             />
 
         <EditText
             android:id="@+id/stockDrcPrice04"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:textAlignment="center"
-            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:gravity="center"
             />
 
         <TextView
             android:id="@+id/stockDetail04"
-            android:layout_width="50dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="详情>>" />
+
+    </LinearLayout>
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/stock05"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:text="济川药业" />
+
+    <EditText
+        android:id="@+id/stockNowPrice05"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        />
+
+    <EditText
+        android:id="@+id/stockTtmPrice05"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        />
+
+    <EditText
+        android:id="@+id/stockDrcPrice05"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/stockDetail05"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="详情>>" />
+
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/stock06"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:text="伟星新材" />
+
+        <EditText
+            android:id="@+id/stockNowPrice06"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockTtmPrice06"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockDrcPrice06"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/stockDetail06"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="详情>>" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/stock07"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:text="伟明环保" />
+
+        <EditText
+            android:id="@+id/stockNowPrice07"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockTtmPrice07"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockDrcPrice07"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/stockDetail07"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="详情>>" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/stock08"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:text="老板电器" />
+
+        <EditText
+            android:id="@+id/stockNowPrice08"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockTtmPrice08"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockDrcPrice08"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/stockDetail08"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="详情>>" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/stock09"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:text="联美控股" />
+
+        <EditText
+            android:id="@+id/stockNowPrice09"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockTtmPrice09"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockDrcPrice09"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/stockDetail09"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="详情>>" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/stock10"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:text="爱尔眼科" />
+
+        <EditText
+            android:id="@+id/stockNowPrice10"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockTtmPrice10"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockDrcPrice10"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/stockDetail10"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="详情>>" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/stock11"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:text="洋河股份" />
+
+        <EditText
+            android:id="@+id/stockNowPrice11"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockTtmPrice11"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockDrcPrice11"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/stockDetail11"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="详情>>" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/stock12"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:text="东港股份" />
+
+        <EditText
+            android:id="@+id/stockNowPrice12"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockTtmPrice12"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <EditText
+            android:id="@+id/stockDrcPrice12"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/stockDetail12"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="详情>>" />
 
