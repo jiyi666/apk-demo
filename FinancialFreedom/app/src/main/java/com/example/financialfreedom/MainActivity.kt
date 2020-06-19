@@ -12,6 +12,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //supportRequestWindowFeature(Window.FEATURE_NO_TITLE) //去掉标题栏的代码
         setContentView(R.layout.activity_main)
 
         /*
@@ -31,7 +32,6 @@ class MainActivity : BaseActivity() {
         val adapter = StockDataAdapter(stockList)
         recyclerView.adapter = adapter
     }
-
 
     /**
      * 初始化stock整个list的数据
