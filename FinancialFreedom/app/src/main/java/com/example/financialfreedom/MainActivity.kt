@@ -2,6 +2,7 @@ package com.example.financialfreedom
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.financialfreedom.common.database.DatabaseControler
 import com.example.financialfreedom.utils.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -31,6 +32,15 @@ class MainActivity : BaseActivity() {
          */
         val adapter = StockDataAdapter(stockList)
         recyclerView.adapter = adapter
+
+        /*
+         * 使用数据库
+         */
+        val databaseStock = DatabaseControler(this, "StockData", 1)
+        databaseStock.create()  //创建数据库
+        for (i in 0 until stockList.size){
+            databaseStock.addData(stockList.get(index = i)) //添加数据
+        }
     }
 
     /**
