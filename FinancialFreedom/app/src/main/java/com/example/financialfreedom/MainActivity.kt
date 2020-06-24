@@ -1,6 +1,7 @@
 package com.example.financialfreedom
 
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.financialfreedom.common.database.DatabaseControler
 import com.example.financialfreedom.utils.BaseActivity
@@ -88,4 +89,27 @@ class MainActivity : BaseActivity() {
 
          */
     }
+
+    /**
+     *  MainActivity的单实例，用于供外部类调用的static方法等
+     */
+    companion object{
+
+        const val STARTDETAILACTIVITY = "startdetailactivity"
+        const val INPUTPRICE          = "inputprice"
+
+        @JvmStatic
+        fun mainActivityTodo(event: String){
+            when (event){
+                STARTDETAILACTIVITY -> {
+                    Log.d("jiyi", "you click details!")
+                }
+
+                INPUTPRICE -> {
+                    Log.d("jiyi", "you click input!")
+                }
+            }
+        }
+    }
+
 }

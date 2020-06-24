@@ -5,7 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.financialfreedom.MainActivity.Companion.STARTDETAILACTIVITY
 
 /** RecyclerView的适配器 */
 class StockDataAdapter(val stockdataList : List<StockData>) :
@@ -29,7 +31,65 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
         val view =LayoutInflater.from(parent.context)
             .inflate(R.layout.main_data, parent, false)
 
-        return ViewHolder(view)
+        val viewHolder = ViewHolder(view)
+        /*
+         * 最外层布局空白处点击事件
+         */
+        viewHolder.itemView.setOnClickListener{
+            val position = viewHolder.adapterPosition
+            val stockData = stockdataList[position]
+            Toast.makeText(parent.context, "you click what?",
+                Toast.LENGTH_SHORT).show()
+        }
+
+        /*
+         * TextView：股票名字点击事件
+         */
+        viewHolder.stockName.setOnClickListener{
+            val position = viewHolder.adapterPosition
+            val stockData = stockdataList[position]
+            Toast.makeText(parent.context, "you click ${stockData.name}",
+                Toast.LENGTH_SHORT).show()
+        }
+
+        /*
+         * EditText：股票当前价格点击事件
+         */
+        viewHolder.stockNowPrice.setOnClickListener{
+            val position = viewHolder.adapterPosition
+            val stockData = stockdataList[position]
+            Toast.makeText(parent.context, "you click ${stockData.nowPrice}",
+                Toast.LENGTH_SHORT).show()
+        }
+
+        /*
+         * EditText：股票TTM好价格点击事件
+         */
+        viewHolder.stockTtmPrice.setOnClickListener{
+            val position = viewHolder.adapterPosition
+            val stockData = stockdataList[position]
+            Toast.makeText(parent.context, "you click ${stockData.ttmPrice}",
+                Toast.LENGTH_SHORT).show()
+        }
+
+        /*
+         * EditText：股票动态股息率好价格点击事件
+         */
+        viewHolder.stockDrcPrice.setOnClickListener{
+            val position = viewHolder.adapterPosition
+            val stockData = stockdataList[position]
+            Toast.makeText(parent.context, "you click ${stockData.drcPrice}",
+                Toast.LENGTH_SHORT).show()
+        }
+
+        /*
+        * TextView：股票详情页面点击事件
+        */
+        viewHolder.stockDetails.setOnClickListener{
+            MainActivity.mainActivityTodo(STARTDETAILACTIVITY)  //跳转去MainActivity执行相关操作
+        }
+
+        return viewHolder //注意这里要返回viewHolder，因为有各种点击事件
     }
 
     /*
