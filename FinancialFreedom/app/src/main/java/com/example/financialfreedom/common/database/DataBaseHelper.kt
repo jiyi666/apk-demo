@@ -12,10 +12,18 @@ class DataBaseHelper(val context: Context, val name: String, val versin: Int) :
     SQLiteOpenHelper(context, name, null, versin) {
     private val createStockData = "create table $name (" +
             "id integer primary key autoincrement, " +
+            "stockcode text," +
             "stockName text," +
             "nowPrice real," +
+            "TtmPERatio real," +
+            "perEarnings real," +
+            "perDividend real," +
+            "tenYearNationalDebt real," +
+            "tenYearNationalDebtDevide3 real," +
+            "drcDividendRatio real," +
             "ttmPrice real," +
-            "drcPrice real)"
+            "drcPrice real," +
+            "finalPrice real)"
 
 
     /*
