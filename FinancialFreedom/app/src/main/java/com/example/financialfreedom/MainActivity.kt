@@ -1,5 +1,6 @@
 package com.example.financialfreedom
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,11 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         //supportRequestWindowFeature(Window.FEATURE_NO_TITLE) //去掉标题栏的代码
         setContentView(R.layout.activity_main)
+
+        /*
+         * 将当前活动赋值给静态对象
+         */
+        mainActivity = this
 
         /*
          * 初始化stock数据
@@ -97,16 +103,20 @@ class MainActivity : BaseActivity() {
 
         const val STARTDETAILACTIVITY = "startdetailactivity"
         const val INPUTPRICE          = "inputprice"
+        lateinit var  mainActivity : BaseActivity   //静态对象，用于适配器调用activity的相关操作
 
         @JvmStatic
         fun mainActivityTodo(event: String){
             when (event){
                 STARTDETAILACTIVITY -> {
-                    Log.d("jiyi", "you click details!")
+                    /*
+                     * 通过MainAvtivity的静态对象调用相关的方法
+                     */
+                    val intent = Intent(MainActivity.mainActivity, DetailActivity::class.java)
+                    MainActivity.mainActivity.startActivity(intent) //开启活动
                 }
 
                 INPUTPRICE -> {
-                    Log.d("jiyi", "you click input!")
                 }
             }
         }
