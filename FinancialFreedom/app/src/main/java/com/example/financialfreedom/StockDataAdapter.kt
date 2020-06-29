@@ -84,7 +84,8 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
         * TextView：股票详情页面点击事件
         */
         viewHolder.stockDetails.setOnClickListener{
-            MainActivity.mainActivityTodo(STARTDETAILACTIVITY)  //跳转去MainActivity执行相关操作
+            val position = viewHolder.adapterPosition
+            MainActivity.mainActivityTodo(STARTDETAILACTIVITY, position)  //跳转去MainActivity执行相关操作
         }
 
         return viewHolder //注意这里要返回viewHolder，因为有各种点击事件

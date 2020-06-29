@@ -54,4 +54,31 @@ class DatabaseControler(val context: Context, val name: String, val versin: Int)
         db.insert(name, null, value)
 
     }
+
+    fun queryData(name: String, position: Int) : StockData?{
+        Log.d(tag, "remark0!")
+        val db = dbHelper.writableDatabase
+        Log.d(tag, "remark1!")
+        val cursor = db.query(name, null,
+            null, null, null,
+            null, null, null)
+        if (cursor.moveToFirst()){
+            do {
+                val id = cursor.getString(cursor.getColumnIndex("id"))
+                if (position == id.toInt()){
+                    val stockCode = cursor.getString(cursor.getColumnIndex("stockCode"))
+                    val stockName = cursor.getString(cursor.getColumnIndex("stockName"))
+                    val nowPrice = cursor.getString(cursor.getColumnIndex("nowPrice")).toDouble()
+                    val ttmPERatio = cursor.getString(cursor.getColumnIndex("ttmPERatio")).toDouble()
+                    val perDividend = cursor.getString(cursor.getColumnIndex("perDividend")).toDouble()
+                    val tenYearNationalDebt = cursor.getString(cursor.getColumnIndex("tenYearNationalDebt")).toDouble()
+                    cursor.close()
+                    return StockData(stockCode, stockName, nowPrice, ttmPERatio, perDividend, tenYearNationalDebt)
+                }
+
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return StockData("?", "?", 0.00, 0.00, 0.00, 0.00)
+    }
 }

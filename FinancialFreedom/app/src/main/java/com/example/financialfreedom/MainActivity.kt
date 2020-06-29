@@ -98,14 +98,21 @@ class MainActivity : BaseActivity() {
         const val INPUTPRICE          = "inputprice"
         lateinit var  mainActivity : BaseActivity   //静态对象，用于适配器调用activity的相关操作
 
+        /**
+         * mainActivityTodo由外部类回调MainActivity操作
+         * event：需要执行的操作
+         * position：响应控件对应数据库的id
+         */
         @JvmStatic
-        fun mainActivityTodo(event: String){
+        fun mainActivityTodo(event: String, position: Int){
             when (event){
                 STARTDETAILACTIVITY -> {
                     /*
                      * 通过MainAvtivity的静态对象调用相关的方法
                      */
+                    val data = position
                     val intent = Intent(MainActivity.mainActivity, DetailActivity::class.java)
+                    intent.putExtra("database_position", position)  //向活动传递数据
                     MainActivity.mainActivity.startActivity(intent) //开启活动
                 }
 
