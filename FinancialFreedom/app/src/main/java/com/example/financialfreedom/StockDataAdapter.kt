@@ -18,9 +18,9 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
      */
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val stockName : TextView = view.findViewById(R.id.stockName)
-        val stockNowPrice : EditText = view.findViewById(R.id.stockNowPrice)
-        val stockTtmPrice : EditText = view.findViewById(R.id.stockTtmPrice)
-        val stockDrcPrice : EditText = view.findViewById(R.id.stockDrcPrice)
+        val stockNowPrice : TextView = view.findViewById(R.id.stockNowPrice)
+        val stockTtmPrice : TextView = view.findViewById(R.id.stockTtmPrice)
+        val stockDrcPrice : TextView = view.findViewById(R.id.stockDrcPrice)
         val stockDetails : TextView = view.findViewById(R.id.stockDetails)
     }
 
@@ -51,7 +51,7 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
         }
 
         /*
-         * EditText：股票当前价格点击事件
+         * TextView：股票当前价格点击事件
          */
         viewHolder.stockNowPrice.setOnClickListener{
             val position = viewHolder.adapterPosition
@@ -61,7 +61,7 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
         }
 
         /*
-         * EditText：股票TTM好价格点击事件
+         * TextView：股票TTM好价格点击事件
          */
         viewHolder.stockTtmPrice.setOnClickListener{
             val position = viewHolder.adapterPosition
@@ -71,7 +71,7 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
         }
 
         /*
-         * EditText：股票动态股息率好价格点击事件
+         * TextView：股票动态股息率好价格点击事件
          */
         viewHolder.stockDrcPrice.setOnClickListener{
             val position = viewHolder.adapterPosition
