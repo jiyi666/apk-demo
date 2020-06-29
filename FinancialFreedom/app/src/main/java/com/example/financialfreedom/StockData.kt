@@ -1,27 +1,64 @@
 package com.example.financialfreedom
 
 /**
- * name:股票名称
+ * stockCode:股票代码
+ * stockName:股票简称
  * nowPrice:当前价格
+ * ttmPERatio：当前TTM市盈率
+ * perEarnings：每股收益
+ * perDividend：每股股息
+ * tenYearNationalDebt：十年期国债收益率
+ * tenYearNationalDebtDevide3：三分之一十年期国债收益率
+ * drcDividendRatio:动态股息率
  * ttmPrice：TTM市盈率好价格
  * drcPrice：动态股息率好价格
  * detailes：详情
+ * finalPrice：最终好价格
  */
-class StockData(val name: String, val nowPrice: Double,
-               val ttmPrice: Double, val drcPrice: Double, val detailes: String) {
-}
-/*
-class StockData(val name: String, val nowPrice: Double){
+class StockData(val stockCode: String, val stockName: String, val nowPrice: Double,
+                val ttmPERatio: Double, val perDividend: Double, val tenYearNationalDebt: Double){
     var ttmPrice : String
     var drcPrice : String
-    val detailes : String = "更多>>"
-    val nowTTM : Double = 1.30
-    val perDividend : Double = 0.02704
-    val tenYearNationalDebt : Double = 1.00
+    val detailes : String = "详细>>"
+    val perEarnings : String
+    val tenYearNationalDebtDevide3 : String
+    val drcDividendRatio : String
+    val finalPrice : String
 
     init {
-        ttmPrice = String.format("%.2f", 15 * (nowPrice / nowTTM))
+        /*
+         * 每股收益：当前价格/当前TTM市盈率 （三位小数）
+         */
+        perEarnings = String.format("%.3f", nowPrice / ttmPERatio)
+        /*
+         * 三分之一十年国债收益率：十年期国债收益率 / 3 (五位小数)
+         */
+        tenYearNationalDebtDevide3 = String.format("%.5f", tenYearNationalDebt / 3)
+        /*
+         * 动态股息率：每股股息 / 当前价格 （五位小数）
+         */
+        drcDividendRatio = String.format("%.5f", perDividend / nowPrice)
+        /*
+         * TTM市盈率好价格：15 * 每股收益 （两位小数）
+         */
+        ttmPrice = String.format("%.2f", 15 * (nowPrice / ttmPERatio))
+        /*
+         * 动态股息率好价格：每股股息 / 十年期国债收益率 （两位小数）
+         */
         drcPrice = String.format("%.2f", perDividend / tenYearNationalDebt)
+        /*
+         * 最终好价格：TTM市盈率好价格与动态股息率好价格二者取最小值 （两位小数）
+         */
+        finalPrice = if (ttmPrice > drcPrice) drcPrice else ttmPrice
+    }
+
+    override fun toString(): String {
+        return "[stockCode(股票代码)：$stockCode, stockName(股票简称)：$stockName, " +
+                "nowPrice(当前价格)：$nowPrice, ttmPERatio(当前TTM市盈率)：$ttmPERatio, " +
+                "perEarnings(每股收益)：$perEarnings, perDividend(每股股息)：$perDividend, " +
+                "tenYearNationalDebt(十年期国债收益率)：$tenYearNationalDebt, " +
+                "tenYearNationalDebtDevide3(三分之一十年期国债收益率)：$tenYearNationalDebtDevide3, " +
+                "drcDividendRatio(动态股息率)：$drcDividendRatio, ttmPrice(TTM市盈率好价格)：$ttmPrice, " +
+                "drcPrice(动态股息率好价格)：$drcPrice, finalPrice(最终好价格)：$finalPrice"
     }
 }
- */

@@ -38,10 +38,18 @@ class DatabaseControler(val context: Context, val name: String, val versin: Int)
          * 这里写入数据库的操作没有进行编码，中文读出来就可能是乱码
          */
         val value = ContentValues().apply {
-            put("stockName", stockData.name)
+            put("stockCode", stockData.stockCode)
+            put("stockName", stockData.stockName)
             put("nowPrice", stockData.nowPrice)
+            put("ttmPERatio", stockData.ttmPERatio)
+            put("perEarnings", stockData.perEarnings)
+            put("perDividend", stockData.perDividend)
+            put("tenYearNationalDebt", stockData.tenYearNationalDebt)
+            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDevide3)
+            put("drcDividendRatio", stockData.drcDividendRatio)
             put("ttmPrice", stockData.ttmPrice)
             put("drcPrice", stockData.drcPrice)
+            put("finalPrice", stockData.finalPrice)
         }
         db.insert(name, null, value)
 

@@ -36,8 +36,6 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
          * 最外层布局空白处点击事件
          */
         viewHolder.itemView.setOnClickListener{
-            val position = viewHolder.adapterPosition
-            val stockData = stockdataList[position]
             Toast.makeText(parent.context, "you click what?",
                 Toast.LENGTH_SHORT).show()
         }
@@ -48,7 +46,7 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
         viewHolder.stockName.setOnClickListener{
             val position = viewHolder.adapterPosition
             val stockData = stockdataList[position]
-            Toast.makeText(parent.context, "you click ${stockData.name}",
+            Toast.makeText(parent.context, "you click ${stockData.stockName}",
                 Toast.LENGTH_SHORT).show()
         }
 
@@ -97,7 +95,7 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val stockData = stockdataList[position]
-        holder.stockName.text = stockData.name
+        holder.stockName.text = stockData.stockName
         holder.stockNowPrice.setText(stockData.nowPrice.toString())
         holder.stockTtmPrice.setText(stockData.ttmPrice.toString())
         holder.stockDrcPrice.setText(stockData.drcPrice.toString())

@@ -45,7 +45,7 @@ class MainActivity : BaseActivity() {
          */
         val databaseStock = DatabaseControler(this, "StockData", 1)
         databaseStock.create()  //创建数据库
-        for (i in 0 until stockList.size){
+        for (i in 0 until (stockList.size)){
             databaseStock.addData(stockList.get(index = i)) //添加数据
         }
     }
@@ -54,46 +54,39 @@ class MainActivity : BaseActivity() {
      * 初始化stock整个list的数据
      */
     private fun initStockData(){
-        stockList.add(StockData("安图生物", 149.84,
-            26.00, 33.28, "详情>>"))
-        stockList.add(StockData("海天味业", 116.41,
-            25.41, 33.28, "详情>>"))
-        stockList.add(StockData("贵州茅台", 1358.00,
-            629.62, 1358.00, "详情>>"))
-        stockList.add(StockData("浙江美大", 10.74,
-            9.41, 20.04, "详情>>"))
-        stockList.add(StockData("济川药业", 21.78,
-            29.03, 45.49, "详情>>"))
-        stockList.add(StockData("伟星新材", 12.70,
-            8.96, 18.49, "详情>>"))
-        stockList.add(StockData("伟明环保", 30.10,
-            14.61, 11.46, "详情>>"))
-        stockList.add(StockData("老板电器", 30.07,
-            23.18, 18.49, "详情>>"))
-        stockList.add(StockData("联美控股", 15.30,
-            11.21, 7.77, "详情>>"))
-        stockList.add(StockData("爱尔眼科", 50.02,
-            5.61, 5.55, "详情>>"))
-        stockList.add(StockData("洋河股份", 104.43,
-            73.31, 110.95, "详情>>"))
-        stockList.add(StockData("东港股份", 10.40,
-            6.41, 14.79, "详情>>"))
 
-        /*
-        stockList.add(StockData("安图生物", 149.84))
-        stockList.add(StockData("海天味业", 116.4))
-        stockList.add(StockData("贵州茅台", 1358.00))
-        stockList.add(StockData("浙江美大", 10.74))
-        stockList.add(StockData("济川药业", 21.78))
-        stockList.add(StockData("伟星新材", 12.70))
-        stockList.add(StockData("伟明环保", 30.10))
-        stockList.add(StockData("老板电器", 30.07))
-        stockList.add(StockData("联美控股", 15.30))
-        stockList.add(StockData("爱尔眼科", 50.02))
-        stockList.add(StockData("洋河股份", 104.43))
-        stockList.add(StockData("东港股份", 10.40))
-
-         */
+        stockList.add(StockData("603658","安图生物", 171.47,
+            98.94,0.9, 0.029))
+        stockList.add(StockData("603288","海天味业", 119.39,
+            70.478,0.9, 0.029))
+        stockList.add(StockData("600519","贵州茅台", 1439.84,
+            41.986,17.025, 0.029))
+        stockList.add(StockData("002677","浙江美大", 11.08,
+            17.671,0.542, 0.029))
+        stockList.add(StockData("600566","济川药业", 24.68,
+            12.754,1.23, 0.029))
+        stockList.add(StockData("002372","伟星新材", 12.07,
+            20.217,0.5, 0.029))
+        stockList.add(StockData("603568","伟明环保", 29.3,
+            30.175,0.31, 0.029))
+        stockList.add(StockData("002508","老板电器", 32.25,
+            20.19,0.5, 0.029))
+        stockList.add(StockData("600167","联美控股", 14.19,
+            19.00,0.21, 0.029))
+        stockList.add(StockData("300015","爱尔眼科", 46.30,
+            160.76,0.115, 0.029))
+        stockList.add(StockData("002304","洋河股份", 108.29,
+            22.16,3.00, 0.029))
+        stockList.add(StockData("002117","东港股份", 11.29,
+            26.44,0.4, 0.029))
+        stockList.add(StockData("600660","福耀玻璃", 21.45,
+            19.55,0.75, 0.029))
+        stockList.add(StockData("603444","吉比特", 453.90,
+            31.96,5.00, 0.029))
+        stockList.add(StockData("603429","集友股份", 31.70,
+            73.55,0.186, 0.029))
+        stockList.add(StockData("603866","元祖股份", 17.08,
+            35.54,1.2, 0.029))
     }
 
     /**
