@@ -3,6 +3,7 @@ package com.example.financialfreedom
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
@@ -44,9 +45,14 @@ class MainActivity : BaseActivity() {
          * 使用数据库
          */
         val databaseStock = StockDatabaseControl(this, "StockData", 1)
-        databaseStock.create()  //创建数据库
-        for (i in 0 until (stockList.size)){
-            databaseStock.addData(stockList.get(index = i)) //添加数据
+        /*
+         * 如果数据库不存在：创建 + 添加初始数据
+         */
+        if (databaseStock.queryData("StockData", 1) == null){
+            databaseStock.create()  //创建数据库
+            for (i in 0 until (stockList.size)){
+                databaseStock.addData(stockList.get(index = i)) //添加数据
+            }
         }
     }
 

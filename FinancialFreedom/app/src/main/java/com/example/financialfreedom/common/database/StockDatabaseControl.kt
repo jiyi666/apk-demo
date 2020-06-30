@@ -56,7 +56,7 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
      * 查询数据：通过数据库的id索引对应的股票数据
      * position：目标id
      */
-    fun queryData(name: String, position: Int) : StockData{
+    fun queryData(name: String, position: Int) : StockData?{
         val db = dbHelper.writableDatabase
         /*
          * 数据库索引规则：全库搜索
@@ -84,6 +84,9 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
             } while (cursor.moveToNext())
         }
         cursor.close()
-        return StockData("?", "?", 0.00, 0.00, 0.00, 0.00)
+        /*
+         * 如果未编译到目标数据，则返回null
+         */
+        return null
     }
 }
