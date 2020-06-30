@@ -9,16 +9,19 @@ import java.lang.NullPointerException
 /**
  *  数据库封装类，用于其他activity调用以操作数据库
  */
-class DatabaseControler(val context: Context, val name: String, val versin: Int) {
+class StockDatabaseControl(val context: Context, val name: String, val versin: Int) {
 
-    lateinit var dbHelper: DataBaseHelper
     private val tag = "DatabaseControler"
+    private var dbHelper : MyDataBaseHelper
+
+    init {
+         dbHelper = MyDataBaseHelper(context, name, versin)
+    }
 
     /*
      * 创建数据库
      */
     fun create(){
-        dbHelper = DataBaseHelper(context, name, versin)
         dbHelper.writableDatabase
     }
 
@@ -27,12 +30,6 @@ class DatabaseControler(val context: Context, val name: String, val versin: Int)
      */
     fun addData(stockData: StockData){
         val db = dbHelper.writableDatabase
-
-        /* 因为dbHelper是lateinit变量，所以可能会出现未初始化的情况，故需要做判空处理 */
-        if (db == null){
-            Log.e(tag, "dbHelper is null, please create database first!")
-            throw NullPointerException()
-        }
 
         /*
          * 这里写入数据库的操作没有进行编码，中文读出来就可能是乱码
@@ -55,13 +52,21 @@ class DatabaseControler(val context: Context, val name: String, val versin: Int)
 
     }
 
-    fun queryData(name: String, position: Int) : StockData?{
-        Log.d(tag, "remark0!")
+    /*
+     * 查询数据：通过数据库的id索引对应的股票数据
+     * position：目标id
+     */
+    fun queryData(name: String, position: Int) : StockData{
         val db = dbHelper.writableDatabase
-        Log.d(tag, "remark1!")
+        /*
+         * 数据库索引规则：全库搜索
+         */
         val cursor = db.query(name, null,
             null, null, null,
             null, null, null)
+        /*
+         * 数据库遍历
+         */
         if (cursor.moveToFirst()){
             do {
                 val id = cursor.getString(cursor.getColumnIndex("id"))

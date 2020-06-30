@@ -7,8 +7,11 @@ import android.widget.Toast
 
 /**
  *  启动SQLite数据库
+ *  context:对应activity的上下文
+ *  name:需要操作的数据库的名字
+ *  version:需要操作的数据库的版本
  */
-class DataBaseHelper(val context: Context, val name: String, val versin: Int) :
+class MyDataBaseHelper(val context: Context, val name: String, val versin: Int) :
     SQLiteOpenHelper(context, name, null, versin) {
     private val createStockData = "create table $name (" +
             "id integer primary key autoincrement, " +

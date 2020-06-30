@@ -84,7 +84,7 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
         * TextView：股票详情页面点击事件
         */
         viewHolder.stockDetails.setOnClickListener{
-            val position = viewHolder.adapterPosition
+            val position = (viewHolder.adapterPosition + 1) //数据库的id是从1开始索引
             MainActivity.mainActivityTodo(STARTDETAILACTIVITY, position)  //跳转去MainActivity执行相关操作
         }
 

@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.financialfreedom.common.database.DatabaseControler
+import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -43,7 +43,7 @@ class MainActivity : BaseActivity() {
         /*
          * 使用数据库
          */
-        val databaseStock = DatabaseControler(this, "StockData", 1)
+        val databaseStock = StockDatabaseControl(this, "StockData", 1)
         databaseStock.create()  //创建数据库
         for (i in 0 until (stockList.size)){
             databaseStock.addData(stockList.get(index = i)) //添加数据
@@ -110,10 +110,9 @@ class MainActivity : BaseActivity() {
                     /*
                      * 通过MainAvtivity的静态对象调用相关的方法
                      */
-                    val data = position
-                    val intent = Intent(MainActivity.mainActivity, DetailActivity::class.java)
+                    val intent = Intent(mainActivity, DetailActivity::class.java)
                     intent.putExtra("database_position", position)  //向活动传递数据
-                    MainActivity.mainActivity.startActivity(intent) //开启活动
+                    mainActivity.startActivity(intent) //开启活动
                 }
 
                 INPUTPRICE -> {
