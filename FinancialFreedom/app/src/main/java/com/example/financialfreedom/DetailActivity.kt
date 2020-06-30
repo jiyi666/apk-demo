@@ -51,7 +51,7 @@ class DetailActivity : BaseActivity(){
             val perDividend = detail_perDividend.text.toString().toDouble()
 
             putDataToView(
-                StockData(targetData!!.stockCode, targetData!!.stockName,
+                StockData(targetData!!.stockCode, targetData.stockName,
                     nowPrice, ttmPERatio, perDividend, tenYearNationalDebt)
             )
         }
