@@ -53,8 +53,8 @@ class DetailActivity : BaseActivity(){
      * stockData：待显示的股票信息
      */
     fun putDataToView(stockData: StockData){
-        detail_stockcode.setText(stockData.stockCode)
-        detail_stockname.setText(stockData.stockName)
+        detail_stockcode.text = stockData.stockCode
+        detail_stockname.text = stockData.stockName
         detail_nowprice.setText(stockData.nowPrice.toString())
         detail_ttmPERatio.setText(stockData.ttmPERatio.toString())
         detail_perEarnings.setText(stockData.perEarnings)
@@ -62,10 +62,10 @@ class DetailActivity : BaseActivity(){
         detail_tenYearNationalDebtDevide3.setText(stockData.tenYearNationalDebtDevide3.toString())
         detail_perDividend.setText(stockData.perDividend.toString())
         detail_drcDividendRatio.setText(stockData.drcDividendRatio)
-        detail_ttmPrice.setText(stockData.ttmPrice)
-        detail_drcPrice.setText(stockData.drcPrice)
-        detail_finalPrice.setText(stockData.finalPrice)
-        detail_nowprice1.setText(stockData.nowPrice.toString())
+        detail_ttmPrice.text = stockData.ttmPrice
+        detail_drcPrice.text = stockData.drcPrice
+        detail_finalPrice.text = stockData.finalPrice
+        detail_nowprice1.text = stockData.nowPrice.toString()
     }
 
 }
