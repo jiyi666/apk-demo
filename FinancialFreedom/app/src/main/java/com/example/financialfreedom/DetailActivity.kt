@@ -30,7 +30,7 @@ class DetailActivity : BaseActivity(){
         val targetData = databaseControler.queryData("StockData", position)
 
         /*
-         * 刷新数据到View
+         * 显示数据库中存储数据
          */
         if (targetData != null){
             putDataToView(targetData)
@@ -41,6 +41,20 @@ class DetailActivity : BaseActivity(){
             putDataToView(StockData("?", "?", 0.00, 0.00, 0.00, 0.00))
         }
 
+        /*
+         * 刷新用户输入数据
+         */
+        updateData.setOnClickListener {
+            val nowPrice = detail_nowprice.text.toString().toDouble()
+            val ttmPERatio = detail_ttmPERatio.text.toString().toDouble()
+            val tenYearNationalDebt = detail_tenYearNationalDebt.text.toString().toDouble()
+            val perDividend = detail_perDividend.text.toString().toDouble()
+
+            putDataToView(
+                StockData(targetData!!.stockCode, targetData!!.stockName,
+                    nowPrice, ttmPERatio, perDividend, tenYearNationalDebt)
+            )
+        }
     }
 
     override fun onDestroy() {
@@ -57,11 +71,11 @@ class DetailActivity : BaseActivity(){
         detail_stockname.text = stockData.stockName
         detail_nowprice.setText(stockData.nowPrice.toString())
         detail_ttmPERatio.setText(stockData.ttmPERatio.toString())
-        detail_perEarnings.setText(stockData.perEarnings)
+        detail_perEarnings.text = stockData.perEarnings
         detail_tenYearNationalDebt.setText(stockData.tenYearNationalDebt.toString())
-        detail_tenYearNationalDebtDevide3.setText(stockData.tenYearNationalDebtDevide3.toString())
+        detail_tenYearNationalDebtDevide3.text = stockData.tenYearNationalDebtDevide3.toString()
         detail_perDividend.setText(stockData.perDividend.toString())
-        detail_drcDividendRatio.setText(stockData.drcDividendRatio)
+        detail_drcDividendRatio.text = stockData.drcDividendRatio
         detail_ttmPrice.text = stockData.ttmPrice
         detail_drcPrice.text = stockData.drcPrice
         detail_finalPrice.text = stockData.finalPrice

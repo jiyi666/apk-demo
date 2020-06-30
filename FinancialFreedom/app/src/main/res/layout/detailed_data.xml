@@ -30,7 +30,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_marginLeft="50sp"
+            android:layout_marginLeft="70sp"
             android:gravity="center"
             android:text="股票简称" />
 
@@ -43,13 +43,14 @@
             android:text="中国海天味业" />
 
     </LinearLayout>
+
     <!--股票细节第一行（6个控件：3TextView和3EditView）-->
     <LinearLayout
         android:id="@+id/detaile_linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/detaile_linearLayout1"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -88,11 +89,11 @@
             android:layout_height="50dp"
             android:layout_weight="1.3"
             android:gravity="center"
-            android:text="每股收益:"
+            android:text="每股股息:"
             android:textSize="13sp"/>
 
         <EditText
-            android:id="@+id/detail_perEarnings"
+            android:id="@+id/detail_perDividend"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginRight="0dp"
@@ -100,13 +101,14 @@
             android:gravity="center"
             android:text="1.766"/>
     </LinearLayout>
+
     <!--股票细节第二行（3个控件：1TextView和2EditView）-->
     <LinearLayout
     android:id="@+id/detaile_linearLayout3"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@id/detaile_linearLayout2"
-    android:layout_marginTop="30dp"
+    android:layout_marginTop="10dp"
     android:orientation="horizontal">
 
     <TextView
@@ -125,7 +127,7 @@
         android:gravity="center"
         android:text="0.029"/>
 
-    <EditText
+    <TextView
         android:id="@+id/detail_tenYearNationalDebtDevide3"
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -135,13 +137,14 @@
 
 
 </LinearLayout>
+
     <!--股票细节第三行（4个控件：2TextView和2EditView）-->
     <LinearLayout
         android:id="@+id/detaile_linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/detaile_linearLayout3"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -149,10 +152,10 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="每股股息：" />
+            android:text="每股收益：" />
 
-        <EditText
-            android:id="@+id/detail_perDividend"
+        <TextView
+            android:id="@+id/detail_perEarnings"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
@@ -166,7 +169,7 @@
             android:gravity="center"
             android:text="动态股息率：" />
 
-        <EditText
+        <TextView
             android:id="@+id/detail_drcDividendRatio"
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -176,13 +179,14 @@
 
 
     </LinearLayout>
+
     <!--股票细节第四行（2个控件：2TextView）-->
     <LinearLayout
         android:id="@+id/detaile_linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/detaile_linearLayout4"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -203,13 +207,14 @@
 
 
     </LinearLayout>
+
     <!--股票细节第五行（2个控件：2TextView）-->
     <LinearLayout
         android:id="@+id/detaile_linearLayout6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/detaile_linearLayout5"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -230,13 +235,14 @@
 
 
     </LinearLayout>
+
     <!--股票细节第六行（2个控件：2TextView）-->
     <LinearLayout
         android:id="@+id/detaile_linearLayout7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/detaile_linearLayout6"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -257,13 +263,14 @@
 
 
     </LinearLayout>
+
     <!--股票细节第六行（2个控件：2TextView）-->
     <LinearLayout
         android:id="@+id/detaile_linearLayout8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/detaile_linearLayout7"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -280,6 +287,35 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="1439.84"/>
+
+
+
+    </LinearLayout>
+
+    <!--股票细节第七行（2个控件：2Button）-->
+    <LinearLayout
+        android:id="@+id/detaile_linearLayout9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detaile_linearLayout8"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/updateData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="刷新数据"/>
+
+        <Button
+            android:id="@+id/saveData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_weight="1"
+            android:text="存储数据"/>
+
 
 
 
