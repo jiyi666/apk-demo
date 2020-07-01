@@ -1,5 +1,6 @@
 package com.example.financialfreedom
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import com.example.financialfreedom.common.database.StockDatabaseControl
@@ -124,6 +125,11 @@ class DetailActivity : BaseActivity(){
         Log.d(tag, "onDestroy!")
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d(tag, "onResume!")
+    }
+
     /**
      * 将数据库读取出来的数据显示到view
      * stockData：待显示的股票信息
@@ -142,6 +148,24 @@ class DetailActivity : BaseActivity(){
         detail_drcPrice.text = stockData.drcPrice
         detail_finalPrice.text = stockData.finalPrice
         detail_nowprice1.text = stockData.nowPrice.toString()
+
+        /*
+         * 文本颜色设置:
+         * 当前价格均大于TTM市盈率好价格和动态股息率好价格 -> 红色
+         * 当前价格均小于TTM市盈率好价格和动态股息率好价格 -> 绿色
+         * 当前价格介于TTM市盈率好价格和动态股息率好价格间 -> 蓝色
+        */
+        val color : Int
+        if ((stockData.nowPrice > stockData.ttmPrice.toDouble()) &&
+            (stockData.nowPrice > stockData.drcPrice.toDouble())){
+            color = Color.RED
+        } else if ((stockData.nowPrice < stockData.ttmPrice.toDouble()) &&
+            (stockData.nowPrice < stockData.drcPrice.toDouble())){
+            color = Color.GREEN
+        } else {
+            color = Color.BLUE
+        }
+        detail_nowprice1.setTextColor(color)
     }
 
 }

@@ -1,9 +1,9 @@
 package com.example.financialfreedom
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -101,6 +101,25 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
         holder.stockTtmPrice.setText(stockData.ttmPrice.toString())
         holder.stockDrcPrice.setText(stockData.drcPrice.toString())
         holder.stockDetails.text = stockData.detailes
+
+        /*
+         * 文本颜色设置:
+         * 当前价格均大于TTM市盈率好价格和动态股息率好价格 -> 红色
+         * 当前价格均小于TTM市盈率好价格和动态股息率好价格 -> 绿色
+         * 当前价格介于TTM市盈率好价格和动态股息率好价格间 -> 蓝色
+         */
+        val color : Int
+        if ((stockData.nowPrice > stockData.ttmPrice.toDouble()) &&
+                    (stockData.nowPrice > stockData.drcPrice.toDouble())){
+               color = Color.RED
+           } else if ((stockData.nowPrice < stockData.ttmPrice.toDouble()) &&
+            (stockData.nowPrice < stockData.drcPrice.toDouble())){
+                color = Color.GREEN
+           } else {
+            color = Color.BLUE
+        }
+        holder.stockNowPrice.setTextColor(color)
+
     }
 
     /*
