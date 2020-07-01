@@ -103,6 +103,20 @@ class DetailActivity : BaseActivity(){
             false
         }
 
+        /*
+         * 存储数据用户输入及最终计算数据
+         */
+        saveData.setOnClickListener {
+            val nowPrice = detail_nowprice.text.toString().toDouble()
+            val ttmPERatio = detail_ttmPERatio.text.toString().toDouble()
+            val tenYearNationalDebt = detail_tenYearNationalDebt.text.toString().toDouble()
+            val perDividend = detail_perDividend.text.toString().toDouble()
+            /*
+             * 调用数据库进行数据更新
+             */
+            databaseControler.updateData(StockData(targetData!!.stockCode, targetData.stockName,
+                nowPrice, ttmPERatio, perDividend, tenYearNationalDebt), position)
+        }
     }
 
     override fun onDestroy() {

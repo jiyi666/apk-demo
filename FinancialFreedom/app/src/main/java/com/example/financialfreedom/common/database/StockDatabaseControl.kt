@@ -89,4 +89,27 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
          */
         return null
     }
+
+    /*
+     * 更新数据：通过数据库的id索引对应的股票数据
+     * position：目标id
+     */
+    fun updateData(stockData: StockData, position: Int) {
+        val db = dbHelper.writableDatabase
+        val value = ContentValues().apply {
+            put("stockCode", stockData.stockCode)
+            put("stockName", stockData.stockName)
+            put("nowPrice", stockData.nowPrice)
+            put("ttmPERatio", stockData.ttmPERatio)
+            put("perEarnings", stockData.perEarnings)
+            put("perDividend", stockData.perDividend)
+            put("tenYearNationalDebt", stockData.tenYearNationalDebt)
+            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDevide3)
+            put("drcDividendRatio", stockData.drcDividendRatio)
+            put("ttmPrice", stockData.ttmPrice)
+            put("drcPrice", stockData.drcPrice)
+            put("finalPrice", stockData.finalPrice)
+        }
+        db.update(name, value, "id = ?", arrayOf(position.toString()))
+    }
 }

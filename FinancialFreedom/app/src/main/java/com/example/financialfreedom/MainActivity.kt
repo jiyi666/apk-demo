@@ -2,8 +2,6 @@ package com.example.financialfreedom
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
@@ -13,7 +11,14 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : BaseActivity() {
 
     private val stockList = ArrayList<StockData>()
+    /*
+     * 使用数据库
+     */
+    val databaseStock = StockDatabaseControl(this, "StockData", 1)
 
+    /**
+     * onCreate:显示数据库中的数据
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //supportRequestWindowFeature(Window.FEATURE_NO_TITLE) //去掉标题栏的代码
@@ -25,9 +30,31 @@ class MainActivity : BaseActivity() {
         mainActivity = this
 
         /*
-         * 初始化stock数据
+         * 如果数据库不存在：创建 + 添加初始数据
          */
-        initStockData()
+        if (databaseStock.queryData("StockData", 1) == null){
+            /* 创建数据库 */
+            databaseStock.create()
+            /*
+             * 初始化stock数据
+             */
+            initStockData()
+            /* 添加数据 */
+            for (i in 0 until (stockList.size)){
+                databaseStock.addData(stockList.get(index = i))
+            }
+        } else {
+            /*
+             * 如果数据库存在，就从数据库中读取最新数据
+             */
+            stockList.clear()
+            for (i in 1..16){
+                val tmpData = databaseStock.queryData("StockData", i)
+                if (tmpData != null){
+                    stockList.add(tmpData)
+                }
+            }
+        }
 
         /*
          * 获取layoutManager
@@ -40,22 +67,36 @@ class MainActivity : BaseActivity() {
          */
         val adapter = StockDataAdapter(stockList)
         recyclerView.adapter = adapter
-
-        /*
-         * 使用数据库
-         */
-        val databaseStock = StockDatabaseControl(this, "StockData", 1)
-        /*
-         * 如果数据库不存在：创建 + 添加初始数据
-         */
-        if (databaseStock.queryData("StockData", 1) == null){
-            databaseStock.create()  //创建数据库
-            for (i in 0 until (stockList.size)){
-                databaseStock.addData(stockList.get(index = i)) //添加数据
-            }
-        }
     }
 
+    /**
+     *  onResume：从数据库读取最新的数据显示到view
+     */
+    override fun onResume() {
+        super.onResume()
+        /*
+         * 重新填充stockList数据
+         */
+        stockList.clear()
+        for (i in 1..16){
+            val tmpData = databaseStock.queryData("StockData", i)
+            if (tmpData != null){
+                stockList.add(tmpData)
+            }
+        }
+
+        /*
+         * 获取layoutManager
+         */
+        val layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
+
+        /*
+         * 获取适配器
+         */
+        val adapter = StockDataAdapter(stockList)
+        recyclerView.adapter = adapter
+    }
     /**
      * 初始化stock整个list的数据
      */
