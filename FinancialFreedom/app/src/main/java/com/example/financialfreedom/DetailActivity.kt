@@ -2,7 +2,6 @@ package com.example.financialfreedom
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import kotlinx.android.synthetic.main.detailed_data.*
@@ -54,7 +53,56 @@ class DetailActivity : BaseActivity(){
                 StockData(targetData!!.stockCode, targetData.stockName,
                     nowPrice, ttmPERatio, perDividend, tenYearNationalDebt)
             )
+
+            /*
+             * 隐藏所有EditView的光标
+             */
+            detail_nowprice.isCursorVisible = false
+            detail_ttmPERatio.isCursorVisible = false
+            detail_perDividend.isCursorVisible = false
+            detail_tenYearNationalDebt.isCursorVisible = false
         }
+
+        /*
+         * nowprice触摸事件监听：清空内容 + 隐藏光标
+         * TODO:这个lambda表达式原理？
+         */
+        detail_nowprice.setOnTouchListener { _, _ ->
+            detail_nowprice.setText("")
+            detail_nowprice.isCursorVisible = true
+            false
+        }
+
+        /*
+         * perDividend触摸事件监听：清空内容 + 隐藏光标
+         * TODO:这个lambda表达式原理？
+         */
+        detail_perDividend.setOnTouchListener{ _, _ ->
+            detail_perDividend.setText("")
+            detail_perDividend.isCursorVisible = true
+            false
+        }
+
+        /*
+         * ttmPERatio触摸事件监听：清空内容 + 隐藏光标
+         * TODO:这个lambda表达式原理？
+         */
+        detail_ttmPERatio.setOnTouchListener{ _, _ ->
+            detail_ttmPERatio.setText("")
+            detail_ttmPERatio.isCursorVisible = true
+            false
+        }
+
+        /*
+         * tenYearNationalDebt触摸事件监听：清空内容 + 隐藏光标
+         * TODO:这个lambda表达式原理？
+         */
+        detail_tenYearNationalDebt.setOnTouchListener{ _, _ ->
+            detail_tenYearNationalDebt.setText("")
+            detail_tenYearNationalDebt.isCursorVisible = true
+            false
+        }
+
     }
 
     override fun onDestroy() {
