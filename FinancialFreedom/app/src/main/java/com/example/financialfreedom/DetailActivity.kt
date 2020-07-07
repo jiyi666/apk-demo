@@ -43,12 +43,21 @@ class DetailActivity : BaseActivity(){
 
         /*
          * 刷新用户输入数据
+         * Note：对所有的数据进行判空输入处理，如果为空，则按照原来的数据进行计算
          */
         updateData.setOnClickListener {
-            val nowPrice = detail_nowprice.text.toString().toDouble()
-            val ttmPERatio = detail_ttmPERatio.text.toString().toDouble()
-            val tenYearNationalDebt = detail_tenYearNationalDebt.text.toString().toDouble()
-            val perDividend = detail_perDividend.text.toString().toDouble()
+            val nowPrice = if (detail_nowprice.text.toString() != "")
+                detail_nowprice.text.toString().toDouble() else
+                targetData!!.nowPrice
+            val ttmPERatio = if (detail_ttmPERatio.text.toString() != "")
+                detail_ttmPERatio.text.toString().toDouble() else
+                targetData!!.ttmPERatio
+            val tenYearNationalDebt = if (detail_tenYearNationalDebt.text.toString() != "")
+                detail_tenYearNationalDebt.text.toString().toDouble() else
+                targetData!!.tenYearNationalDebt
+            val perDividend = if (detail_perDividend.text.toString() != "")
+                detail_perDividend.text.toString().toDouble() else
+                targetData!!.perDividend
 
             putDataToView(
                 StockData(targetData!!.stockCode, targetData.stockName,
@@ -62,6 +71,30 @@ class DetailActivity : BaseActivity(){
             detail_ttmPERatio.isCursorVisible = false
             detail_perDividend.isCursorVisible = false
             detail_tenYearNationalDebt.isCursorVisible = false
+        }
+
+        /*
+         * 存储数据用户输入及最终计算数据
+         * Note：对所有的数据进行判空输入处理，如果为空，则按照原来的数据进行计算
+         */
+        saveData.setOnClickListener {
+            val nowPrice = if (detail_nowprice.text.toString() != "")
+                detail_nowprice.text.toString().toDouble() else
+                targetData!!.nowPrice
+            val ttmPERatio = if (detail_ttmPERatio.text.toString() != "")
+                detail_ttmPERatio.text.toString().toDouble() else
+                targetData!!.ttmPERatio
+            val tenYearNationalDebt = if (detail_tenYearNationalDebt.text.toString() != "")
+                detail_tenYearNationalDebt.text.toString().toDouble() else
+                targetData!!.tenYearNationalDebt
+            val perDividend = if (detail_perDividend.text.toString() != "")
+                detail_perDividend.text.toString().toDouble() else
+                targetData!!.perDividend
+            /*
+             * 调用数据库进行数据更新
+             */
+            databaseControler.updateData(StockData(targetData!!.stockCode, targetData.stockName,
+                nowPrice, ttmPERatio, perDividend, tenYearNationalDebt), position)
         }
 
         /*
@@ -102,21 +135,6 @@ class DetailActivity : BaseActivity(){
             detail_tenYearNationalDebt.setText("")
             detail_tenYearNationalDebt.isCursorVisible = true
             false
-        }
-
-        /*
-         * 存储数据用户输入及最终计算数据
-         */
-        saveData.setOnClickListener {
-            val nowPrice = detail_nowprice.text.toString().toDouble()
-            val ttmPERatio = detail_ttmPERatio.text.toString().toDouble()
-            val tenYearNationalDebt = detail_tenYearNationalDebt.text.toString().toDouble()
-            val perDividend = detail_perDividend.text.toString().toDouble()
-            /*
-             * 调用数据库进行数据更新
-             */
-            databaseControler.updateData(StockData(targetData!!.stockCode, targetData.stockName,
-                nowPrice, ttmPERatio, perDividend, tenYearNationalDebt), position)
         }
     }
 
