@@ -2,10 +2,14 @@ package com.example.financialfreedom
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.util.Log
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import kotlinx.android.synthetic.main.detailed_data.*
+import java.lang.Exception
+import kotlin.concurrent.thread
 
 /**
  *  具体数据展示页面的activity
@@ -14,6 +18,10 @@ class DetailActivity : BaseActivity(){
 
     val tag : String = "DetailActivity"
     var position : Int = -1
+    /* 消息集 */
+    val updateDataFromInternet = 1
+    /* 线程停止标志 */
+    private var threadRun = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,10 +144,42 @@ class DetailActivity : BaseActivity(){
             detail_tenYearNationalDebt.isCursorVisible = true
             false
         }
+
+        /**
+         *  消息处理：用于获取网络数据
+         */
+        val handler = object : Handler(){
+            override fun handleMessage(msg: Message) {
+                when (msg.what){
+                    updateDataFromInternet -> {
+                        val url = "http://hq.sinajs.cn/list=sh" +
+                                  targetData?.stockCode.toString()
+                        Log.d("jiyi", "url:$url")
+                    }
+                }
+            }
+        }
+
+        /**
+         *  线程使用消息机制来不停地访问网络数据并更新UI
+         */
+        thread {
+            while (threadRun){
+                try {
+                    val msg = Message()
+                    msg.what = updateDataFromInternet
+                    Thread.sleep(2000)
+                    handler.sendMessage(msg)
+                } catch (e: Exception){
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        threadRun = false
         Log.d(tag, "onDestroy!")
     }
 
