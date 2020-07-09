@@ -132,7 +132,7 @@ class MainActivity : BaseActivity() {
             31.96,5.00, 0.029))
         stockList.add(StockData("603429","集友股份", 31.70,
             73.55,0.186, 0.029))
-        stockList.add(StockData("603866","元祖股份", 17.08,
+        stockList.add(StockData("603886","元祖股份", 17.08,
             35.54,1.2, 0.029))
     }
 

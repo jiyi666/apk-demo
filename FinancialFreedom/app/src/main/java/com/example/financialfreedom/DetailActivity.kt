@@ -8,6 +8,8 @@ import android.util.Log
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import kotlinx.android.synthetic.main.detailed_data.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.lang.Exception
 import kotlin.concurrent.thread
 
@@ -16,8 +18,12 @@ import kotlin.concurrent.thread
  */
 class DetailActivity : BaseActivity(){
 
+    /* 类tag */
     val tag : String = "DetailActivity"
+    /* 数据库中的位置 */
     var position : Int = -1
+    /* UI更新标志:所有的EditView控件触发输入监听都将停止UI更新，直到保存数据之后才会更新 */
+    var uiUpdateFlag = true
     /* 消息集 */
     val updateDataFromInternet = 1
     /* 线程停止标志 */
@@ -103,6 +109,7 @@ class DetailActivity : BaseActivity(){
              */
             databaseControler.updateData(StockData(targetData!!.stockCode, targetData.stockName,
                 nowPrice, ttmPERatio, perDividend, tenYearNationalDebt), position)
+            uiUpdateFlag = true
         }
 
         /*
@@ -112,6 +119,7 @@ class DetailActivity : BaseActivity(){
         detail_nowprice.setOnTouchListener { _, _ ->
             detail_nowprice.setText("")
             detail_nowprice.isCursorVisible = true
+            uiUpdateFlag = false
             false
         }
 
@@ -122,6 +130,7 @@ class DetailActivity : BaseActivity(){
         detail_perDividend.setOnTouchListener{ _, _ ->
             detail_perDividend.setText("")
             detail_perDividend.isCursorVisible = true
+            uiUpdateFlag = false
             false
         }
 
@@ -132,6 +141,7 @@ class DetailActivity : BaseActivity(){
         detail_ttmPERatio.setOnTouchListener{ _, _ ->
             detail_ttmPERatio.setText("")
             detail_ttmPERatio.isCursorVisible = true
+            uiUpdateFlag = false
             false
         }
 
@@ -142,43 +152,89 @@ class DetailActivity : BaseActivity(){
         detail_tenYearNationalDebt.setOnTouchListener{ _, _ ->
             detail_tenYearNationalDebt.setText("")
             detail_tenYearNationalDebt.isCursorVisible = true
+            uiUpdateFlag = false
             false
         }
 
         /**
-         *  消息处理：用于获取网络数据
+         *  消息处理：获取传递过来的数据并更新UI
          */
         val handler = object : Handler(){
             override fun handleMessage(msg: Message) {
                 when (msg.what){
                     updateDataFromInternet -> {
-                        val url = "http://hq.sinajs.cn/list=sh" +
-                                  targetData?.stockCode.toString()
-                        Log.d("jiyi", "url:$url")
+                        val bundle = msg.data
+                        val nowPrice = bundle.getDouble("nowPrice")
+                        val nowStockData = StockData(targetData!!.stockCode, targetData!!.stockName,
+                        nowPrice, targetData.ttmPERatio, targetData.perDividend, targetData.tenYearNationalDebt)
+
+                        putDataToView(nowStockData)
                     }
                 }
             }
         }
 
         /**
-         *  线程使用消息机制来不停地访问网络数据并更新UI
+         *  线程每2s查询一次服务器数据，并使用消息机制更新UI
          */
         thread {
             while (threadRun){
                 try {
-                    val msg = Message()
-                    msg.what = updateDataFromInternet
-                    Thread.sleep(2000)
-                    handler.sendMessage(msg)
+                    /*
+                     * 从股票代码识别是上市还是深市
+                     */
+                    val shOrSz = when (targetData?.stockCode.toString()[0]){
+                        '6' -> "sh"
+                        else -> "sz"
+                    }
+                    /*
+                     * 拼组URL
+                     */
+                    val url = "http://hq.sinajs.cn/list=" +
+                            shOrSz + targetData?.stockCode.toString()
+
+                    //Log.d("jiyi", "url:$url")
+                    /*
+                     * 进行网络访问，得到服务器数据
+                     */
+                    val client = OkHttpClient()
+                    val request = Request.Builder()
+                        .url(url)
+                        .build()
+                    val response = client.newCall(request).execute()
+                    val responseData = response.body?.string()
+                    if (responseData != null){
+//                        Log.d("jiyi", "responseData:" +
+//                                "${parseOkHttpStockData(responseData)}")
+                        if (uiUpdateFlag == true){
+                            /*
+                             * Msg中通过bundle携带数据
+                             */
+                            val msg = Message()
+                            val bundle = Bundle()
+                            bundle.putDouble("nowPrice", parseOkHttpStockData(responseData))
+                            msg.what = updateDataFromInternet
+                            msg.data = bundle
+                            handler.sendMessage(msg)
+                        }
+
+                    } else {
+                        Log.d(tag, "Don't query stockData, Please ensure stockCode:${targetData?.stockCode}")
+                    }
+
                 } catch (e: Exception){
                     e.printStackTrace()
                 }
+                Thread.sleep(2000)
             }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        /*
+         * 停止线程
+         */
         threadRun = false
         Log.d(tag, "onDestroy!")
     }
@@ -226,4 +282,20 @@ class DetailActivity : BaseActivity(){
         detail_nowprice1.setTextColor(color)
     }
 
+    /**
+     * 服务器数据解析
+     * param:服务器响应的原始数据
+     * return：目前只需要返回当前价格
+     */
+    private fun parseOkHttpStockData(data: String) : Double{
+        /* 1.去掉数据中的双引号 */
+        val responseData = data.replace("\"", "")
+        /* 2.通过识别等号来切割字符串，只需要使用切割后的第二个子串 */
+        val splitTmp: List<String> = responseData.split("=")
+        /* 3.通过识别逗号来切割整个子串 */
+        val targetList: List<String> = splitTmp[1].split(",")
+
+        /* 返回当前股价 */
+        return targetList[3].toDouble()
+    }
 }
