@@ -2,15 +2,25 @@ package com.example.financialfreedom
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import kotlin.concurrent.thread
 
 
 class MainActivity : BaseActivity() {
 
+    private val tag = "MainActivity"
     private val stockList = ArrayList<StockData>()
+    /* 线程停止标志 */
+    private var threadRun = true
+    /* 消息集 */
+    val updateDataFromInternet = 1
     /*
      * 使用数据库
      */
@@ -75,7 +85,8 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         /*
-         * 重新填充stockList数据
+         * 重新填充stockList数据:一旦从detailed_activity返回之后，有些数据已经保存
+         * 在数据库中了，所以需要重新从数据库中读取并刷新UI
          */
         stockList.clear()
         for (i in 1..16){
@@ -96,6 +107,58 @@ class MainActivity : BaseActivity() {
          */
         val adapter = StockDataAdapter(stockList)
         recyclerView.adapter = adapter
+
+        threadRun = true
+        /**
+         *  消息处理：获取传递过来的数据并更新UI
+         */
+        val handler = object : Handler(){
+            override fun handleMessage(msg: Message) {
+                when (msg.what){
+                    updateDataFromInternet -> {
+                        val bundle = msg.data
+                        val position = bundle.getInt("position")
+                        val nowPrice = bundle.getString("nowPrice")
+                        val ttmPrice = bundle.getString("ttmPrice")
+                        val drcPrice = bundle.getString("drcPrice")
+                        val realData = "nowPrice:" + nowPrice +
+                                ",ttmPrice:" + ttmPrice +
+                                ",drcPrice:" + drcPrice
+                        adapter.notifyItemChanged(position - 1, realData)
+                    }
+                }
+            }
+        }
+        /**
+         *  线程每2s查询一次数据并发送消息进行UI更新
+         */
+        thread {
+            while (threadRun){
+                for (position in 1..16){
+                    /* 通过网络查询最新的数据 */
+                    val tmpData = queryData(position)
+                    /*
+                     * Msg中通过bundle携带数据
+                     */
+                    val msg = Message()
+                    val bundle = Bundle()
+                    bundle.putInt("position", position)
+                    bundle.putString("nowPrice", tmpData.nowPrice.toString())
+                    bundle.putString("ttmPrice", tmpData.ttmPrice)
+                    bundle.putString("drcPrice", tmpData.drcPrice)
+                    msg.what = updateDataFromInternet
+                    msg.data = bundle
+                    handler.sendMessage(msg)
+                }
+                Thread.sleep(2000)
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        /* 处于onStop生命周期时，将停止网络服务查询和UI更新 */
+        threadRun = false
     }
     /**
      * 初始化stock整个list的数据
@@ -168,4 +231,33 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    private fun queryData(position: Int) : StockData{
+        val targetData = databaseStock.queryData("StockData", position)
+        /*
+        * 从股票代码识别是上市还是深市
+        */
+        val shOrSz = when (targetData?.stockCode.toString()[0]){
+            '6' -> "sh"
+            else -> "sz"
+        }
+        /*
+         * 拼组URL
+         */
+        val url = "http://hq.sinajs.cn/list=" +
+                shOrSz + targetData?.stockCode.toString()
+        /*
+         * 进行网络访问，得到服务器数据
+         */
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(url)
+            .build()
+        val response = client.newCall(request).execute()
+        val responseData = response.body?.string()
+        when (responseData){
+            null -> return StockData("?", "?", 0.00, 0.00, 0.00, 0.00)
+            else -> return StockData(targetData!!.stockCode, targetData.stockName, parseOkHttpStockData(responseData),
+                targetData.ttmPERatio, targetData.perDividend, targetData.tenYearNationalDebt)
+        }
+    }
 }

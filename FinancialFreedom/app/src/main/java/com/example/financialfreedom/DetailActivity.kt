@@ -171,7 +171,7 @@ class DetailActivity : BaseActivity(){
                     updateDataFromInternet -> {
                         val bundle = msg.data
                         val nowPrice = bundle.getDouble("nowPrice")
-                        val nowStockData = StockData(targetData!!.stockCode, targetData!!.stockName,
+                        val nowStockData = StockData(targetData!!.stockCode, targetData.stockName,
                         nowPrice, targetData.ttmPERatio, targetData.perDividend, targetData.tenYearNationalDebt)
 
                         putDataToView(nowStockData)
@@ -199,8 +199,6 @@ class DetailActivity : BaseActivity(){
                      */
                     val url = "http://hq.sinajs.cn/list=" +
                             shOrSz + targetData?.stockCode.toString()
-
-                    //Log.d("jiyi", "url:$url")
                     /*
                      * 进行网络访问，得到服务器数据
                      */
@@ -211,8 +209,6 @@ class DetailActivity : BaseActivity(){
                     val response = client.newCall(request).execute()
                     val responseData = response.body?.string()
                     if (responseData != null){
-//                        Log.d("jiyi", "responseData:" +
-//                                "${parseOkHttpStockData(responseData)}")
                         if (uiUpdateFlag == true){
                             /*
                              * Msg中通过bundle携带数据
@@ -288,21 +284,21 @@ class DetailActivity : BaseActivity(){
         }
         detail_nowprice1.setTextColor(color)
     }
+}
 
-    /**
-     * 服务器数据解析
-     * param:服务器响应的原始数据
-     * return：目前只需要返回当前价格
-     */
-    private fun parseOkHttpStockData(data: String) : Double{
-        /* 1.去掉数据中的双引号 */
-        val responseData = data.replace("\"", "")
-        /* 2.通过识别等号来切割字符串，只需要使用切割后的第二个子串 */
-        val splitTmp: List<String> = responseData.split("=")
-        /* 3.通过识别逗号来切割整个子串 */
-        val targetList: List<String> = splitTmp[1].split(",")
+/**
+ * 顶层函数：服务器数据解析
+ * param:服务器响应的原始数据
+ * return：目前只需要返回当前价格
+ */
+fun parseOkHttpStockData(data: String) : Double{
+    /* 1.去掉数据中的双引号 */
+    val responseData = data.replace("\"", "")
+    /* 2.通过识别等号来切割字符串，只需要使用切割后的第二个子串 */
+    val splitTmp: List<String> = responseData.split("=")
+    /* 3.通过识别逗号来切割整个子串 */
+    val targetList: List<String> = splitTmp[1].split(",")
 
-        /* 返回当前股价 */
-        return targetList[3].toDouble()
-    }
+    /* 返回当前股价 */
+    return targetList[3].toDouble()
 }

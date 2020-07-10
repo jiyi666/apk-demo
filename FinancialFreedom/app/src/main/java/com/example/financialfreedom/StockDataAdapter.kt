@@ -91,6 +91,26 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
         return viewHolder //注意这里要返回viewHolder，因为有各种点击事件
     }
 
+    /**
+     * 调用adapter的notifyItemChanged时会调用此函数，用于更新局部控件
+     */
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        super.onBindViewHolder(holder, position, payloads)
+        if (payloads.isEmpty()){
+            onBindViewHolder(holder, position)
+        } else {
+            /* payloads的size恒为1 */
+            val str = payloads.get(index = 0)
+
+            val priceList: List<String> = str.toString().split(",")
+            val nowPrice = priceList[0].split(":")[1]
+            val ttmPrice = priceList[1].split(":")[1]
+            val drcPrice = priceList[2].split(":")[1]
+            holder.stockNowPrice.text = nowPrice
+            holder.stockTtmPrice.text = ttmPrice
+            holder.stockDrcPrice.text = drcPrice
+        }
+    }
     /*
      * 对RecyclerView滚入屏幕的子项数据赋值
      */
