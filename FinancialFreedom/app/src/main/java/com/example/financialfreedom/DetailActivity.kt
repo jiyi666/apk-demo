@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
+import android.widget.Toast
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import kotlinx.android.synthetic.main.detailed_data.*
@@ -85,6 +86,9 @@ class DetailActivity : BaseActivity(){
             detail_ttmPERatio.isCursorVisible = false
             detail_perDividend.isCursorVisible = false
             detail_tenYearNationalDebt.isCursorVisible = false
+
+            /* 告知用户数据刷新成功 */
+            Toast.makeText(this, "刷新成功！", Toast.LENGTH_SHORT).show()
         }
 
         /*
@@ -110,6 +114,8 @@ class DetailActivity : BaseActivity(){
             databaseControler.updateData(StockData(targetData!!.stockCode, targetData.stockName,
                 nowPrice, ttmPERatio, perDividend, tenYearNationalDebt), position)
             uiUpdateFlag = true
+            /* 告知用户数据保存成功 */
+            Toast.makeText(this, "保存成功！", Toast.LENGTH_SHORT).show()
         }
 
         /*
@@ -176,6 +182,7 @@ class DetailActivity : BaseActivity(){
 
         /**
          *  线程每2s查询一次服务器数据，并使用消息机制更新UI
+         *  TODO:暂不处理用户点击保存数据之后刷新会导致某些值还原的问题
          */
         thread {
             while (threadRun){

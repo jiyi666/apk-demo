@@ -91,7 +91,7 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
     }
 
     /*
-     * 更新数据：通过数据库的id索引对应的股票数据
+     * 更新数据：通过数据库的id索引对应的股票数据:附加更新所有列的国债收益率
      * position：目标id
      */
     fun updateData(stockData: StockData, position: Int) {
@@ -111,5 +111,11 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
             put("finalPrice", stockData.finalPrice)
         }
         db.update(name, value, "id = ?", arrayOf(position.toString()))
+
+        /* 更新所有列的十年期国债收益率 */
+        val value1 = ContentValues().apply {
+            put("tenYearNationalDebt", stockData.tenYearNationalDebt)
+        }
+        db.update(name, value1, "", null)
     }
 }
