@@ -7,9 +7,9 @@ import android.os.Message
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
+import com.example.financialfreedom.utils.getInternetResponse
+import com.example.financialfreedom.utils.parseOkHttpStockData
 import kotlinx.android.synthetic.main.activity_main.*
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import kotlin.concurrent.thread
 
 
@@ -135,8 +135,17 @@ class MainActivity : BaseActivity() {
         thread {
             while (threadRun){
                 for (position in 1..16){
+                    /* 从数据库中读取需要查询的数据 */
+                    val targetData = databaseStock.queryData("StockData", position)
                     /* 通过网络查询最新的数据 */
-                    val tmpData = queryData(position)
+                    val tmpData = when (getInternetResponse(targetData)){
+                        null -> StockData("?", "?", 0.00, 0.00, 0.00, 0.00)
+                        else -> StockData(targetData!!.stockCode, targetData.stockName, parseOkHttpStockData(getInternetResponse(targetData)),
+                            targetData.ttmPERatio, targetData.perDividend, targetData.tenYearNationalDebt)
+                    }
+
+                    /* 将最新数据写入数据库 */
+                    databaseStock.updateData(tmpData, position)
                     /*
                      * Msg中通过bundle携带数据
                      */
@@ -228,36 +237,6 @@ class MainActivity : BaseActivity() {
                 INPUTPRICE -> {
                 }
             }
-        }
-    }
-
-    private fun queryData(position: Int) : StockData{
-        val targetData = databaseStock.queryData("StockData", position)
-        /*
-        * 从股票代码识别是上市还是深市
-        */
-        val shOrSz = when (targetData?.stockCode.toString()[0]){
-            '6' -> "sh"
-            else -> "sz"
-        }
-        /*
-         * 拼组URL
-         */
-        val url = "http://hq.sinajs.cn/list=" +
-                shOrSz + targetData?.stockCode.toString()
-        /*
-         * 进行网络访问，得到服务器数据
-         */
-        val client = OkHttpClient()
-        val request = Request.Builder()
-            .url(url)
-            .build()
-        val response = client.newCall(request).execute()
-        val responseData = response.body?.string()
-        when (responseData){
-            null -> return StockData("?", "?", 0.00, 0.00, 0.00, 0.00)
-            else -> return StockData(targetData!!.stockCode, targetData.stockName, parseOkHttpStockData(responseData),
-                targetData.ttmPERatio, targetData.perDividend, targetData.tenYearNationalDebt)
         }
     }
 }

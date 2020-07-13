@@ -106,6 +106,18 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
             val nowPrice = priceList[0].split(":")[1]
             val ttmPrice = priceList[1].split(":")[1]
             val drcPrice = priceList[2].split(":")[1]
+            /* 设置文本颜色:由价格比较得出 */
+            val color : Int
+            if ((nowPrice.toDouble() > ttmPrice.toDouble()) &&
+                (nowPrice.toDouble() > drcPrice.toDouble())){
+                color = Color.RED
+            } else if ((nowPrice.toDouble() < ttmPrice.toDouble()) &&
+                (nowPrice.toDouble() < drcPrice.toDouble())){
+                color = Color.GREEN
+            } else {
+                color = Color.BLUE
+            }
+            holder.stockNowPrice.setTextColor(color)
             holder.stockNowPrice.text = nowPrice
             holder.stockTtmPrice.text = ttmPrice
             holder.stockDrcPrice.text = drcPrice

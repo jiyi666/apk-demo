@@ -8,9 +8,9 @@ import android.util.Log
 import android.widget.Toast
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
+import com.example.financialfreedom.utils.getInternetResponse
+import com.example.financialfreedom.utils.parseOkHttpStockData
 import kotlinx.android.synthetic.main.detailed_data.*
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import java.lang.Exception
 import kotlin.concurrent.thread
 
@@ -187,27 +187,8 @@ class DetailActivity : BaseActivity(){
         thread {
             while (threadRun){
                 try {
-                    /*
-                     * 从股票代码识别是上市还是深市
-                     */
-                    val shOrSz = when (targetData?.stockCode.toString()[0]){
-                        '6' -> "sh"
-                        else -> "sz"
-                    }
-                    /*
-                     * 拼组URL
-                     */
-                    val url = "http://hq.sinajs.cn/list=" +
-                            shOrSz + targetData?.stockCode.toString()
-                    /*
-                     * 进行网络访问，得到服务器数据
-                     */
-                    val client = OkHttpClient()
-                    val request = Request.Builder()
-                        .url(url)
-                        .build()
-                    val response = client.newCall(request).execute()
-                    val responseData = response.body?.string()
+                    /* 获取服务器查询数据:字符串 */
+                    val responseData = getInternetResponse(targetData)
                     if (responseData != null){
                         if (uiUpdateFlag == true){
                             /*
@@ -284,21 +265,4 @@ class DetailActivity : BaseActivity(){
         }
         detail_nowprice1.setTextColor(color)
     }
-}
-
-/**
- * 顶层函数：服务器数据解析
- * param:服务器响应的原始数据
- * return：目前只需要返回当前价格
- */
-fun parseOkHttpStockData(data: String) : Double{
-    /* 1.去掉数据中的双引号 */
-    val responseData = data.replace("\"", "")
-    /* 2.通过识别等号来切割字符串，只需要使用切割后的第二个子串 */
-    val splitTmp: List<String> = responseData.split("=")
-    /* 3.通过识别逗号来切割整个子串 */
-    val targetList: List<String> = splitTmp[1].split(",")
-
-    /* 返回当前股价 */
-    return targetList[3].toDouble()
 }
