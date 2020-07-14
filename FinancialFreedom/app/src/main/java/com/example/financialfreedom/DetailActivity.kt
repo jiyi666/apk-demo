@@ -8,7 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
-import com.example.financialfreedom.utils.getInternetResponse
+import com.example.financialfreedom.utils.HttpUtils
 import com.example.financialfreedom.utils.parseOkHttpStockData
 import kotlinx.android.synthetic.main.detailed_data.*
 import java.lang.Exception
@@ -187,8 +187,19 @@ class DetailActivity : BaseActivity(){
         thread {
             while (threadRun){
                 try {
-                    /* 获取服务器查询数据:字符串 */
-                    val responseData = getInternetResponse(targetData)
+                    /*
+                     * 从股票代码识别是上市还是深市
+                     */
+                    val shOrSz = when (targetData?.stockCode.toString()[0]){
+                        '6' -> "sh"
+                        else -> "sz"
+                    }
+                    /*
+                     * 拼组URL
+                     */
+                    val url = "http://hq.sinajs.cn/list=" + shOrSz + targetData?.stockCode.toString()
+                    /* 使用OkHttp进行网络数据请求 */
+                    val responseData = HttpUtils.getInternetResponse(url)
                     if (responseData != null){
                         if (uiUpdateFlag == true){
                             /*
@@ -209,7 +220,7 @@ class DetailActivity : BaseActivity(){
                 } catch (e: Exception){
                     e.printStackTrace()
                 }
-                Thread.sleep(2000)
+                Thread.sleep(1000)
             }
         }
     }

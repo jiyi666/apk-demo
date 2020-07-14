@@ -4,10 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
-import com.example.financialfreedom.utils.getInternetResponse
+import com.example.financialfreedom.utils.HttpUtils
 import com.example.financialfreedom.utils.parseOkHttpStockData
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.concurrent.thread
@@ -134,15 +135,33 @@ class MainActivity : BaseActivity() {
          */
         thread {
             while (threadRun){
+                var url = "http://hq.sinajs.cn/list="
                 for (position in 1..16){
                     /* 从数据库中读取需要查询的数据 */
                     val targetData = databaseStock.queryData("StockData", position)
-                    /* 通过网络查询最新的数据 */
-                    val tmpData = when (getInternetResponse(targetData)){
-                        null -> StockData("?", "?", 0.00, 0.00, 0.00, 0.00)
-                        else -> StockData(targetData!!.stockCode, targetData.stockName, parseOkHttpStockData(getInternetResponse(targetData)),
-                            targetData.ttmPERatio, targetData.perDividend, targetData.tenYearNationalDebt)
+                    /*
+                     * 从股票代码识别是上市还是深市
+                     */
+                    val shOrSz = when (targetData?.stockCode.toString()[0]){
+                        '6' -> "sh"
+                        else -> "sz"
                     }
+                    /*
+                     * 拼组URL:16组数据一次查询
+                     */
+                    url = url + shOrSz + targetData?.stockCode.toString()
+                    if (position != 16){
+                        url += ","
+                    }
+                }
+                /* 使用OkHttp进行网络数据请求 */
+                val responseData = HttpUtils.getInternetResponse(url)
+                /* 通过消息机制进行UI更新 */
+                for (position in 1..16){
+                    val targetData = databaseStock.queryData("StockData", position)
+                    val targetPrice = parseOkHttpStockData(responseData, position-1)
+                    val tmpData = StockData(targetData!!.stockCode, targetData.stockName, targetPrice,
+                            targetData.ttmPERatio, targetData.perDividend, targetData.tenYearNationalDebt)
 
                     /* 将最新数据写入数据库 */
                     databaseStock.updateData(tmpData, position)
@@ -158,6 +177,7 @@ class MainActivity : BaseActivity() {
                     msg.what = updateDataFromInternet
                     msg.data = bundle
                     handler.sendMessage(msg)
+                    Thread.sleep(100)
                 }
                 Thread.sleep(2000)
             }
