@@ -14,7 +14,7 @@ fun parseOkHttpStockData(data: String?, position: Int = 0) : Double{
     /* 2.通过识别";"来切割字符串，拿到每一股的完整数据 */
     val perStockData: List<String> = responseData!!.split(";")
     /* 3.通过识别"="来切割字符串 */
-    val splitTmp: List<String> = perStockData[position]!!.split("=")
+    val splitTmp: List<String> = perStockData[position].split("=")
     /* 4.将上文"="右边的子串再切割，通过识别","来切割整个子串 */
     val targetList: List<String> = splitTmp[1].split(",")
 
@@ -31,6 +31,10 @@ fun parseOkHttpStockData(data: String?, position: Int = 0) : Double{
  */
 object HttpUtils{
     private val client = OkHttpClient()
+
+    /**
+     *  同步方式
+     */
     fun getInternetResponse(url: String) : String?{
         /*
          * 进行网络访问，得到服务器数据
@@ -40,6 +44,15 @@ object HttpUtils{
             .build()
         val response = client.newCall(request).execute()
         return response.body?.string()
+    }
+    /**
+     *  异步方式
+     */
+    fun sendOkHttpRequest(url: String, callback: okhttp3.Callback){
+        val request = Request.Builder()
+            .url(url)
+            .build()
+        client.newCall(request).enqueue(callback)
     }
 }
 

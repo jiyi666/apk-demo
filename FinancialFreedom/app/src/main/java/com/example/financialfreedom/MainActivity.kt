@@ -11,6 +11,10 @@ import com.example.financialfreedom.utils.BaseActivity
 import com.example.financialfreedom.utils.HttpUtils
 import com.example.financialfreedom.utils.parseOkHttpStockData
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import java.io.IOException
 import kotlin.concurrent.thread
 
 
@@ -155,30 +159,37 @@ class MainActivity : BaseActivity() {
                     }
                 }
                 /* 使用OkHttp进行网络数据请求 */
-                val responseData = HttpUtils.getInternetResponse(url)
-                /* 通过消息机制进行UI更新 */
-                for (position in 1..16){
-                    val targetData = databaseStock.queryData("StockData", position)
-                    val targetPrice = parseOkHttpStockData(responseData, position-1)
-                    val tmpData = StockData(targetData!!.stockCode, targetData.stockName, targetPrice,
-                            targetData.ttmPERatio, targetData.perDividend, targetData.tenYearNationalDebt)
+                HttpUtils.sendOkHttpRequest(url, object : Callback{
+                    override fun onResponse(call: Call, response: Response) {
+                        /* 获取响应数据 */
+                        val responseData = response.body?.string()
+                        for (position in 1..16){
+                            val targetData = databaseStock.queryData("StockData", position)
+                            val targetPrice = parseOkHttpStockData(responseData, position-1)
+                            val tmpData = StockData(targetData!!.stockCode, targetData.stockName, targetPrice,
+                                targetData.ttmPERatio, targetData.perDividend, targetData.tenYearNationalDebt)
 
-                    /* 将最新数据写入数据库 */
-                    databaseStock.updateData(tmpData, position)
-                    /*
-                     * Msg中通过bundle携带数据
-                     */
-                    val msg = Message()
-                    val bundle = Bundle()
-                    bundle.putInt("position", position)
-                    bundle.putString("nowPrice", tmpData.nowPrice.toString())
-                    bundle.putString("ttmPrice", tmpData.ttmPrice)
-                    bundle.putString("drcPrice", tmpData.drcPrice)
-                    msg.what = updateDataFromInternet
-                    msg.data = bundle
-                    handler.sendMessage(msg)
-                    Thread.sleep(100)
-                }
+                            /* 将最新数据写入数据库 */
+                            databaseStock.updateData(tmpData, position)
+                            /*
+                             * Msg中通过bundle携带数据
+                             */
+                            val msg = Message()
+                            val bundle = Bundle()
+                            bundle.putInt("position", position)
+                            bundle.putString("nowPrice", tmpData.nowPrice.toString())
+                            bundle.putString("ttmPrice", tmpData.ttmPrice)
+                            bundle.putString("drcPrice", tmpData.drcPrice)
+                            msg.what = updateDataFromInternet
+                            msg.data = bundle
+                            handler.sendMessage(msg)
+                            Thread.sleep(100)
+                        }
+                    }
+
+                    override fun onFailure(call: Call, e: IOException) {
+                    }
+                })
                 Thread.sleep(2000)
             }
         }
