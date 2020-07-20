@@ -7,8 +7,8 @@ import android.os.Message
 import android.util.Log
 import android.widget.Toast
 import com.example.financialfreedom.R
-import com.example.financialfreedom.StockData
-import com.example.financialfreedom.common.database.StockDatabaseControl
+import com.example.financialfreedom.adapter.stockdataadapter.StockData
+import com.example.financialfreedom.common.database.stockdata.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import com.example.financialfreedom.common.internet.HttpUtils
 import com.example.financialfreedom.common.internet.parseOkHttpStockData

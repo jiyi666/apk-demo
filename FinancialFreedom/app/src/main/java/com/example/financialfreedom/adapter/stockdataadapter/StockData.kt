@@ -1,4 +1,4 @@
-package com.example.financialfreedom
+package com.example.financialfreedom.adapter.stockdataadapter
 
 /**
  * stockCode:股票代码

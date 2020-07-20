@@ -1,4 +1,4 @@
-package com.example.financialfreedom
+package com.example.financialfreedom.adapter.stockdataadapter
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.financialfreedom.R
 import com.example.financialfreedom.activity.MainActivity
 import com.example.financialfreedom.activity.MainActivity.Companion.STARTDETAILACTIVITY
 

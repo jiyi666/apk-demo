@@ -1,10 +1,8 @@
-package com.example.financialfreedom.common.database
+package com.example.financialfreedom.common.database.stockdata
 
 import android.content.ContentValues
 import android.content.Context
-import android.util.Log
-import com.example.financialfreedom.StockData
-import java.lang.NullPointerException
+import com.example.financialfreedom.adapter.stockdataadapter.StockData
 
 /**
  *  数据库封装类，用于其他activity调用以操作数据库
@@ -15,7 +13,12 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
     private var dbHelper : MyDataBaseHelper
 
     init {
-         dbHelper = MyDataBaseHelper(context, name, versin)
+         dbHelper =
+             MyDataBaseHelper(
+                 context,
+                 name,
+                 versin
+             )
     }
 
     /*
@@ -85,7 +88,7 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
         }
         cursor.close()
         /*
-         * 如果未编译到目标数据，则返回null
+         * 如果未遍历到目标数据，则返回null
          */
         return null
     }

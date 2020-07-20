@@ -6,9 +6,9 @@ import android.os.Handler
 import android.os.Message
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.financialfreedom.R
-import com.example.financialfreedom.StockData
-import com.example.financialfreedom.StockDataAdapter
-import com.example.financialfreedom.common.database.StockDatabaseControl
+import com.example.financialfreedom.adapter.stockdataadapter.StockData
+import com.example.financialfreedom.adapter.stockdataadapter.StockDataAdapter
+import com.example.financialfreedom.common.database.stockdata.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import com.example.financialfreedom.common.internet.HttpUtils
 import com.example.financialfreedom.common.internet.parseOkHttpStockData
