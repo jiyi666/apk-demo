@@ -9,6 +9,7 @@ import com.example.financialfreedom.adapter.myattentionadapter.MyAttentionAdapte
 import com.example.financialfreedom.adapter.myattentionadapter.RealTimeStock
 import com.example.financialfreedom.common.database.myattention.MyAttentionBaseControl
 import com.example.financialfreedom.common.internet.HttpUtils
+import com.example.financialfreedom.common.internet.parseRealTimeStockData
 import kotlinx.android.synthetic.main.activity_my_attention.*
 import okhttp3.Call
 import okhttp3.Callback
@@ -35,9 +36,7 @@ class MyAttentionActivity : AppCompatActivity() {
             /* 初始化stock数据 */
             initRealTimeStock()
             /* 添加数据 */
-            Log.d("jiyi", "size:${realTimeStockList.size}")
             for (i in 0 until (realTimeStockList.size)){
-                Log.d("jiyi", "data:${realTimeStockList.get(index = i)}")
                 realTimeStockBase.addData(realTimeStockList.get(index = i))
             }
         } else {
@@ -74,14 +73,19 @@ class MyAttentionActivity : AppCompatActivity() {
                     /* 使用网络访问 */
                     HttpUtils.sendOkHttpRequest(url, object : Callback {
                         override fun onResponse(call: Call, response: Response) {
-                            /* 获取响应数据 */
+                            /* 进行网络访问 */
                             val responseData = response.body?.string()
-                            Log.d("jiyi", "responseData:$responseData")
-                            //val tmpData = parseRealTimeStockData(targetData!!.stockCode, responseData)
-//                            /* 将最新数据写入数据库 */
-//                            realTimeStockBase.updateData(tmpData, position)
-//                            /* UI更新 */
-//                            adapter.notifyItemChanged(position - 1, tmpData)
+                            /* 解析数据 */
+                            val tmpData = parseRealTimeStockData(targetData!!.stockCode, responseData)
+                            /* 将最新数据写入数据库 */
+                            realTimeStockBase.updateData(tmpData, position)
+                            /* UI更新 */
+                            runOnUiThread {
+                                val realData = "nowPrice:" + tmpData.nowPrice +
+                                        ",upAndDown:" + tmpData.upAndDown +
+                                        ",upAndDownRate:" + tmpData.upAndDownRate
+                                adapter.notifyItemChanged(position - 1, realData)
+                            }
                         }
 
                         override fun onFailure(call: Call, e: IOException) {
@@ -101,8 +105,6 @@ class MyAttentionActivity : AppCompatActivity() {
 
     /* 初始化实时数据 */
     private fun initRealTimeStock(){
-        realTimeStockList.add(RealTimeStock("159905", "深红利", 2.313,2.246))
-        realTimeStockList.add(RealTimeStock("159905", "深红利", 2.313,2.246))
         realTimeStockList.add(RealTimeStock("159905", "深红利", 2.313,2.246))
     }
 }
