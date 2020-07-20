@@ -1,4 +1,4 @@
-package com.example.financialfreedom.utils
+package com.example.financialfreedom.common.internet
 
 import okhttp3.*
 
