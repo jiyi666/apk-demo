@@ -1,15 +1,17 @@
-package com.example.financialfreedom
+package com.example.financialfreedom.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.financialfreedom.R
+import com.example.financialfreedom.StockData
+import com.example.financialfreedom.StockDataAdapter
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
-import com.example.financialfreedom.utils.HttpUtils
-import com.example.financialfreedom.utils.parseOkHttpStockData
+import com.example.financialfreedom.common.internet.HttpUtils
+import com.example.financialfreedom.common.internet.parseOkHttpStockData
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.Call
 import okhttp3.Callback
@@ -165,9 +167,19 @@ class MainActivity : BaseActivity() {
                         val responseData = response.body?.string()
                         for (position in 1..16){
                             val targetData = databaseStock.queryData("StockData", position)
-                            val targetPrice = parseOkHttpStockData(responseData, position-1)
-                            val tmpData = StockData(targetData!!.stockCode, targetData.stockName, targetPrice,
-                                targetData.ttmPERatio, targetData.perDividend, targetData.tenYearNationalDebt)
+                            val targetPrice =
+                                parseOkHttpStockData(
+                                    responseData,
+                                    position - 1
+                                )
+                            val tmpData = StockData(
+                                targetData!!.stockCode,
+                                targetData.stockName,
+                                targetPrice,
+                                targetData.ttmPERatio,
+                                targetData.perDividend,
+                                targetData.tenYearNationalDebt
+                            )
 
                             /* 将最新数据写入数据库 */
                             databaseStock.updateData(tmpData, position)
@@ -205,38 +217,102 @@ class MainActivity : BaseActivity() {
      */
     private fun initStockData(){
 
-        stockList.add(StockData("603658","安图生物", 171.47,
-            98.94,0.9, 0.029))
-        stockList.add(StockData("603288","海天味业", 119.39,
-            70.478,0.9, 0.029))
-        stockList.add(StockData("600519","贵州茅台", 1439.84,
-            41.986,17.025, 0.029))
-        stockList.add(StockData("002677","浙江美大", 11.08,
-            17.671,0.542, 0.029))
-        stockList.add(StockData("600566","济川药业", 24.68,
-            12.754,1.23, 0.029))
-        stockList.add(StockData("002372","伟星新材", 12.07,
-            20.217,0.5, 0.029))
-        stockList.add(StockData("603568","伟明环保", 29.3,
-            30.175,0.31, 0.029))
-        stockList.add(StockData("002508","老板电器", 32.25,
-            20.19,0.5, 0.029))
-        stockList.add(StockData("600167","联美控股", 14.19,
-            19.00,0.21, 0.029))
-        stockList.add(StockData("300015","爱尔眼科", 46.30,
-            160.76,0.115, 0.029))
-        stockList.add(StockData("002304","洋河股份", 108.29,
-            22.16,3.00, 0.029))
-        stockList.add(StockData("002117","东港股份", 11.29,
-            26.44,0.4, 0.029))
-        stockList.add(StockData("600660","福耀玻璃", 21.45,
-            19.55,0.75, 0.029))
-        stockList.add(StockData("603444","吉比特", 453.90,
-            31.96,5.00, 0.029))
-        stockList.add(StockData("603429","集友股份", 31.70,
-            73.55,0.186, 0.029))
-        stockList.add(StockData("603886","元祖股份", 17.08,
-            35.54,1.2, 0.029))
+        stockList.add(
+            StockData(
+                "603658", "安图生物", 171.47,
+                98.94, 0.9, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "603288", "海天味业", 119.39,
+                70.478, 0.9, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "600519", "贵州茅台", 1439.84,
+                41.986, 17.025, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "002677", "浙江美大", 11.08,
+                17.671, 0.542, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "600566", "济川药业", 24.68,
+                12.754, 1.23, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "002372", "伟星新材", 12.07,
+                20.217, 0.5, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "603568", "伟明环保", 29.3,
+                30.175, 0.31, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "002508", "老板电器", 32.25,
+                20.19, 0.5, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "600167", "联美控股", 14.19,
+                19.00, 0.21, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "300015", "爱尔眼科", 46.30,
+                160.76, 0.115, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "002304", "洋河股份", 108.29,
+                22.16, 3.00, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "002117", "东港股份", 11.29,
+                26.44, 0.4, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "600660", "福耀玻璃", 21.45,
+                19.55, 0.75, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "603444", "吉比特", 453.90,
+                31.96, 5.00, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "603429", "集友股份", 31.70,
+                73.55, 0.186, 0.029
+            )
+        )
+        stockList.add(
+            StockData(
+                "603886", "元祖股份", 17.08,
+                35.54, 1.2, 0.029
+            )
+        )
     }
 
     /**

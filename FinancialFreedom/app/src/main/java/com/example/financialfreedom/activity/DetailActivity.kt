@@ -1,4 +1,4 @@
-package com.example.financialfreedom
+package com.example.financialfreedom.activity
 
 import android.graphics.Color
 import android.os.Bundle
@@ -6,10 +6,12 @@ import android.os.Handler
 import android.os.Message
 import android.util.Log
 import android.widget.Toast
+import com.example.financialfreedom.R
+import com.example.financialfreedom.StockData
 import com.example.financialfreedom.common.database.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
-import com.example.financialfreedom.utils.HttpUtils
-import com.example.financialfreedom.utils.parseOkHttpStockData
+import com.example.financialfreedom.common.internet.HttpUtils
+import com.example.financialfreedom.common.internet.parseOkHttpStockData
 import kotlinx.android.synthetic.main.detailed_data.*
 import java.lang.Exception
 import kotlin.concurrent.thread
@@ -53,7 +55,16 @@ class DetailActivity : BaseActivity(){
             /*
              * 如果是null，则送显一组魔鬼数据
              */
-            putDataToView(StockData("?", "?", 0.00, 0.00, 0.00, 0.00))
+            putDataToView(
+                StockData(
+                    "?",
+                    "?",
+                    0.00,
+                    0.00,
+                    0.00,
+                    0.00
+                )
+            )
         }
 
         /*
@@ -75,8 +86,10 @@ class DetailActivity : BaseActivity(){
                 targetData!!.perDividend
 
             putDataToView(
-                StockData(targetData!!.stockCode, targetData.stockName,
-                    nowPrice, ttmPERatio, perDividend, tenYearNationalDebt)
+                StockData(
+                    targetData!!.stockCode, targetData.stockName,
+                    nowPrice, ttmPERatio, perDividend, tenYearNationalDebt
+                )
             )
 
             /*
@@ -111,8 +124,11 @@ class DetailActivity : BaseActivity(){
             /*
              * 调用数据库进行数据更新
              */
-            databaseControler.updateData(StockData(targetData!!.stockCode, targetData.stockName,
-                nowPrice, ttmPERatio, perDividend, tenYearNationalDebt), position)
+            databaseControler.updateData(
+                StockData(
+                    targetData!!.stockCode, targetData.stockName,
+                    nowPrice, ttmPERatio, perDividend, tenYearNationalDebt
+                ), position)
             uiUpdateFlag = true
             /* 告知用户数据保存成功 */
             Toast.makeText(this, "保存成功！", Toast.LENGTH_SHORT).show()
@@ -171,8 +187,15 @@ class DetailActivity : BaseActivity(){
                     updateDataFromInternet -> {
                         val bundle = msg.data
                         val nowPrice = bundle.getDouble("nowPrice")
-                        val nowStockData = StockData(targetData!!.stockCode, targetData.stockName,
-                        nowPrice, targetData.ttmPERatio, targetData.perDividend, targetData.tenYearNationalDebt)
+                        val nowStockData =
+                            StockData(
+                                targetData!!.stockCode,
+                                targetData.stockName,
+                                nowPrice,
+                                targetData.ttmPERatio,
+                                targetData.perDividend,
+                                targetData.tenYearNationalDebt
+                            )
 
                         putDataToView(nowStockData)
                     }
@@ -207,7 +230,11 @@ class DetailActivity : BaseActivity(){
                              */
                             val msg = Message()
                             val bundle = Bundle()
-                            bundle.putDouble("nowPrice", parseOkHttpStockData(responseData))
+                            bundle.putDouble("nowPrice",
+                                parseOkHttpStockData(
+                                    responseData
+                                )
+                            )
                             msg.what = updateDataFromInternet
                             msg.data = bundle
                             handler.sendMessage(msg)

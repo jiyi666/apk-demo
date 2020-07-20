@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.financialfreedom.MainActivity.Companion.STARTDETAILACTIVITY
+import com.example.financialfreedom.activity.MainActivity
+import com.example.financialfreedom.activity.MainActivity.Companion.STARTDETAILACTIVITY
 
 /** RecyclerView的适配器 */
 class StockDataAdapter(val stockdataList : List<StockData>) :

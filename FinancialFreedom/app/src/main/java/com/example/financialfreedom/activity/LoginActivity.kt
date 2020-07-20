@@ -1,8 +1,9 @@
-package com.example.financialfreedom
+package com.example.financialfreedom.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import com.example.financialfreedom.R
 import com.example.financialfreedom.utils.BaseActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
