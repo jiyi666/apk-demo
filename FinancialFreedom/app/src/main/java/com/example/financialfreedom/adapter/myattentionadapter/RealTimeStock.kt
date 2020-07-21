@@ -23,6 +23,6 @@ class RealTimeStock(val stockCode: String, val stockName: String, val nowPrice: 
         return "[stockCode(股票代码)：$stockCode, stockName(股票简称)：$stockName, " +
                 "nowPrice(当前价格)：$nowPrice, basicPrice(基准价格)：$basicPrice, " +
                 "upAndDown(涨幅): ${upAndDown.toDouble()}" +
-                "upAndDownRate(涨幅率): ${upAndDownRate.toDouble() * 100}%"
+                "upAndDownRate(涨幅率): ${upAndDownRate.toDouble() * 100.0}%"
     }
 }

@@ -68,7 +68,7 @@ class MyAttentionAdapter (val realTimeStockList : List<RealTimeStock>) :
             /* 文本更新 */
             holder.stockNowPrice.text = nowPrice
             holder.upAndDown.text = upAndDown
-            holder.upAndDownRate.text = (upAndDownRate.toDouble() * 100).toString() + "%"
+            holder.upAndDownRate.text = (upAndDownRate.toDouble() * 100.0).toString() + "%"
         }
     }
 
@@ -78,7 +78,7 @@ class MyAttentionAdapter (val realTimeStockList : List<RealTimeStock>) :
         holder.stockName.text = realTimeStock.stockName
         holder.stockNowPrice.text = realTimeStock.nowPrice.toString()
         holder.upAndDown.text = realTimeStock.upAndDown
-        holder.upAndDownRate.text = (realTimeStock.upAndDownRate.toDouble() * 100).toString() + "%"
+        holder.upAndDownRate.text = (realTimeStock.upAndDownRate.toDouble() * 100.0).toString() + "%"
 
         /*
          * 文本颜色设置:
