@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.financialfreedom.R
 import com.example.financialfreedom.adapter.stockdataadapter.StockData
@@ -65,7 +66,7 @@ class MainActivity : BaseActivity() {
              * 如果数据库存在，就从数据库中读取最新数据
              */
             stockList.clear()
-            for (i in 1..16){
+            for (i in 1..databaseStock.getDataLengh()){
                 val tmpData = databaseStock.queryData("StockData", i)
                 if (tmpData != null){
                     stockList.add(tmpData)
@@ -96,7 +97,7 @@ class MainActivity : BaseActivity() {
          * 在数据库中了，所以需要重新从数据库中读取并刷新UI
          */
         stockList.clear()
-        for (i in 1..16){
+        for (i in 1..databaseStock.getDataLengh()){
             val tmpData = databaseStock.queryData("StockData", i)
             if (tmpData != null){
                 stockList.add(tmpData)
@@ -142,7 +143,7 @@ class MainActivity : BaseActivity() {
         thread {
             while (threadRun){
                 var url = "http://hq.sinajs.cn/list="
-                for (position in 1..16){
+                for (position in 1..databaseStock.getDataLengh()){
                     /* 从数据库中读取需要查询的数据 */
                     val targetData = databaseStock.queryData("StockData", position)
                     /*
@@ -165,7 +166,7 @@ class MainActivity : BaseActivity() {
                     override fun onResponse(call: Call, response: Response) {
                         /* 获取响应数据 */
                         val responseData = response.body?.string()
-                        for (position in 1..16){
+                        for (position in 1..databaseStock.getDataLengh()){
                             val targetData = databaseStock.queryData("StockData", position)
                             val targetPrice =
                                 parseOkHttpStockData(

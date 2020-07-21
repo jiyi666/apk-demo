@@ -121,4 +121,15 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
         }
         db.update(name, value1, "", null)
     }
+
+    /* 获取数据库总数据条数 */
+    fun getDataLengh() : Int{
+        val db = dbHelper.writableDatabase
+        /* 全局搜索 */
+        val cursor = db.query(name, null,
+            null, null, null,
+            null, null, null)
+
+        return cursor.count
+    }
 }

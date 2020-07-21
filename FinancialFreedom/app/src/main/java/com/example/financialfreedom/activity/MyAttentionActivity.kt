@@ -42,7 +42,7 @@ class MyAttentionActivity : AppCompatActivity() {
         } else {
             /* 如果数据库存在，就从数据库中读取最新数据 */
             realTimeStockList.clear()
-            for (i in 1..16){
+            for (i in 1..realTimeStockBase.getDataLengh()){
                 val tmpData = realTimeStockBase.queryData("RealTimeStock", i)
                 if (tmpData != null){
                     realTimeStockList.add(tmpData)
@@ -60,7 +60,7 @@ class MyAttentionActivity : AppCompatActivity() {
         thread {
             while (threadRun){
                 var url = "http://hq.sinajs.cn/list="
-                for (position in 1..1){
+                for (position in 1..realTimeStockBase.getDataLengh()){
                     /* 从数据库中读取需要查询的数据 */
                     val targetData = realTimeStockBase.queryData("RealTimeStock", position)
                     /* 从股票代码识别是上市还是深市 */
