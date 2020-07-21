@@ -26,12 +26,12 @@
         android:gravity="center"
         android:layout_weight="1"
         />
-
+    <!-- 如果是center的话，这里一旦出现Sting转Double的异常数据之后，显示就会往下降，显得不协调，所以改为如下-->
     <TextView
         android:id="@+id/upAndDownRate"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:layout_weight="1"
         />
 
