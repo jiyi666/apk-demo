@@ -3,6 +3,7 @@ package com.example.financialfreedom.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.financialfreedom.R
 import com.example.financialfreedom.adapter.myattentionadapter.MyAttentionAdapter
@@ -19,8 +20,12 @@ import kotlin.concurrent.thread
 
 class MyAttentionActivity : AppCompatActivity() {
 
+    private val tag = "MyAttentionActivity"
     /* 线程停止标志 */
     private var threadRun = true
+    /* 线程暂停标志 */
+    private var threadPause = false
+
     private val realTimeStockList = ArrayList<RealTimeStock>()
     /* 使用数据库 */
     val realTimeStockBase = MyAttentionBaseControl(this, "RealTimeStock", 1)
@@ -42,6 +47,7 @@ class MyAttentionActivity : AppCompatActivity() {
         } else {
             /* 如果数据库存在，就从数据库中读取最新数据 */
             realTimeStockList.clear()
+            Log.d(tag, "Database size:${realTimeStockBase.getDataLengh()}")
             for (i in 1..realTimeStockBase.getDataLengh()){
                 val tmpData = realTimeStockBase.queryData("RealTimeStock", i)
                 if (tmpData != null){
@@ -49,6 +55,7 @@ class MyAttentionActivity : AppCompatActivity() {
                 }
             }
         }
+        Log.d(tag, "realTimeStockList size:${realTimeStockList.size}")
         /* 获取layoutManager */
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
@@ -57,42 +64,92 @@ class MyAttentionActivity : AppCompatActivity() {
         val adapter = MyAttentionAdapter(realTimeStockList)
         recyclerView.adapter = adapter
 
+        /* EditView触摸监听 */
+        editView.setOnTouchListener { _, _ ->
+            threadPause = true
+            false
+        }
+        /* 按键监听 */
+        addNewItem.setOnClickListener {
+            val inputText = editView.text.toString()
+            if (inputText != ""){
+                var url = "http://hq.sinajs.cn/list="
+                /* 从股票代码识别是上市还是深市 */
+                val shOrSz = when (inputText[0]){
+                    '6' -> "sh"
+                    '5' -> "sh" //上市基金
+                    else -> "sz"
+                }
+                /* 拼组URL */
+                url = url + shOrSz + inputText
+                /* 使用网络访问 */
+                HttpUtils.sendOkHttpRequest(url, object : Callback {
+                    override fun onResponse(call: Call, response: Response) {
+                        /* 进行网络访问 */
+                        val responseData = response.body?.string()
+                        /* 解析数据 */
+                        val tmpData = parseRealTimeStockData(inputText, responseData)
+                        if (tmpData != null){
+                            /* 将最新数据写入数据库 */
+                            realTimeStockList.add(tmpData)
+                            realTimeStockBase.addData(tmpData)
+                            threadPause = false
+                        } else {
+                            //Todo:
+                        }
+                    }
+                    override fun onFailure(call: Call, e: IOException) {
+                    }
+                })
+            } else {
+                Toast.makeText(this, "请输入有效代码！", Toast.LENGTH_LONG).show()
+            }
+        }
+
         thread {
             while (threadRun){
-                var url = "http://hq.sinajs.cn/list="
-                for (position in 1..realTimeStockBase.getDataLengh()){
-                    /* 从数据库中读取需要查询的数据 */
-                    val targetData = realTimeStockBase.queryData("RealTimeStock", position)
-                    /* 从股票代码识别是上市还是深市 */
-                    val shOrSz = when (targetData?.stockCode.toString()[0]){
-                        '6' -> "sh"
-                        else -> "sz"
-                    }
-                    /* 拼组URL */
-                    url = url + shOrSz + targetData?.stockCode.toString()
-                    /* 使用网络访问 */
-                    HttpUtils.sendOkHttpRequest(url, object : Callback {
-                        override fun onResponse(call: Call, response: Response) {
-                            /* 进行网络访问 */
-                            val responseData = response.body?.string()
-                            /* 解析数据 */
-                            val tmpData = parseRealTimeStockData(targetData!!.stockCode, responseData)
-                            /* 将最新数据写入数据库 */
-                            realTimeStockBase.updateData(tmpData, position)
-                            /* UI更新 */
-                            runOnUiThread {
-                                val realData = "nowPrice:" + tmpData.nowPrice +
-                                        ",upAndDown:" + tmpData.upAndDown +
-                                        ",upAndDownRate:" + tmpData.upAndDownRate
-                                adapter.notifyItemChanged(position - 1, realData)
+                if (threadPause){
+                    Thread.sleep(2000)
+                } else {
+                    for (position in 1..realTimeStockBase.getDataLengh()){
+                        /* 从数据库中读取需要查询的数据 */
+                        val targetData = realTimeStockBase.queryData("RealTimeStock", position)
+                        /* 从股票代码识别是上市还是深市 */
+                        var url = "http://hq.sinajs.cn/list="
+                        val shOrSz = when (targetData?.stockCode.toString()[0]){
+                            '6' -> "sh"
+                            '5' -> "sh"
+                            else -> "sz"
+                        }
+                        /* 拼组URL */
+                        url = url + shOrSz + targetData?.stockCode.toString()
+                        /* 使用网络访问 */
+                        HttpUtils.sendOkHttpRequest(url, object : Callback {
+                            override fun onResponse(call: Call, response: Response) {
+                                /* 进行网络访问 */
+                                val responseData = response.body?.string()
+                                /* 解析数据 */
+                                val tmpData = parseRealTimeStockData(targetData!!.stockCode, responseData)
+                                if (tmpData != null){
+                                    Log.d(tag, "tmpData:$tmpData")
+                                    /* 将最新数据写入数据库 */
+                                    realTimeStockBase.updateData(tmpData!!, position)
+                                    /* UI更新 */
+                                    runOnUiThread {
+                                        val realData = "nowPrice:" + tmpData.nowPrice +
+                                                ",upAndDown:" + tmpData.upAndDown +
+                                                ",upAndDownRate:" + tmpData.upAndDownRate
+                                        adapter.notifyItemChanged(position - 1, realData)
+                                    }
+                                }
                             }
-                        }
 
-                        override fun onFailure(call: Call, e: IOException) {
-                        }
-                    })
+                            override fun onFailure(call: Call, e: IOException) {
+                            }
+                        })
+                    }
+                    Thread.sleep(2000)
                 }
-                Thread.sleep(2000)
             }
         }
     }

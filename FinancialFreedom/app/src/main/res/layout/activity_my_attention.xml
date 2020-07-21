@@ -7,11 +7,30 @@
     android:orientation="vertical"
     tools:context=".activity.MyAttentionActivity">
 
-    <Button
-        android:id="@+id/addNewItem"
+    <!--添加自选控件层-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="添加"/>
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:inputType="numberDecimal"
+            android:hint="输入股票代码"/>
+
+        <Button
+            android:id="@+id/addNewItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="添加"/>
+
+    </LinearLayout>
+
 
     <!--顶层一直显示控件信息-->
     <LinearLayout

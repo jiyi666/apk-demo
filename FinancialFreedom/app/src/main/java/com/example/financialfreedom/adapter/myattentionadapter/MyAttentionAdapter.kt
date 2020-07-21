@@ -21,10 +21,7 @@ class MyAttentionAdapter (val realTimeStockList : List<RealTimeStock>) :
     }
 
     /* 加载my_attention布局 */
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MyAttentionAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.my_attention, parent, false)
 
