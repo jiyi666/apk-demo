@@ -95,7 +95,10 @@ class MyAttentionActivity : AppCompatActivity() {
                             realTimeStockBase.addData(tmpData)
                             threadPause = false
                         } else {
-                            //Todo:
+                            /* 在主线程进行吐司提醒 */
+                            runOnUiThread {
+                                takeToast("为查询到相关股票信息，请重新输入！")
+                            }
                         }
                     }
                     override fun onFailure(call: Call, e: IOException) {
@@ -133,7 +136,7 @@ class MyAttentionActivity : AppCompatActivity() {
                                 if (tmpData != null){
                                     Log.d(tag, "tmpData:$tmpData")
                                     /* 将最新数据写入数据库 */
-                                    realTimeStockBase.updateData(tmpData!!, position)
+                                    realTimeStockBase.updateData(tmpData, position)
                                     /* UI更新 */
                                     runOnUiThread {
                                         val realData = "nowPrice:" + tmpData.nowPrice +
@@ -163,5 +166,10 @@ class MyAttentionActivity : AppCompatActivity() {
     /* 初始化实时数据 */
     private fun initRealTimeStock(){
         realTimeStockList.add(RealTimeStock("159905", "深红利", 2.313,2.246))
+    }
+
+    /* 用于更新UI */
+    private fun takeToast(text: String){
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 }
