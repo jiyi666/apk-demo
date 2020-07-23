@@ -8,9 +8,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.financialfreedom.R
+import com.example.financialfreedom.activity.MyAttentionActivity
 
-class MyAttentionAdapter (val realTimeStockList : List<RealTimeStock>) :
+class MyAttentionAdapter :
     RecyclerView.Adapter <MyAttentionAdapter.ViewHolder>(){
+
+    var realTimeStockList = ArrayList<RealTimeStock>()
+
+    fun setDataList(param : ArrayList<RealTimeStock>){
+        realTimeStockList = param
+    }
 
     /* 用于获取最外层布局的及控件的实例 */
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -26,7 +33,14 @@ class MyAttentionAdapter (val realTimeStockList : List<RealTimeStock>) :
             .inflate(R.layout.my_attention, parent, false)
 
         val viewHolder = ViewHolder(view)
-
+//        viewHolder.itemView.setOnLongClickListener {
+//            val position = viewHolder.adapterPosition
+//            MyAttentionActivity.myAttentionActivityTodo(MyAttentionActivity.HANDLELONGCLIECK, position)
+//            realTimeStockList.remove(realTimeStockList.get(position))
+//            notifyItemRemoved(position)
+//            notifyItemRangeChanged(position, realTimeStockList.size)
+//            false
+//        }
         return viewHolder //注意这里要返回viewHolder，因为有各种点击事件
     }
 
@@ -66,6 +80,14 @@ class MyAttentionAdapter (val realTimeStockList : List<RealTimeStock>) :
             holder.stockNowPrice.text = nowPrice
             holder.upAndDown.text = upAndDown
             holder.upAndDownRate.text = String.format("%.2f", upAndDownRate.toDouble() * 100.0) + "%"
+            holder.itemView.setOnLongClickListener {
+                val position = holder.adapterPosition
+                MyAttentionActivity.myAttentionActivityTodo(MyAttentionActivity.HANDLELONGCLIECK, position)
+                realTimeStockList.remove(realTimeStockList.get(position))
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position, realTimeStockList.size)
+                false
+            }
         }
     }
 
@@ -94,6 +116,12 @@ class MyAttentionAdapter (val realTimeStockList : List<RealTimeStock>) :
         holder.upAndDown.setTextColor(color)
         holder.upAndDownRate.setTextColor(color)
 
+//        holder.itemView.setOnLongClickListener {
+//            val position = holder.adapterPosition
+//            MyAttentionActivity.myAttentionActivityTodo(MyAttentionActivity.HANDLELONGCLIECK, position)
+//            notifyItemRemoved(position)
+//            false
+//        }
     }
 
     /* 返回数据源长度 */
