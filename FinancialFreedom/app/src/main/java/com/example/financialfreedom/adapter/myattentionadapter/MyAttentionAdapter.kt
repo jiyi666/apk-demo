@@ -10,13 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.financialfreedom.R
 import com.example.financialfreedom.activity.MyAttentionActivity
 
-class MyAttentionAdapter :
+/**
+ *  TODO:长按删除的listener，到底应该在onCreateViewHolder中还是在
+ *  TODO:onBindViewHolder中?目前在两个函数中都写了此函数，似乎都可以
+ *
+ */
+class MyAttentionAdapter(list: ArrayList<RealTimeStock>) :
     RecyclerView.Adapter <MyAttentionAdapter.ViewHolder>(){
 
     var realTimeStockList = ArrayList<RealTimeStock>()
 
-    fun setDataList(param : ArrayList<RealTimeStock>){
-        realTimeStockList = param
+    init {
+        realTimeStockList = list
     }
 
     /* 用于获取最外层布局的及控件的实例 */
@@ -33,14 +38,22 @@ class MyAttentionAdapter :
             .inflate(R.layout.my_attention, parent, false)
 
         val viewHolder = ViewHolder(view)
-//        viewHolder.itemView.setOnLongClickListener {
-//            val position = viewHolder.adapterPosition
-//            MyAttentionActivity.myAttentionActivityTodo(MyAttentionActivity.HANDLELONGCLIECK, position)
-//            realTimeStockList.remove(realTimeStockList.get(position))
-//            notifyItemRemoved(position)
-//            notifyItemRangeChanged(position, realTimeStockList.size)
-//            false
-//        }
+        /**
+         *  长按监听
+         */
+        viewHolder.itemView.setOnLongClickListener {
+            val position = viewHolder.adapterPosition
+            /* 将长按item对应的股票代码发送至MyAttentionActivity */
+            MyAttentionActivity.myAttentionActivityTodo(MyAttentionActivity.HANDLELONGCLIECK,
+                realTimeStockList.get(position).stockCode)
+            /* 在ArrayList中移除此股 */
+            realTimeStockList.remove(realTimeStockList.get(position))
+            /* 通知移除该item */
+            notifyItemRemoved(position)
+            /* 通知调制ArrayList顺序(此句删除也无影响) */
+            notifyItemRangeChanged(position, realTimeStockList.size)
+            false
+        }
         return viewHolder //注意这里要返回viewHolder，因为有各种点击事件
     }
 
@@ -80,14 +93,6 @@ class MyAttentionAdapter :
             holder.stockNowPrice.text = nowPrice
             holder.upAndDown.text = upAndDown
             holder.upAndDownRate.text = String.format("%.2f", upAndDownRate.toDouble() * 100.0) + "%"
-            holder.itemView.setOnLongClickListener {
-                val position = holder.adapterPosition
-                MyAttentionActivity.myAttentionActivityTodo(MyAttentionActivity.HANDLELONGCLIECK, position)
-                realTimeStockList.remove(realTimeStockList.get(position))
-                notifyItemRemoved(position)
-                notifyItemRangeChanged(position, realTimeStockList.size)
-                false
-            }
         }
     }
 
@@ -115,13 +120,6 @@ class MyAttentionAdapter :
         }
         holder.upAndDown.setTextColor(color)
         holder.upAndDownRate.setTextColor(color)
-
-//        holder.itemView.setOnLongClickListener {
-//            val position = holder.adapterPosition
-//            MyAttentionActivity.myAttentionActivityTodo(MyAttentionActivity.HANDLELONGCLIECK, position)
-//            notifyItemRemoved(position)
-//            false
-//        }
     }
 
     /* 返回数据源长度 */

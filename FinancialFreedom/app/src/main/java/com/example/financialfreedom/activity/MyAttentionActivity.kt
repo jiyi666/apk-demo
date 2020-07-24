@@ -20,9 +20,21 @@ import kotlin.concurrent.thread
 
 /** 长按删除Flag */
 internal var onLongClickFlag = false
-/** 长按删除的item位置 */
-internal var onLongClickPosition = -1
+/** 长按删除的股票代码 */
+internal var removeStockCode = ""
 
+/**
+ * MyAttentionActivity设计思路及需要注意的地方：
+ * 1.增加了线程暂停标志，当用户在输入股票进行查询时，线程将一直处于睡眠而不去进行网络请求，因为网络请求之后
+ * 还会去更新UI，会导致整个界面崩溃；
+ * 2.长按删除事件监听到之后，adapter会发送对应的股票代码到此活动，之所以选择发送股票代码，是因为发送position
+ * 等值会导致在删除ArrayList和数据库值时大大增加操作难度，比如ArrayList的值已经在adapter中删除了，那么ArrayList
+ * 此时的position对应的股票代码并不是数据库中对应position的股票代码，而是数据库中当前position的下一个；
+ * 3.实现adapter和此活动的长按删除其共同操作的是ArrayList，每次添加和删除等操作都是先操作了ArrayList之后再去
+ * 操作数据库，并且线程中每只股票的网络请求都不会从数据库中读取，而且ArrayList，总之，ArrayList总是adapter和
+ * activity的首选操作目标；
+ * TODO:1.添加和删除操作时，没有提供相同股票的识别功能；2.ArrayList没有进行判空操作，否则activity会崩溃；
+ */
 class MyAttentionActivity : BaseActivity() {
 
     private val tag = "MyAttentionActivity"
@@ -30,10 +42,10 @@ class MyAttentionActivity : BaseActivity() {
     private var threadRun = true
     /* 线程暂停标志 */
     private var threadPause = false
-
+    /* 启用ArrayList */
     private var realTimeStockList = ArrayList<RealTimeStock>()
-    /* 使用数据库 */
-    val realTimeStockBase = MyAttentionBaseControl(this, "RealTimeStock", 1)
+    /* 启用数据库 */
+    private val realTimeStockBase = MyAttentionBaseControl(this, "RealTimeStock", 1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,18 +75,9 @@ class MyAttentionActivity : BaseActivity() {
         recyclerView.layoutManager = layoutManager
 
         /* 获取适配器 */
-        val adapter = MyAttentionAdapter()
-        adapter.setDataList(realTimeStockList)
+        val adapter = MyAttentionAdapter(realTimeStockList)
         recyclerView.adapter = adapter
 
-        /* 查询按键 */
-        queryAllData.setOnClickListener {
-            realTimeStockList.clear()
-            realTimeStockList = realTimeStockBase.queryAllData("RealTimeStock")
-            for (i in 0 until realTimeStockList.size){
-                Log.d("jiyi", "data[$i]:${realTimeStockList.get(i)}")
-            }
-        }
         /* EditView触摸监听 */
         editView.setOnTouchListener { _, _ ->
             threadPause = true
@@ -101,14 +104,14 @@ class MyAttentionActivity : BaseActivity() {
                         /* 解析数据 */
                         val tmpData = parseRealTimeStockData(inputText, responseData)
                         if (tmpData != null){
-                            /* 将最新数据写入数据库 */
+                            /* 将最新数据写入数据库和ArrayList */
                             realTimeStockList.add(tmpData)
                             realTimeStockBase.addData(tmpData)
                             threadPause = false
                         } else {
                             /* 在主线程进行吐司提醒 */
                             runOnUiThread {
-                                takeToast("为查询到相关股票信息，请重新输入！")
+                                takeToast("未查询到相关股票信息，请重新输入！")
                             }
                         }
                     }
@@ -127,23 +130,19 @@ class MyAttentionActivity : BaseActivity() {
                 } else {
                     /* 处理删除item事件 */
                     if (onLongClickFlag == true){
-                        if (onLongClickPosition != -1){
-                            realTimeStockList.remove(realTimeStockList.get(onLongClickPosition))
-                            //Log.d("jiyi", "remove:${realTimeStockList.get(onLongClickPosition).stockName}")
-                            realTimeStockBase.deleteData(realTimeStockList.get(onLongClickPosition).stockCode)
-                            //Log.d("jiyi", "remove:${realTimeStockList.get(onLongClickPosition).stockName}")
+                        if (removeStockCode != ""){
+                            /* 删除数据库中的对应数据，注意，这里不需要删除ArrayList里面的了，因为
+                             * adapter中已经删除了
+                             */
+                            realTimeStockBase.deleteData(removeStockCode)
                         }
                         onLongClickFlag = false
-                        onLongClickPosition = -1
+                        removeStockCode = ""
                         Thread.sleep(500)
                     }
-                    //Log.d("jiyi", "database size:${realTimeStockBase.getDataLengh()}")
-                    Log.d("jiyi", "list size:${realTimeStockList.size}")
-
-                    //realTimeStockList.clear()
-                    //realTimeStockList = realTimeStockBase.queryAllData("RealTimeStock")
+                    Log.d(tag, "Now ArrayList size:${realTimeStockList.size}")
                     for (i in 0 until realTimeStockList.size){
-                        /* 从数据库中读取需要查询的数据 */
+                        /* 从ArrayList中读取需要查询的数据 */
                         val targetData = realTimeStockList.get(i)
                         /* 从股票代码识别是上市还是深市 */
                         var url = "http://hq.sinajs.cn/list="
@@ -162,8 +161,6 @@ class MyAttentionActivity : BaseActivity() {
                                 /* 解析数据 */
                                 val tmpData = parseRealTimeStockData(targetData.stockCode, responseData)
                                 if (tmpData != null){
-                                    //Log.d(tag, "tmpData:$tmpData")
-                                    //Log.d("jiyi", "update data ok!")
                                     /* 将最新数据写入数据库 */
                                     realTimeStockBase.updateData(tmpData)
                                     /* UI更新 */
@@ -197,12 +194,9 @@ class MyAttentionActivity : BaseActivity() {
         realTimeStockList.add(RealTimeStock("159905", "深红利", 2.313,2.246))
         realTimeStockList.add(RealTimeStock("510880", "红利ETF", 2.313,2.246))
         realTimeStockList.add(RealTimeStock("510300", "300ETF", 2.313,2.246))
-        realTimeStockList.add(RealTimeStock("600300", "深红利", 2.313,2.246))
-        realTimeStockList.add(RealTimeStock("600200", "红利ETF", 2.313,2.246))
-        realTimeStockList.add(RealTimeStock("600100", "300ETF", 2.313,2.246))
     }
 
-    /* 用于更新UI */
+    /* 用于UI更新时的吐司动作 */
     private fun takeToast(text: String){
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
@@ -218,17 +212,18 @@ class MyAttentionActivity : BaseActivity() {
         /**
          * mainActivityTodo由外部类回调MainActivity操作
          * event：需要执行的操作
-         * position：响应控件对应数据库的id
+         * stockCode：响应控件对应数据库的id
          */
         @JvmStatic
-        fun myAttentionActivityTodo(event: String, position: Int){
+        fun myAttentionActivityTodo(event: String, stockCode: String){
             when (event){
                 HANDLELONGCLIECK -> {
                     onLongClickFlag = true
-                    onLongClickPosition = position
-                    Log.d("jiyi", "click position:$position")
+                    removeStockCode = stockCode
+                    Log.d("MyAttentionActivity", "remove stockCode:$stockCode")
                 }
 
             }
         }
-    }}
+    }
+}

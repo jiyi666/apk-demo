@@ -70,7 +70,7 @@ class MyAttentionBaseControl(val context: Context, val name: String, val versin:
     }
 
     /*
-     * 编译全局数据库
+     * 遍历全局数据库
      */
     fun queryAllData(name: String) : ArrayList<RealTimeStock>{
         val db = dbHelper.writableDatabase
@@ -84,7 +84,6 @@ class MyAttentionBaseControl(val context: Context, val name: String, val versin:
         /* 遍历数据库 */
         if (cursor.moveToFirst()){
             do {
-                val id = cursor.getString(cursor.getColumnIndex("id"))
                     val stockCode = cursor.getString(cursor.getColumnIndex("stockCode"))
                     val stockName = cursor.getString(cursor.getColumnIndex("stockName"))
                     val nowPrice = cursor.getString(cursor.getColumnIndex("nowPrice"))
