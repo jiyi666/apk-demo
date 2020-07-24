@@ -1,4 +1,4 @@
-package com.example.financialfreedom.common.database.stockdata
+package com.example.financialfreedom.database.stockdata
 
 import android.content.ContentValues
 import android.content.Context

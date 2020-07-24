@@ -1,4 +1,4 @@
-package com.example.financialfreedom.common.database.myattention
+package com.example.financialfreedom.database.myattention
 
 import android.content.ContentValues
 import android.content.Context

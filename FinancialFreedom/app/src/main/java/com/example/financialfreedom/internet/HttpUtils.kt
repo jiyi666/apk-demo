@@ -1,4 +1,4 @@
-package com.example.financialfreedom.common.internet
+package com.example.financialfreedom.internet
 
 import com.example.financialfreedom.adapter.myattentionadapter.RealTimeStock
 import okhttp3.*

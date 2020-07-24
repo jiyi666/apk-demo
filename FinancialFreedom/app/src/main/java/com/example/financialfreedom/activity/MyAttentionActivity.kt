@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.financialfreedom.R
 import com.example.financialfreedom.adapter.myattentionadapter.MyAttentionAdapter
 import com.example.financialfreedom.adapter.myattentionadapter.RealTimeStock
-import com.example.financialfreedom.common.database.myattention.MyAttentionBaseControl
-import com.example.financialfreedom.common.internet.HttpUtils
-import com.example.financialfreedom.common.internet.parseRealTimeStockData
+import com.example.financialfreedom.database.myattention.MyAttentionBaseControl
+import com.example.financialfreedom.internet.HttpUtils
+import com.example.financialfreedom.internet.parseRealTimeStockData
 import com.example.financialfreedom.utils.BaseActivity
 import kotlinx.android.synthetic.main.activity_my_attention.*
 import okhttp3.Call
@@ -177,7 +177,7 @@ class MyAttentionActivity : BaseActivity() {
                             }
                         })
                     }
-                    Thread.sleep(2000)
+                    Thread.sleep(1000)
                 }
             }
         }
