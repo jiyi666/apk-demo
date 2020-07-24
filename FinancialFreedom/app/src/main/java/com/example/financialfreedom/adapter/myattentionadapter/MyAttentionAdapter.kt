@@ -8,9 +8,21 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.financialfreedom.R
+import com.example.financialfreedom.activity.MyAttentionActivity
 
-class MyAttentionAdapter (val realTimeStockList : List<RealTimeStock>) :
+/**
+ *  TODO:长按删除的listener，到底应该在onCreateViewHolder中还是在
+ *  TODO:onBindViewHolder中?目前在两个函数中都写了此函数，似乎都可以
+ *
+ */
+class MyAttentionAdapter(list: ArrayList<RealTimeStock>) :
     RecyclerView.Adapter <MyAttentionAdapter.ViewHolder>(){
+
+    var realTimeStockList = ArrayList<RealTimeStock>()
+
+    init {
+        realTimeStockList = list
+    }
 
     /* 用于获取最外层布局的及控件的实例 */
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -26,7 +38,22 @@ class MyAttentionAdapter (val realTimeStockList : List<RealTimeStock>) :
             .inflate(R.layout.my_attention, parent, false)
 
         val viewHolder = ViewHolder(view)
-
+        /**
+         *  长按监听
+         */
+        viewHolder.itemView.setOnLongClickListener {
+            val position = viewHolder.adapterPosition
+            /* 将长按item对应的股票代码发送至MyAttentionActivity */
+            MyAttentionActivity.myAttentionActivityTodo(MyAttentionActivity.HANDLELONGCLIECK,
+                realTimeStockList.get(position).stockCode)
+            /* 在ArrayList中移除此股 */
+            realTimeStockList.remove(realTimeStockList.get(position))
+            /* 通知移除该item */
+            notifyItemRemoved(position)
+            /* 通知调制ArrayList顺序(此句删除也无影响) */
+            notifyItemRangeChanged(position, realTimeStockList.size)
+            false
+        }
         return viewHolder //注意这里要返回viewHolder，因为有各种点击事件
     }
 
@@ -93,7 +120,6 @@ class MyAttentionAdapter (val realTimeStockList : List<RealTimeStock>) :
         }
         holder.upAndDown.setTextColor(color)
         holder.upAndDownRate.setTextColor(color)
-
     }
 
     /* 返回数据源长度 */
