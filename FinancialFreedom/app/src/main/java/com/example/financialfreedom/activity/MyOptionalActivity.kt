@@ -40,11 +40,22 @@ class MyOptionalActivity : AppCompatActivity() {
             for (i in 0 until (myOptionalStockList.size)){
                 myOptionalStockbase.addData(myOptionalStockList.get(index = i))
             }
-        } else {
-            /* 如果数据库存在，就从数据库中读取最新数据 */
-            myOptionalStockList.clear()
-            myOptionalStockList = myOptionalStockbase.queryAllData("MyOptionalStockData")
         }
+
+        /* 添加股票的listener */
+        addNewItem.setOnClickListener {
+            val intent = Intent(this, MyOptionalDetailActivity::class.java)
+            this.startActivity(intent) //开启活动
+        }
+    }
+
+    override fun onResume() {
+        Log.d(tag, "onResume")
+        super.onResume()
+
+        /* 从数据库中读取出最新的数据写入ArrayList */
+        myOptionalStockList.clear()
+        myOptionalStockList = myOptionalStockbase.queryAllData("MyOptionalStockData")
 
         /*
          * 获取layoutManager
@@ -58,11 +69,20 @@ class MyOptionalActivity : AppCompatActivity() {
         val adapter = MyOptionalAdapter(myOptionalStockList)
         recyclerView.adapter = adapter
 
-        /* 添加股票的listener */
-        addNewItem.setOnClickListener {
-            val intent = Intent(this, MyOptionalDetailActivity::class.java)
-            this.startActivity(intent) //开启活动
-        }
+
+    }
+    override fun onPause() {
+        Log.d(tag, "onPause")
+        super.onPause()
+    }
+    override fun onStop() {
+        Log.d(tag, "onStop")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Log.d(tag, "onDestroy")
+        super.onDestroy()
     }
 
     /**

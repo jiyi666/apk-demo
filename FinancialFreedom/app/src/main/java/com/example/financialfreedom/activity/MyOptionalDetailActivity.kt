@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import com.example.financialfreedom.R
 import com.example.financialfreedom.adapter.stockdataadapter.StockData
+import com.example.financialfreedom.database.myoptional.MyOptionalBaseControl
 import com.example.financialfreedom.internet.HttpUtils
 import com.example.financialfreedom.internet.parseOkHttpStockDataForNowPrice
 import com.example.financialfreedom.internet.parseOkHttpStockDataForStockName
@@ -24,6 +25,10 @@ class MyOptionalDetailActivity : BaseActivity() {
     private val tag = "MyOptionalDetail"
     /* 消息集 */
     private val updateUi = 1
+    /* 使用数据库 */
+    val stockbase = MyOptionalBaseControl(this, "MyOptionalStockData", 1)
+    /* 需要存入数据库的数据 */
+    var saveStockData = StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +53,8 @@ class MyOptionalDetailActivity : BaseActivity() {
                             ttmPERatio, perDividend, tenYearNationalDebt)
                         Log.d(tag, "new stockinfo:${nowStockData.toString()}")
                         putDataToView(nowStockData)
+                        /* 暂存数据 */
+                        saveStockData = nowStockData
                     }
                 }
             }
@@ -129,6 +136,18 @@ class MyOptionalDetailActivity : BaseActivity() {
                     }
                 })
             }
+        }
+
+        /* 存储数据:数据有效（stockCode不为"?"）才保存，且不会连续保存进数据库 */
+        saveData.setOnClickListener {
+            if (saveStockData.stockCode != "?"){
+                stockbase.addData(saveStockData)
+                takeToast("数据保存成功！")
+                saveStockData = StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
+            } else {
+                takeToast("数据无效，不能保存！")
+            }
+
         }
     }
 

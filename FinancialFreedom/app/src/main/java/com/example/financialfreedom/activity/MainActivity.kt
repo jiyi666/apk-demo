@@ -60,30 +60,7 @@ class MainActivity : BaseActivity() {
             for (i in 0 until (stockList.size)){
                 databaseStock.addData(stockList.get(index = i))
             }
-        } else {
-            /*
-             * 如果数据库存在，就从数据库中读取最新数据
-             */
-            stockList.clear()
-            for (i in 1..databaseStock.getDataLengh()){
-                val tmpData = databaseStock.queryData("StockData", i)
-                if (tmpData != null){
-                    stockList.add(tmpData)
-                }
-            }
         }
-
-        /*
-         * 获取layoutManager
-         */
-        val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
-
-        /*
-         * 获取适配器
-         */
-        val adapter = StockDataAdapter(stockList)
-        recyclerView.adapter = adapter
     }
 
     /**
