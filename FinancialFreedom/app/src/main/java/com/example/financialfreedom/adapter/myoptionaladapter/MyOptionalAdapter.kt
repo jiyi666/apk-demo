@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.financialfreedom.R
+import com.example.financialfreedom.activity.MyOptionalActivity
+import com.example.financialfreedom.activity.MyOptionalActivity.Companion.STARTDETAILACTIVITY
 import com.example.financialfreedom.adapter.stockdataadapter.StockData
 
 class MyOptionalAdapter(list: ArrayList<StockData>) :
@@ -35,6 +37,11 @@ class MyOptionalAdapter(list: ArrayList<StockData>) :
 
         val viewHolder = ViewHolder(view)
 
+        /* 股票详情点击页面 */
+        viewHolder.stockDetails.setOnClickListener {
+            val position = viewHolder.adapterPosition
+            MyOptionalActivity.myOptionalActivityTodo(STARTDETAILACTIVITY, stockDataList[position].stockCode)  //跳转去MyOptionalActivity执行相关操作
+        }
 
         return viewHolder //注意这里要返回viewHolder，因为有各种点击事件
     }

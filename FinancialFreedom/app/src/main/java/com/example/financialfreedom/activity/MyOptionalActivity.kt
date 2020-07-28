@@ -1,7 +1,6 @@
 package com.example.financialfreedom.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +10,7 @@ import com.example.financialfreedom.adapter.stockdataadapter.StockData
 import com.example.financialfreedom.database.myoptional.MyOptionalBaseControl
 import com.example.financialfreedom.internet.HttpUtils
 import com.example.financialfreedom.internet.parseOkHttpStockDataForNowPrice
+import com.example.financialfreedom.utils.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.recyclerView
 import kotlinx.android.synthetic.main.activity_my_optional.*
 import okhttp3.Call
@@ -22,9 +22,10 @@ import kotlin.concurrent.thread
 /**
  * MyOptionalActivity设计实现逻辑：
  * 采用和MainActivity一样的UI设计模式，上面的添加按钮为跳转到具体的输入页面，其页面和detailactivity的
- * 布局一样
+ * 布局一样，输入页面和详细页面为同一个activity，通过查询数据库中数据是否存在来判断用户是添加新的数据还是
+ * 更新之前的数据
  */
-class MyOptionalActivity : AppCompatActivity() {
+class MyOptionalActivity : BaseActivity() {
 
     private val tag = "MyOptionalActivity"
     /* 线程运行标志 */
@@ -37,6 +38,8 @@ class MyOptionalActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_optional)
+
+        myOptionalActivity = this
 
         /* 如果数据库不存在：创建 + 添加初始数据 */
         if (myOptionalStockbase.queryAllData("MyOptionalStockData").size == 0){
@@ -130,6 +133,8 @@ class MyOptionalActivity : AppCompatActivity() {
     override fun onStop() {
         Log.d(tag, "onStop")
         super.onStop()
+        /* onStop生命周期需要停止线程 */
+        threadRun = false
     }
 
     override fun onDestroy() {
@@ -144,5 +149,35 @@ class MyOptionalActivity : AppCompatActivity() {
         myOptionalStockList.add(StockData("600900", "长江电力", 18.67, 19.63, 0.68, 0.02916))
         myOptionalStockList.add(StockData("600036", "招商银行", 34.71, 9.18, 1.2, 0.02916))
         myOptionalStockList.add(StockData("601838", "成都银行", 8.26,5.24, 0.42, 0.02916))
+    }
+
+    /**
+     *  MainActivity的单实例，用于供外部类调用的static方法等
+     */
+    companion object{
+
+        const val STARTDETAILACTIVITY = "startdetailactivity"
+        lateinit var  myOptionalActivity : BaseActivity   //静态对象，用于适配器调用activity的相关操作
+
+        /**
+         * myOptionalActivityTodo由外部类回调MyOptionalActivity操作
+         * event：需要执行的操作
+         * stockCode：响应控件对应的股票代码
+         */
+        @JvmStatic
+        fun myOptionalActivityTodo(event: String, stockCode: String){
+            when (event){
+                STARTDETAILACTIVITY -> {
+                    /*
+                     * 通过MyOptionalActivity的静态对象调用相关的方法
+                     */
+                    val intent = Intent(myOptionalActivity, MyOptionalDetailActivity::class.java)
+                    /* 向活动传递数据：注意为Int型 */
+                    intent.putExtra("stock_code", stockCode.toInt())
+                    myOptionalActivity.startActivity(intent) //开启活动
+                    Log.d("MyOptionalActivity", "click stockCode:$stockCode")
+                }
+            }
+        }
     }
 }

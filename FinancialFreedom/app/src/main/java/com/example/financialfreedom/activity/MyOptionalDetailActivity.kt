@@ -141,14 +141,30 @@ class MyOptionalDetailActivity : BaseActivity() {
         /* 存储数据:数据有效（stockCode不为"?"）才保存，且不会连续保存进数据库 */
         saveData.setOnClickListener {
             if (saveStockData.stockCode != "?"){
-                stockbase.addData(saveStockData)
-                takeToast("数据保存成功！")
-                saveStockData = StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
+                /* 若数据库中无该数据，则添加数据，否则更新数据 */
+                if (stockbase.queryData(saveStockData.stockCode) == null){
+                    stockbase.addData(saveStockData)
+                    takeToast("数据保存成功！")
+                    saveStockData = StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
+                } else {
+                    stockbase.updateData(saveStockData)
+                    takeToast("查询到数据库中有该股票信息，已更新成功！")
+                    saveStockData = StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
+                }
+
             } else {
                 takeToast("数据无效，不能保存！")
             }
 
         }
+
+        /* 拿到MyOptionalActivity送来的数据并送显 */
+        val targetStockCode = intent.getIntExtra("stock_code", -1)
+        val stockData = stockbase.queryData(targetStockCode.toString())
+        if (stockData != null){
+            putDataToView(stockData)
+        }
+
     }
 
     /* 用于UI更新时的吐司动作 */
@@ -167,7 +183,7 @@ class MyOptionalDetailActivity : BaseActivity() {
         detail_ttmPERatio.setText(stockData.ttmPERatio.toString())
         detail_perEarnings.text = stockData.perEarnings
         detail_tenYearNationalDebt.setText(stockData.tenYearNationalDebt.toString())
-        detail_tenYearNationalDebtDevide3.text = stockData.tenYearNationalDebtDevide3.toString()
+        detail_tenYearNationalDebtDevide3.text = stockData.tenYearNationalDebtDevide3
         detail_perDividend.setText(stockData.perDividend.toString())
         detail_drcDividendRatio.text = stockData.drcDividendRatio
         detail_ttmPrice.text = stockData.ttmPrice

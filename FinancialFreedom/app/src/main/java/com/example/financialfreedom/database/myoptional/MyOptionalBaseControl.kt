@@ -2,6 +2,7 @@ package com.example.financialfreedom.database.myoptional
 
 import android.content.ContentValues
 import android.content.Context
+import android.util.Log
 import com.example.financialfreedom.adapter.stockdataadapter.StockData
 import com.example.financialfreedom.database.stockdata.MyDataBaseHelper
 
@@ -75,6 +76,46 @@ class MyOptionalBaseControl(val context: Context, val name: String, val version:
         cursor.close()
         /* 如果未遍历到目标数据，则返回null */
         return dataList
+    }
+
+    /*
+     * 查询数据：通过股票代码索引对应的股票数据
+     */
+    fun queryData(targetStockCode: String) : StockData? {
+        val db = dbHelper.writableDatabase
+        /*
+         * 数据库索引规则：全库搜索
+         */
+        val cursor = db.query(
+            name, null,
+            null, null, null,
+            null, null, null
+        )
+        /*
+         * 数据库遍历
+         */
+        if (cursor.moveToFirst()) {
+            do {
+                val stockCode = cursor.getString(cursor.getColumnIndex("stockCode"))
+                val stockName = cursor.getString(cursor.getColumnIndex("stockName"))
+                val nowPrice = cursor.getString(cursor.getColumnIndex("nowPrice")).toDouble()
+                val ttmPERatio = cursor.getString(cursor.getColumnIndex("ttmPERatio")).toDouble()
+                val perDividend = cursor.getString(cursor.getColumnIndex("perDividend")).toDouble()
+                val tenYearNationalDebt = cursor.getString(cursor.getColumnIndex("tenYearNationalDebt")).toDouble()
+
+                /* 搜索到对应stockcode */
+                if (targetStockCode == stockCode) {
+                    cursor.close()
+                    return StockData(stockCode, stockName, nowPrice, ttmPERatio, perDividend, tenYearNationalDebt
+                    )
+                }
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        /*
+         * 如果未遍历到目标数据，则返回null
+         */
+        return null
     }
 
     /*
