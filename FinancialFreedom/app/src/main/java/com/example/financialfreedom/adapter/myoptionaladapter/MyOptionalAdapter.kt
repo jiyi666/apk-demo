@@ -43,6 +43,23 @@ class MyOptionalAdapter(list: ArrayList<StockData>) :
             MyOptionalActivity.myOptionalActivityTodo(STARTDETAILACTIVITY, stockDataList[position].stockCode)  //跳转去MyOptionalActivity执行相关操作
         }
 
+        /**
+         *  长按监听：删除item
+         */
+        viewHolder.itemView.setOnLongClickListener {
+            val position = viewHolder.adapterPosition
+            /* 将长按item对应的股票代码发送至MyAttentionActivity */
+            MyOptionalActivity.myOptionalActivityTodo(MyOptionalActivity.HANDLELONGCLIECK,
+                stockDataList.get(position).stockCode)
+            /* 在ArrayList中移除此股 */
+            stockDataList.remove(stockDataList.get(position))
+            /* 通知移除该item */
+            notifyItemRemoved(position)
+            /* 通知调制ArrayList顺序(此句删除也无影响) */
+            notifyItemRangeChanged(position, stockDataList.size)
+            false
+        }
+
         return viewHolder //注意这里要返回viewHolder，因为有各种点击事件
     }
 

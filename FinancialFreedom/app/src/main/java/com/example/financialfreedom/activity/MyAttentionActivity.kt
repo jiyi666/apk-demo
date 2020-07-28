@@ -11,6 +11,8 @@ import com.example.financialfreedom.database.myattention.MyAttentionBaseControl
 import com.example.financialfreedom.internet.HttpUtils
 import com.example.financialfreedom.internet.parseRealTimeStockData
 import com.example.financialfreedom.utils.BaseActivity
+import com.example.financialfreedom.utils.onLongClickFlag
+import com.example.financialfreedom.utils.removeStockCode
 import kotlinx.android.synthetic.main.activity_my_attention.*
 import okhttp3.Call
 import okhttp3.Callback
@@ -18,10 +20,6 @@ import okhttp3.Response
 import java.io.IOException
 import kotlin.concurrent.thread
 
-/** 长按删除Flag */
-internal var onLongClickFlag = false
-/** 长按删除的股票代码 */
-internal var removeStockCode = ""
 
 /**
  * MyAttentionActivity设计思路及需要注意的地方：

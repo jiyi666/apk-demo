@@ -153,4 +153,10 @@ class MyOptionalBaseControl(val context: Context, val name: String, val version:
             cursor.close()
         }
     }
+
+    /* 删除数据:根据股票代码来删除 */
+    fun deleteData(stockCode: String){
+        val db = dbHelper.writableDatabase
+        db.delete(name, "stockCode = ?", arrayOf(stockCode))
+    }
 }

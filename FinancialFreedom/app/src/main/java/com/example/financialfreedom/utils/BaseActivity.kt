@@ -4,6 +4,11 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
+/** 长按删除Flag */
+internal var onLongClickFlag = false
+/** 长按删除的股票代码 */
+internal var removeStockCode = ""
+
 open class BaseActivity : AppCompatActivity(){
 
     /*

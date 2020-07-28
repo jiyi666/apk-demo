@@ -11,6 +11,8 @@ import com.example.financialfreedom.database.myoptional.MyOptionalBaseControl
 import com.example.financialfreedom.internet.HttpUtils
 import com.example.financialfreedom.internet.parseOkHttpStockDataForNowPrice
 import com.example.financialfreedom.utils.BaseActivity
+import com.example.financialfreedom.utils.onLongClickFlag
+import com.example.financialfreedom.utils.removeStockCode
 import kotlinx.android.synthetic.main.activity_main.recyclerView
 import kotlinx.android.synthetic.main.activity_my_optional.*
 import okhttp3.Call
@@ -65,6 +67,8 @@ class MyOptionalActivity : BaseActivity() {
         Log.d(tag, "onResume")
         super.onResume()
 
+        threadRun = true
+
         /* 从数据库中读取出最新的数据写入ArrayList */
         myOptionalStockList.clear()
         myOptionalStockList = myOptionalStockbase.queryAllData("MyOptionalStockData")
@@ -84,6 +88,16 @@ class MyOptionalActivity : BaseActivity() {
         /* 线程：每1s更新一次ArrayList中的所有数据（数据库 + UI）*/
         thread {
             while (threadRun){
+                /* 处理删除item事件 */
+                if (onLongClickFlag == true){
+                    if (removeStockCode != ""){
+                        /* 删除数据库中的对应数据，注意，这里不需要删除ArrayList里面的了，因为adapter中已经删除了 */
+                        myOptionalStockbase.deleteData(removeStockCode)
+                    }
+                    onLongClickFlag = false
+                    removeStockCode = ""
+                    Thread.sleep(500)
+                }
                 for (i in 0 until myOptionalStockList.size){
                     /* 从ArrayList中读取需要查询的数据 */
                     val targetData = myOptionalStockList.get(i)
@@ -157,6 +171,7 @@ class MyOptionalActivity : BaseActivity() {
     companion object{
 
         const val STARTDETAILACTIVITY = "startdetailactivity"
+        const val HANDLELONGCLIECK = "handlelongclick"
         lateinit var  myOptionalActivity : BaseActivity   //静态对象，用于适配器调用activity的相关操作
 
         /**
@@ -176,6 +191,11 @@ class MyOptionalActivity : BaseActivity() {
                     intent.putExtra("stock_code", stockCode.toInt())
                     myOptionalActivity.startActivity(intent) //开启活动
                     Log.d("MyOptionalActivity", "click stockCode:$stockCode")
+                }
+                HANDLELONGCLIECK -> {
+                    onLongClickFlag = true
+                    removeStockCode = stockCode
+                    Log.d("MyOptionalActivity", "remove stockCode:$stockCode")
                 }
             }
         }
