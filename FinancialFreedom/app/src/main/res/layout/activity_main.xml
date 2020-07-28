@@ -7,6 +7,21 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
+    <!--添加自选控件层-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/addNewItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="添加"/>
+
+    </LinearLayout>
+
     <!--顶层一直显示控件信息-->
     <LinearLayout
         android:layout_width="match_parent"

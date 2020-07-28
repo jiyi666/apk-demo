@@ -56,10 +56,9 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
     }
 
     /*
-     * 查询数据：通过数据库的id索引对应的股票数据
-     * position：目标id
+     * 查询数据：通过股票代码索引对应的股票数据
      */
-    fun queryData(name: String, position: Int) : StockData?{
+    fun queryData(targetStockCode: String) : StockData? {
         val db = dbHelper.writableDatabase
         /*
          * 数据库索引规则：全库搜索
@@ -70,20 +69,21 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
         /*
          * 数据库遍历
          */
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
-                val id = cursor.getString(cursor.getColumnIndex("id"))
-                if (position == id.toInt()){
-                    val stockCode = cursor.getString(cursor.getColumnIndex("stockCode"))
-                    val stockName = cursor.getString(cursor.getColumnIndex("stockName"))
-                    val nowPrice = cursor.getString(cursor.getColumnIndex("nowPrice")).toDouble()
-                    val ttmPERatio = cursor.getString(cursor.getColumnIndex("ttmPERatio")).toDouble()
-                    val perDividend = cursor.getString(cursor.getColumnIndex("perDividend")).toDouble()
-                    val tenYearNationalDebt = cursor.getString(cursor.getColumnIndex("tenYearNationalDebt")).toDouble()
-                    cursor.close()
-                    return StockData(stockCode, stockName, nowPrice, ttmPERatio, perDividend, tenYearNationalDebt)
-                }
+                val stockCode = cursor.getString(cursor.getColumnIndex("stockCode"))
+                val stockName = cursor.getString(cursor.getColumnIndex("stockName"))
+                val nowPrice = cursor.getString(cursor.getColumnIndex("nowPrice")).toDouble()
+                val ttmPERatio = cursor.getString(cursor.getColumnIndex("ttmPERatio")).toDouble()
+                val perDividend = cursor.getString(cursor.getColumnIndex("perDividend")).toDouble()
+                val tenYearNationalDebt = cursor.getString(cursor.getColumnIndex("tenYearNationalDebt")).toDouble()
 
+                /* 搜索到对应stockcode */
+                if (targetStockCode == stockCode) {
+                    cursor.close()
+                    return StockData(stockCode, stockName, nowPrice, ttmPERatio, perDividend, tenYearNationalDebt
+                    )
+                }
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -91,6 +91,37 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
          * 如果未遍历到目标数据，则返回null
          */
         return null
+    }
+
+    /*
+     * 遍历全局数据库
+     */
+    fun queryAllData(name: String) : ArrayList<StockData>{
+        val db = dbHelper.writableDatabase
+        val dataList = ArrayList<StockData>()
+
+        /* 全局搜索 */
+        val cursor = db.query(name, null,
+            null, null, null,
+            null, null, null)
+
+        /* 遍历数据库 */
+        if (cursor.moveToFirst()){
+            do {
+                val stockCode = cursor.getString(cursor.getColumnIndex("stockCode"))
+                val stockName = cursor.getString(cursor.getColumnIndex("stockName"))
+                val nowPrice = cursor.getString(cursor.getColumnIndex("nowPrice")).toDouble()
+                val ttmPERatio = cursor.getString(cursor.getColumnIndex("ttmPERatio")).toDouble()
+                val perDividend = cursor.getString(cursor.getColumnIndex("perDividend")).toDouble()
+                val tenYearNationalDebt = cursor.getString(cursor.getColumnIndex("tenYearNationalDebt")).toDouble()
+                dataList.add(StockData(stockCode, stockName, nowPrice, ttmPERatio, perDividend, tenYearNationalDebt))
+            } while (cursor.moveToNext())
+            cursor.close()
+            return dataList
+        }
+        cursor.close()
+        /* 如果未遍历到目标数据，则返回null */
+        return dataList
     }
 
     /*
@@ -122,6 +153,42 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
         db.update(name, value1, "", null)
     }
 
+    /*
+     * 更新数据：检索依据为股票代码(唯一)
+     */
+    fun updateData(stockData: StockData) {
+        val db = dbHelper.writableDatabase
+
+        val value = ContentValues().apply {
+            put("stockCode", stockData.stockCode)
+            put("stockName", stockData.stockName)
+            put("nowPrice", stockData.nowPrice)
+            put("ttmPERatio", stockData.ttmPERatio)
+            put("perEarnings", stockData.perEarnings)
+            put("perDividend", stockData.perDividend)
+            put("tenYearNationalDebt", stockData.tenYearNationalDebt)
+            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDevide3)
+            put("drcDividendRatio", stockData.drcDividendRatio)
+            put("ttmPrice", stockData.ttmPrice)
+            put("drcPrice", stockData.drcPrice)
+            put("finalPrice", stockData.finalPrice)
+        }
+        /* 全局搜索 */
+        val cursor = db.query(name, null,
+            null, null, null,
+            null, null, null)
+        /* 遍历数据库 */
+        if (cursor.moveToFirst()){
+            do {
+                val stockCode = cursor.getString(cursor.getColumnIndex("stockCode"))
+                if (stockCode == stockData.stockCode){
+                    db.update(name, value, "stockCode = ?", arrayOf(stockCode))
+                }
+            } while (cursor.moveToNext())
+            cursor.close()
+        }
+    }
+
     /* 获取数据库总数据条数 */
     fun getDataLengh() : Int{
         val db = dbHelper.writableDatabase
@@ -131,5 +198,11 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
             null, null, null)
 
         return cursor.count
+    }
+
+    /* 删除数据:根据股票代码来删除 */
+    fun deleteData(stockCode: String){
+        val db = dbHelper.writableDatabase
+        db.delete(name, "stockCode = ?", arrayOf(stockCode))
     }
 }

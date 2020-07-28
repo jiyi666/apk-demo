@@ -10,10 +10,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.financialfreedom.R
 import com.example.financialfreedom.activity.MainActivity
 import com.example.financialfreedom.activity.MainActivity.Companion.STARTDETAILACTIVITY
+import com.example.financialfreedom.activity.MyOptionalActivity
 
 /** RecyclerView的适配器 */
-class StockDataAdapter(val stockdataList : List<StockData>) :
+class StockDataAdapter(list : ArrayList<StockData>) :
     RecyclerView.Adapter <StockDataAdapter.ViewHolder>() {
+
+    var stockDataList = ArrayList<StockData>()
+
+    init {
+        stockDataList = list
+    }
 
     /*
      * 用于获取最外层布局的及控件的实例
@@ -42,52 +49,28 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
                 Toast.LENGTH_SHORT).show()
         }
 
-        /*
-         * TextView：股票名字点击事件
-         */
-        viewHolder.stockName.setOnClickListener{
+        /* 股票详情点击页面 */
+        viewHolder.stockDetails.setOnClickListener {
             val position = viewHolder.adapterPosition
-            val stockData = stockdataList[position]
-            Toast.makeText(parent.context, "you click ${stockData.stockName}",
-                Toast.LENGTH_SHORT).show()
+            MainActivity.mainActivityTodo(STARTDETAILACTIVITY, stockDataList[position].stockCode)  //跳转去MainActivity执行相关操作
         }
 
-        /*
-         * TextView：股票当前价格点击事件
+        /**
+         *  长按监听：删除item
          */
-        viewHolder.stockNowPrice.setOnClickListener{
+        viewHolder.itemView.setOnLongClickListener {
             val position = viewHolder.adapterPosition
-            val stockData = stockdataList[position]
-            Toast.makeText(parent.context, "you click ${stockData.nowPrice}",
-                Toast.LENGTH_SHORT).show()
-        }
-
-        /*
-         * TextView：股票TTM好价格点击事件
-         */
-        viewHolder.stockTtmPrice.setOnClickListener{
-            val position = viewHolder.adapterPosition
-            val stockData = stockdataList[position]
-            Toast.makeText(parent.context, "you click ${stockData.ttmPrice}",
-                Toast.LENGTH_SHORT).show()
-        }
-
-        /*
-         * TextView：股票动态股息率好价格点击事件
-         */
-        viewHolder.stockDrcPrice.setOnClickListener{
-            val position = viewHolder.adapterPosition
-            val stockData = stockdataList[position]
-            Toast.makeText(parent.context, "you click ${stockData.drcPrice}",
-                Toast.LENGTH_SHORT).show()
-        }
-
-        /*
-        * TextView：股票详情页面点击事件
-        */
-        viewHolder.stockDetails.setOnClickListener{
-            val position = (viewHolder.adapterPosition + 1) //数据库的id是从1开始索引
-            MainActivity.mainActivityTodo(STARTDETAILACTIVITY, position)  //跳转去MainActivity执行相关操作
+            /* 将长按item对应的股票代码发送至MyAttentionActivity */
+            MyOptionalActivity.myOptionalActivityTodo(
+                MyOptionalActivity.HANDLELONGCLIECK,
+                stockDataList.get(position).stockCode)
+            /* 在ArrayList中移除此股 */
+            stockDataList.remove(stockDataList.get(position))
+            /* 通知移除该item */
+            notifyItemRemoved(position)
+            /* 通知调制ArrayList顺序(此句删除也无影响) */
+            notifyItemRangeChanged(position, stockDataList.size)
+            false
         }
 
         return viewHolder //注意这里要返回viewHolder，因为有各种点击事件
@@ -129,7 +112,7 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
      * 对RecyclerView滚入屏幕的子项数据赋值
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val stockData = stockdataList[position]
+        val stockData = stockDataList[position]
         holder.stockName.text = stockData.stockName
         holder.stockNowPrice.setText(stockData.nowPrice.toString())
         holder.stockTtmPrice.setText(stockData.ttmPrice.toString())
@@ -159,5 +142,5 @@ class StockDataAdapter(val stockdataList : List<StockData>) :
     /*
      * 返回数据源长度
      */
-    override fun getItemCount() = stockdataList.size
+    override fun getItemCount() = stockDataList.size
 }

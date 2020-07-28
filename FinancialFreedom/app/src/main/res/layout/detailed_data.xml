@@ -13,34 +13,36 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
             android:layout_marginLeft="20sp"
             android:gravity="center"
-            android:text="股票代码" />
+            android:text="股票代码"/>
 
-        <TextView
+        <EditText
             android:id="@+id/detail_stockcode"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
             android:layout_marginLeft="20sp"
-            android:gravity="center"
-            android:text="603658" />
+            android:gravity="center_vertical"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginLeft="70sp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="30sp"
             android:gravity="center"
-            android:text="股票简称" />
+            android:text="股票简称"/>
 
         <TextView
             android:id="@+id/detail_stockname"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
             android:layout_marginLeft="20sp"
-            android:gravity="center"
-            android:text="中国海天味业" />
+            android:gravity="center"/>
 
     </LinearLayout>
 
@@ -60,14 +62,13 @@
             android:gravity="center"
             android:text="现价:" />
 
-        <EditText
+        <TextView
             android:id="@+id/detail_nowprice"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1.5"
             android:gravity="center"
-            android:inputType="numberDecimal"
-            android:text="1456.23"/>
+            android:inputType="numberDecimal"/>
 
         <TextView
             android:layout_width="0dp"
@@ -83,8 +84,7 @@
             android:layout_height="50dp"
             android:layout_weight="1.4"
             android:gravity="center"
-            android:inputType="numberDecimal"
-            android:text="160.76"/>
+            android:inputType="numberDecimal"/>
 
         <TextView
             android:layout_width="0dp"
@@ -101,8 +101,7 @@
             android:layout_marginRight="0dp"
             android:layout_weight="1.4"
             android:gravity="center"
-            android:inputType="numberDecimal"
-            android:text="1.766"/>
+            android:inputType="numberDecimal"/>
     </LinearLayout>
 
     <!--股票细节第二行（3个控件：1TextView和2EditView）-->
@@ -128,16 +127,14 @@
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:inputType="numberDecimal"
-        android:text="0.029"/>
+        android:inputType="numberDecimal"/>
 
     <TextView
         android:id="@+id/detail_tenYearNationalDebtDevide3"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:text="0.00967"/>
+        android:gravity="center"/>
 
 
 </LinearLayout>
@@ -163,8 +160,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="17.025"/>
+            android:gravity="center"/>
 
         <TextView
             android:layout_width="0dp"
@@ -178,8 +174,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="0.01182"/>
+            android:gravity="center"/>
 
 
     </LinearLayout>
@@ -205,8 +200,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="1439.84"/>
+            android:gravity="center"/>
 
 
 
@@ -233,8 +227,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="1439.84"/>
+            android:gravity="center"/>
 
 
 
@@ -261,8 +254,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="1439.84"/>
+            android:gravity="center"/>
 
 
 
@@ -289,8 +281,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="1439.84"/>
+            android:gravity="center"/>
 
 
 

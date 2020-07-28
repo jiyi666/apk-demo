@@ -2,8 +2,7 @@ package com.example.financialfreedom.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.financialfreedom.R
 import com.example.financialfreedom.adapter.stockdataadapter.StockData
@@ -12,7 +11,12 @@ import com.example.financialfreedom.database.stockdata.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import com.example.financialfreedom.internet.HttpUtils
 import com.example.financialfreedom.internet.parseOkHttpStockDataForNowPrice
+import com.example.financialfreedom.utils.onLongClickFlag
+import com.example.financialfreedom.utils.removeStockCode
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.addNewItem
+import kotlinx.android.synthetic.main.activity_main.recyclerView
+import kotlinx.android.synthetic.main.activity_my_optional.*
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -23,7 +27,7 @@ import kotlin.concurrent.thread
 class MainActivity : BaseActivity() {
 
     private val tag = "MainActivity"
-    private val stockList = ArrayList<StockData>()
+    private var stockList = ArrayList<StockData>()
     /* 线程停止标志 */
     private var threadRun = true
     /* 消息集 */
@@ -49,7 +53,7 @@ class MainActivity : BaseActivity() {
         /*
          * 如果数据库不存在：创建 + 添加初始数据
          */
-        if (databaseStock.queryData("StockData", 1) == null){
+        if (databaseStock.queryAllData("StockData").size == 0){
             /* 创建数据库 */
             databaseStock.create()
             /*
@@ -60,6 +64,12 @@ class MainActivity : BaseActivity() {
             for (i in 0 until (stockList.size)){
                 databaseStock.addData(stockList.get(index = i))
             }
+        }
+
+        /* 添加股票的listener */
+        addNewItem.setOnClickListener {
+            val intent = Intent(this, DetailActivity::class.java)
+            this.startActivity(intent) //开启活动
         }
     }
 
@@ -73,12 +83,7 @@ class MainActivity : BaseActivity() {
          * 在数据库中了，所以需要重新从数据库中读取并刷新UI
          */
         stockList.clear()
-        for (i in 1..databaseStock.getDataLengh()){
-            val tmpData = databaseStock.queryData("StockData", i)
-            if (tmpData != null){
-                stockList.add(tmpData)
-            }
-        }
+        stockList = databaseStock.queryAllData("StockData")
 
         /*
          * 获取layoutManager
@@ -93,93 +98,60 @@ class MainActivity : BaseActivity() {
         recyclerView.adapter = adapter
 
         threadRun = true
-        /**
-         *  消息处理：获取传递过来的数据并更新UI
-         */
-        val handler = object : Handler(){
-            override fun handleMessage(msg: Message) {
-                when (msg.what){
-                    updateDataFromInternet -> {
-                        val bundle = msg.data
-                        val position = bundle.getInt("position")
-                        val nowPrice = bundle.getString("nowPrice")
-                        val ttmPrice = bundle.getString("ttmPrice")
-                        val drcPrice = bundle.getString("drcPrice")
-                        val realData = "nowPrice:" + nowPrice +
-                                ",ttmPrice:" + ttmPrice +
-                                ",drcPrice:" + drcPrice
-                        adapter.notifyItemChanged(position - 1, realData)
-                    }
-                }
-            }
-        }
+
         /**
          *  线程每2s查询一次数据并发送消息进行UI更新
          */
         thread {
             while (threadRun){
-                var url = "http://hq.sinajs.cn/list="
-                for (position in 1..databaseStock.getDataLengh()){
-                    /* 从数据库中读取需要查询的数据 */
-                    val targetData = databaseStock.queryData("StockData", position)
+                /* 处理删除item事件 */
+                if (onLongClickFlag == true){
+                    if (removeStockCode != ""){
+                        /* 删除数据库中的对应数据，注意，这里不需要删除ArrayList里面的了，因为adapter中已经删除了 */
+                        databaseStock.deleteData(removeStockCode)
+                    }
+                    onLongClickFlag = false
+                    removeStockCode = ""
+                    Thread.sleep(500)
+                }
+                for (i in 0 until stockList.size){
+                    val targetData = stockList.get(i)
+                    var url = "http://hq.sinajs.cn/list="
                     /*
                      * 从股票代码识别是上市还是深市
                      */
-                    val shOrSz = when (targetData?.stockCode.toString()[0]){
+                    val shOrSz = when (targetData.stockCode[0]){
                         '6' -> "sh"
                         else -> "sz"
                     }
-                    /*
-                     * 拼组URL:16组数据一次查询
-                     */
-                    url = url + shOrSz + targetData?.stockCode.toString()
-                    if (position != 16){
-                        url += ","
-                    }
-                }
-                /* 使用OkHttp进行网络数据请求 */
-                HttpUtils.sendOkHttpRequest(url, object : Callback{
-                    override fun onResponse(call: Call, response: Response) {
-                        /* 获取响应数据 */
-                        val responseData = response.body?.string()
-                        for (position in 1..databaseStock.getDataLengh()){
-                            val targetData = databaseStock.queryData("StockData", position)
-                            val targetPrice =
-                                parseOkHttpStockDataForNowPrice(
-                                    responseData,
-                                    position - 1
-                                )
-                            val tmpData = StockData(
-                                targetData!!.stockCode,
-                                targetData.stockName,
-                                targetPrice,
-                                targetData.ttmPERatio,
-                                targetData.perDividend,
-                                targetData.tenYearNationalDebt
-                            )
-
+                    /* 拼组URL */
+                    url = url + shOrSz + targetData.stockCode
+                    /* 使用OkHttp进行网络数据请求 */
+                    HttpUtils.sendOkHttpRequest(url, object : Callback{
+                        override fun onResponse(call: Call, response: Response) {
+                            /* 进行网络访问 */
+                            val responseData = response.body?.string()
+                            /* 解析数据:得到当前价格 */
+                            val nowPrice = parseOkHttpStockDataForNowPrice(responseData)
+                            /* 代入当前价格，计算出最新的类对象 */
+                            val tmpData = StockData(targetData.stockCode, targetData.stockName,
+                                nowPrice, targetData.ttmPERatio, targetData.perDividend, targetData.tenYearNationalDebt)
                             /* 将最新数据写入数据库 */
-                            databaseStock.updateData(tmpData, position)
-                            /*
-                             * Msg中通过bundle携带数据
-                             */
-                            val msg = Message()
-                            val bundle = Bundle()
-                            bundle.putInt("position", position)
-                            bundle.putString("nowPrice", tmpData.nowPrice.toString())
-                            bundle.putString("ttmPrice", tmpData.ttmPrice)
-                            bundle.putString("drcPrice", tmpData.drcPrice)
-                            msg.what = updateDataFromInternet
-                            msg.data = bundle
-                            handler.sendMessage(msg)
-                            Thread.sleep(100)
+                            databaseStock.updateData(tmpData)
+                            /* UI更新 */
+                            runOnUiThread {
+                                val finalData = "nowPrice:" + nowPrice +
+                                        ",ttmPrice:" + tmpData.ttmPrice +
+                                        ",drcPrice:" + tmpData.drcPrice
+                                adapter.notifyItemChanged(i, finalData)
+                            }
                         }
-                    }
 
-                    override fun onFailure(call: Call, e: IOException) {
-                    }
-                })
-                Thread.sleep(2000)
+                        override fun onFailure(call: Call, e: IOException) {
+                        }
+                    })
+                }
+                Thread.sleep(1000)
             }
         }
     }
@@ -298,7 +270,7 @@ class MainActivity : BaseActivity() {
     companion object{
 
         const val STARTDETAILACTIVITY = "startdetailactivity"
-        const val INPUTPRICE          = "inputprice"
+        const val HANDLELONGCLIECK = "handlelongclick"
         lateinit var  mainActivity : BaseActivity   //静态对象，用于适配器调用activity的相关操作
 
         /**
@@ -307,18 +279,23 @@ class MainActivity : BaseActivity() {
          * position：响应控件对应数据库的id
          */
         @JvmStatic
-        fun mainActivityTodo(event: String, position: Int){
+        fun mainActivityTodo(event: String, stockCode: String){
             when (event){
                 STARTDETAILACTIVITY -> {
                     /*
                      * 通过MainAvtivity的静态对象调用相关的方法
                      */
                     val intent = Intent(mainActivity, DetailActivity::class.java)
-                    intent.putExtra("database_position", position)  //向活动传递数据
+                    /* 向活动传递数据：注意为Int型 */
+                    intent.putExtra("stock_code", stockCode.toInt())
                     mainActivity.startActivity(intent) //开启活动
+                    Log.d("MainActivity", "click stockCode:$stockCode")
                 }
 
-                INPUTPRICE -> {
+                HANDLELONGCLIECK -> {
+                    onLongClickFlag = true
+                    removeStockCode = stockCode
+                    Log.d("MainActivity", "remove stockCode:$stockCode")
                 }
             }
         }

@@ -12,9 +12,26 @@ import com.example.financialfreedom.database.stockdata.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import com.example.financialfreedom.internet.HttpUtils
 import com.example.financialfreedom.internet.parseOkHttpStockDataForNowPrice
-import kotlinx.android.synthetic.main.detailed_data.*
-import java.lang.Exception
-import kotlin.concurrent.thread
+import com.example.financialfreedom.internet.parseOkHttpStockDataForStockName
+import kotlinx.android.synthetic.main.detailed_data.detail_drcDividendRatio
+import kotlinx.android.synthetic.main.detailed_data.detail_drcPrice
+import kotlinx.android.synthetic.main.detailed_data.detail_finalPrice
+import kotlinx.android.synthetic.main.detailed_data.detail_nowprice
+import kotlinx.android.synthetic.main.detailed_data.detail_nowprice1
+import kotlinx.android.synthetic.main.detailed_data.detail_perDividend
+import kotlinx.android.synthetic.main.detailed_data.detail_perEarnings
+import kotlinx.android.synthetic.main.detailed_data.detail_stockcode
+import kotlinx.android.synthetic.main.detailed_data.detail_stockname
+import kotlinx.android.synthetic.main.detailed_data.detail_tenYearNationalDebt
+import kotlinx.android.synthetic.main.detailed_data.detail_tenYearNationalDebtDevide3
+import kotlinx.android.synthetic.main.detailed_data.detail_ttmPERatio
+import kotlinx.android.synthetic.main.detailed_data.detail_ttmPrice
+import kotlinx.android.synthetic.main.detailed_data.saveData
+import kotlinx.android.synthetic.main.detailed_data.updateData
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import java.io.IOException
 
 /**
  *  具体数据展示页面的activity
@@ -23,74 +40,125 @@ class DetailActivity : BaseActivity(){
 
     /* 类tag */
     val tag : String = "DetailActivity"
-    /* 数据库中的位置 */
-    var position : Int = -1
-    /* UI更新标志:所有的EditView控件触发输入监听都将停止UI更新，直到保存数据之后才会更新 */
-    var uiUpdateFlag = true
     /* 消息集 */
-    val updateDataFromInternet = 1
-    /* 线程停止标志 */
-    private var threadRun = true
+    private val updateUi = 1
+    /* 使用数据库 */
+    val stockbase = StockDatabaseControl(this, "StockData", 1)
+    /* 需要存入数据库的数据 */
+    var saveStockData = StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detailed_data)
-        /*
-         * 接收MainActivity传递过来的数据
-         */
-        position = intent.getIntExtra("database_position", -1)
 
-        /*
-         * 启动数据库搜索数据
-         */
-        val databaseControler = StockDatabaseControl(this, "StockData", 1)
-        val targetData = databaseControler.queryData("StockData", position)
-
-        /*
-         * 显示数据库中存储数据
-         */
-        if (targetData != null){
-            putDataToView(targetData)
-        } else {
-            /*
-             * 如果是null，则送显一组魔鬼数据
-             */
-            putDataToView(
-                StockData(
-                    "?",
-                    "?",
-                    0.00,
-                    0.00,
-                    0.00,
-                    0.00
-                )
-            )
+        /* 拿到MyOptionalActivity送来的数据并送显 */
+        val targetStockCode = intent.getIntExtra("stock_code", -1)
+        val stockData = stockbase.queryData(targetStockCode.toString())
+        if (stockData != null){
+            putDataToView(stockData)
         }
 
+        /**
+         *  消息处理：获取传递过来的数据并更新UI
+         */
+        val handler = object : Handler(){
+            override fun handleMessage(msg: Message) {
+                when (msg.what){
+                    updateUi -> {
+                        val bundle = msg.data
+                        val stockCode = bundle.getString("stockCode")
+                        val stockName = bundle.getString("stockName")
+                        val nowPrice = bundle.getDouble("nowPrice")
+                        val ttmPERatio = bundle.getDouble("ttmPERatio")
+                        val perDividend = bundle.getDouble("perDividend")
+                        val tenYearNationalDebt = bundle.getDouble("tenYearNationalDebt")
+
+                        val nowStockData = StockData(stockCode.toString(), stockName.toString(), nowPrice,
+                            ttmPERatio, perDividend, tenYearNationalDebt)
+                        Log.d(tag, "new stockinfo:${nowStockData.toString()}")
+                        putDataToView(nowStockData)
+                        /* 暂存数据 */
+                        saveStockData = nowStockData
+                    }
+                }
+            }
+        }
         /*
          * 刷新用户输入数据
          * Note：对所有的数据进行判空输入处理，如果为空，则按照原来的数据进行计算
          */
         updateData.setOnClickListener {
-            val nowPrice = if (detail_nowprice.text.toString() != "")
-                detail_nowprice.text.toString().toDouble() else
-                targetData!!.nowPrice
-            val ttmPERatio = if (detail_ttmPERatio.text.toString() != "")
-                detail_ttmPERatio.text.toString().toDouble() else
-                targetData!!.ttmPERatio
-            val tenYearNationalDebt = if (detail_tenYearNationalDebt.text.toString() != "")
-                detail_tenYearNationalDebt.text.toString().toDouble() else
-                targetData!!.tenYearNationalDebt
-            val perDividend = if (detail_perDividend.text.toString() != "")
-                detail_perDividend.text.toString().toDouble() else
-                targetData!!.perDividend
+            val stockCode = when (detail_stockcode.text.toString()){
+                "" -> {
+                    Toast.makeText(this, "请输入股票代码！", Toast.LENGTH_SHORT).show()
+                    null
+                }
+                else -> detail_stockcode.text.toString()
+            }
+            val ttmPERatio = when (detail_ttmPERatio.text.toString()){
+                "" -> {
+                    Toast.makeText(this, "请输入TTM市盈率！", Toast.LENGTH_SHORT).show()
+                    null
+                }
+                else -> detail_ttmPERatio.text.toString()
+            }
+            val perDividend = when (detail_perDividend.text.toString()){
+                "" -> {
+                    Toast.makeText(this, "请输入每股股息！", Toast.LENGTH_SHORT).show()
+                    null
+                }
+                else -> detail_perDividend.text.toString()
+            }
+            val tenYearNationalDebt = when (detail_tenYearNationalDebt.text.toString()){
+                "" -> {
+                    Toast.makeText(this, "请输入十年期国债收益率！", Toast.LENGTH_SHORT).show()
+                    null
+                }
+                else -> detail_tenYearNationalDebt.text.toString()
+            }
+            if ((stockCode != null) && (ttmPERatio != null) && (perDividend != null) && (tenYearNationalDebt != null)){
+                /* 通过网络访问获取当前价格 */
+                var url = "http://hq.sinajs.cn/list="
+                /* 从股票代码识别是上市还是深市 */
+                val shOrSz = when (stockCode.toString()[0]){
+                    '6' -> "sh"
+                    '5' -> "sh" //上市基金
+                    else -> "sz"
+                }
+                /* 拼组URL */
+                url = url + shOrSz + stockCode
+                /* 使用网络访问 */
+                HttpUtils.sendOkHttpRequest(url, object : Callback {
+                    override fun onResponse(call: Call, response: Response) {
+                        val responseData = response.body?.string()
+                        /* 解析数据 */
+                        val stockName = parseOkHttpStockDataForStockName(responseData)
+                        /* 能正确解析出股票简称说明输入的股票代码有效 */
+                        if (stockName != null){
+                            val nowPrice = parseOkHttpStockDataForNowPrice(responseData)
+                            /* Msg中通过bundle携带数据 */
+                            val msg = Message()
+                            val bundle = Bundle()
+                            bundle.putString("stockCode", stockCode)
+                            bundle.putString("stockName", stockName)
+                            bundle.putDouble("nowPrice", nowPrice)
+                            bundle.putDouble("ttmPERatio", ttmPERatio.toString().toDouble())
+                            bundle.putDouble("perDividend", perDividend.toString().toDouble())
+                            bundle.putDouble("tenYearNationalDebt", tenYearNationalDebt.toString().toDouble())
+                            msg.what = updateUi
+                            msg.data = bundle
+                            handler.sendMessage(msg)
+                        } else {
+                            runOnUiThread {
+                                takeToast("没有查到相关股票信息，请重新输入！")
+                            }
+                        }
+                    }
 
-            putDataToView(
-                StockData(
-                    targetData!!.stockCode, targetData.stockName,
-                    nowPrice, ttmPERatio, perDividend, tenYearNationalDebt
-                )
-            )
+                    override fun onFailure(call: Call, e: IOException) {
+                    }
+                })
+            }
 
             /*
              * 隐藏所有EditView的光标
@@ -99,39 +167,25 @@ class DetailActivity : BaseActivity(){
             detail_ttmPERatio.isCursorVisible = false
             detail_perDividend.isCursorVisible = false
             detail_tenYearNationalDebt.isCursorVisible = false
-
-            /* 告知用户数据刷新成功 */
-            Toast.makeText(this, "刷新成功！", Toast.LENGTH_SHORT).show()
         }
 
-        /*
-         * 存储数据用户输入及最终计算数据
-         * Note：对所有的数据进行判空输入处理，如果为空，则按照原来的数据进行计算
-         */
+        /* 存储数据:数据有效（stockCode不为"?"）才保存，且不会连续保存进数据库 */
         saveData.setOnClickListener {
-            val nowPrice = if (detail_nowprice.text.toString() != "")
-                detail_nowprice.text.toString().toDouble() else
-                targetData!!.nowPrice
-            val ttmPERatio = if (detail_ttmPERatio.text.toString() != "")
-                detail_ttmPERatio.text.toString().toDouble() else
-                targetData!!.ttmPERatio
-            val tenYearNationalDebt = if (detail_tenYearNationalDebt.text.toString() != "")
-                detail_tenYearNationalDebt.text.toString().toDouble() else
-                targetData!!.tenYearNationalDebt
-            val perDividend = if (detail_perDividend.text.toString() != "")
-                detail_perDividend.text.toString().toDouble() else
-                targetData!!.perDividend
-            /*
-             * 调用数据库进行数据更新
-             */
-            databaseControler.updateData(
-                StockData(
-                    targetData!!.stockCode, targetData.stockName,
-                    nowPrice, ttmPERatio, perDividend, tenYearNationalDebt
-                ), position)
-            uiUpdateFlag = true
-            /* 告知用户数据保存成功 */
-            Toast.makeText(this, "保存成功！", Toast.LENGTH_SHORT).show()
+            if (saveStockData.stockCode != "?"){
+                /* 若数据库中无该数据，则添加数据，否则更新数据 */
+                if (stockbase.queryData(saveStockData.stockCode) == null){
+                    stockbase.addData(saveStockData)
+                    takeToast("数据保存成功！")
+                    saveStockData = StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
+                } else {
+                    stockbase.updateData(saveStockData)
+                    takeToast("查询到数据库中有该股票信息，已更新成功！")
+                    saveStockData = StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
+                }
+
+            } else {
+                takeToast("数据无效，不能保存！")
+            }
         }
 
         /*
@@ -141,7 +195,6 @@ class DetailActivity : BaseActivity(){
         detail_nowprice.setOnTouchListener { _, _ ->
             detail_nowprice.setText("")
             detail_nowprice.isCursorVisible = true
-            uiUpdateFlag = false
             false
         }
 
@@ -152,7 +205,6 @@ class DetailActivity : BaseActivity(){
         detail_perDividend.setOnTouchListener{ _, _ ->
             detail_perDividend.setText("")
             detail_perDividend.isCursorVisible = true
-            uiUpdateFlag = false
             false
         }
 
@@ -163,7 +215,6 @@ class DetailActivity : BaseActivity(){
         detail_ttmPERatio.setOnTouchListener{ _, _ ->
             detail_ttmPERatio.setText("")
             detail_ttmPERatio.isCursorVisible = true
-            uiUpdateFlag = false
             false
         }
 
@@ -174,90 +225,12 @@ class DetailActivity : BaseActivity(){
         detail_tenYearNationalDebt.setOnTouchListener{ _, _ ->
             detail_tenYearNationalDebt.setText("")
             detail_tenYearNationalDebt.isCursorVisible = true
-            uiUpdateFlag = false
             false
-        }
-
-        /**
-         *  消息处理：获取传递过来的数据并更新UI
-         */
-        val handler = object : Handler(){
-            override fun handleMessage(msg: Message) {
-                when (msg.what){
-                    updateDataFromInternet -> {
-                        val bundle = msg.data
-                        val nowPrice = bundle.getDouble("nowPrice")
-                        val nowStockData =
-                            StockData(
-                                targetData!!.stockCode,
-                                targetData.stockName,
-                                nowPrice,
-                                targetData.ttmPERatio,
-                                targetData.perDividend,
-                                targetData.tenYearNationalDebt
-                            )
-
-                        putDataToView(nowStockData)
-                    }
-                }
-            }
-        }
-
-        /**
-         *  线程每2s查询一次服务器数据，并使用消息机制更新UI
-         *  TODO:暂不处理用户点击保存数据之后刷新会导致某些值还原的问题
-         */
-        thread {
-            while (threadRun){
-                try {
-                    /*
-                     * 从股票代码识别是上市还是深市
-                     */
-                    val shOrSz = when (targetData?.stockCode.toString()[0]){
-                        '6' -> "sh"
-                        else -> "sz"
-                    }
-                    /*
-                     * 拼组URL
-                     */
-                    val url = "http://hq.sinajs.cn/list=" + shOrSz + targetData?.stockCode.toString()
-                    /* 使用OkHttp进行网络数据请求 */
-                    val responseData = HttpUtils.getInternetResponse(url)
-                    if (responseData != null){
-                        if (uiUpdateFlag == true){
-                            /*
-                             * Msg中通过bundle携带数据
-                             */
-                            val msg = Message()
-                            val bundle = Bundle()
-                            bundle.putDouble("nowPrice",
-                                parseOkHttpStockDataForNowPrice(
-                                    responseData
-                                )
-                            )
-                            msg.what = updateDataFromInternet
-                            msg.data = bundle
-                            handler.sendMessage(msg)
-                        }
-
-                    } else {
-                        Log.d(tag, "Don't query stockData, Please ensure stockCode:${targetData?.stockCode}")
-                    }
-
-                } catch (e: Exception){
-                    e.printStackTrace()
-                }
-                Thread.sleep(1000)
-            }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        /*
-         * 停止线程
-         */
-        threadRun = false
         Log.d(tag, "onDestroy!")
     }
 
@@ -271,7 +244,7 @@ class DetailActivity : BaseActivity(){
      * stockData：待显示的股票信息
      */
     fun putDataToView(stockData: StockData){
-        detail_stockcode.text = stockData.stockCode
+        detail_stockcode.setText(stockData.stockCode)
         detail_stockname.text = stockData.stockName
         detail_nowprice.setText(stockData.nowPrice.toString())
         detail_ttmPERatio.setText(stockData.ttmPERatio.toString())
@@ -302,5 +275,9 @@ class DetailActivity : BaseActivity(){
             color = Color.BLUE
         }
         detail_nowprice1.setTextColor(color)
+    }
+    /* 用于UI更新时的吐司动作 */
+    private fun takeToast(text: String){
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 }
