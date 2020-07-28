@@ -76,4 +76,40 @@ class MyOptionalBaseControl(val context: Context, val name: String, val version:
         /* 如果未遍历到目标数据，则返回null */
         return dataList
     }
+
+    /*
+     * 更新数据：检索依据为股票代码(唯一)
+     */
+    fun updateData(stockData: StockData) {
+        val db = dbHelper.writableDatabase
+
+        val value = ContentValues().apply {
+            put("stockCode", stockData.stockCode)
+            put("stockName", stockData.stockName)
+            put("nowPrice", stockData.nowPrice)
+            put("ttmPERatio", stockData.ttmPERatio)
+            put("perEarnings", stockData.perEarnings)
+            put("perDividend", stockData.perDividend)
+            put("tenYearNationalDebt", stockData.tenYearNationalDebt)
+            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDevide3)
+            put("drcDividendRatio", stockData.drcDividendRatio)
+            put("ttmPrice", stockData.ttmPrice)
+            put("drcPrice", stockData.drcPrice)
+            put("finalPrice", stockData.finalPrice)
+        }
+        /* 全局搜索 */
+        val cursor = db.query(name, null,
+            null, null, null,
+            null, null, null)
+        /* 遍历数据库 */
+        if (cursor.moveToFirst()){
+            do {
+                val stockCode = cursor.getString(cursor.getColumnIndex("stockCode"))
+                if (stockCode == stockData.stockCode){
+                    db.update(name, value, "stockCode = ?", arrayOf(stockCode))
+                }
+            } while (cursor.moveToNext())
+            cursor.close()
+        }
+    }
 }

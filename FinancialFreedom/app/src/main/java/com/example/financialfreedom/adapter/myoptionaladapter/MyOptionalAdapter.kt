@@ -39,6 +39,38 @@ class MyOptionalAdapter(list: ArrayList<StockData>) :
         return viewHolder //注意这里要返回viewHolder，因为有各种点击事件
     }
 
+    /**
+     * 调用adapter的notifyItemChanged时会调用此函数，用于更新局部控件
+     */
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        super.onBindViewHolder(holder, position, payloads)
+        if (payloads.isEmpty()){
+            onBindViewHolder(holder, position)
+        } else {
+            /* payloads的size恒为1 */
+            val str = payloads.get(index = 0)
+
+            val priceList: List<String> = str.toString().split(",")
+            val nowPrice = priceList[0].split(":")[1]
+            val ttmPrice = priceList[1].split(":")[1]
+            val drcPrice = priceList[2].split(":")[1]
+            /* 设置文本颜色:由价格比较得出 */
+            val color : Int
+            if ((nowPrice.toDouble() > ttmPrice.toDouble()) &&
+                (nowPrice.toDouble() > drcPrice.toDouble())){
+                color = Color.RED
+            } else if ((nowPrice.toDouble() < ttmPrice.toDouble()) &&
+                (nowPrice.toDouble() < drcPrice.toDouble())){
+                color = Color.GREEN
+            } else {
+                color = Color.BLUE
+            }
+            holder.stockNowPrice.setTextColor(color)
+            holder.stockNowPrice.text = nowPrice
+            holder.stockTtmPrice.text = ttmPrice
+            holder.stockDrcPrice.text = drcPrice
+        }
+    }
     /*
      * 对RecyclerView滚入屏幕的子项数据赋值
      */
@@ -46,8 +78,8 @@ class MyOptionalAdapter(list: ArrayList<StockData>) :
         val stockData = stockDataList[position]
         holder.stockName.text = stockData.stockName
         holder.stockNowPrice.setText(stockData.nowPrice.toString())
-        holder.stockTtmPrice.setText(stockData.ttmPrice.toString())
-        holder.stockDrcPrice.setText(stockData.drcPrice.toString())
+        holder.stockTtmPrice.setText(stockData.ttmPrice)
+        holder.stockDrcPrice.setText(stockData.drcPrice)
         holder.stockDetails.text = stockData.detailes
 
         /*
