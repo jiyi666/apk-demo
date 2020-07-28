@@ -9,7 +9,7 @@ import okhttp3.*
  * param1->positon:需要获取的股票价格，这里使用默认参数方便单股查询
  * return：目前只需要返回当前价格
  */
-fun parseOkHttpStockData(data: String?, position: Int = 0) : Double{
+fun parseOkHttpStockDataForNowPrice(data: String?, position: Int = 0) : Double{
     /* 1.去掉数据中的"双引号" */
     val responseData = data?.replace("\"", "")
     /* 2.通过识别";"来切割字符串，拿到每一股的完整数据 */
@@ -21,6 +21,29 @@ fun parseOkHttpStockData(data: String?, position: Int = 0) : Double{
 
     /* 返回当前股价 */
     return targetList[3].toDouble()
+}
+
+/**
+ * 顶层函数：服务器数据解析
+ * param0->data:服务器响应的原始数据
+ * param1->positon:需要获取的股票简称，这里使用默认参数方便单股查询
+ * return：返回当前股票简称
+ */
+fun parseOkHttpStockDataForStockName(data: String?, position: Int = 0) : String?{
+    /* 1.去掉数据中的"双引号" */
+    val responseData = data?.replace("\"", "")
+    /* 2.通过识别";"来切割字符串，拿到每一股的完整数据 */
+    val perStockData: List<String> = responseData!!.split(";")
+    /* 3.通过识别"="来切割字符串 */
+    val splitTmp: List<String> = perStockData[position].split("=")
+    if (splitTmp[1] == ""){
+        return null
+    }
+    /* 4.将上文"="右边的子串再切割，通过识别","来切割整个子串 */
+    val targetList: List<String> = splitTmp[1].split(",")
+
+    /* 返回股票简称 */
+    return targetList[0]
 }
 
 /**

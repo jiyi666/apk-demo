@@ -11,7 +11,7 @@ import com.example.financialfreedom.adapter.stockdataadapter.StockDataAdapter
 import com.example.financialfreedom.database.stockdata.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import com.example.financialfreedom.internet.HttpUtils
-import com.example.financialfreedom.internet.parseOkHttpStockData
+import com.example.financialfreedom.internet.parseOkHttpStockDataForNowPrice
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.Call
 import okhttp3.Callback
@@ -168,7 +168,7 @@ class MainActivity : BaseActivity() {
                         for (position in 1..databaseStock.getDataLengh()){
                             val targetData = databaseStock.queryData("StockData", position)
                             val targetPrice =
-                                parseOkHttpStockData(
+                                parseOkHttpStockDataForNowPrice(
                                     responseData,
                                     position - 1
                                 )

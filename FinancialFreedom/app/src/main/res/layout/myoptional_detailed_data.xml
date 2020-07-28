@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--股票简介-->
+    <LinearLayout
+        android:id="@+id/detaile_linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="20sp"
+            android:gravity="center"
+            android:text="股票代码"/>
+
+        <EditText
+            android:id="@+id/detail_stockcode"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="20sp"
+            android:gravity="center_vertical"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="30sp"
+            android:gravity="center"
+            android:text="股票简称"/>
+
+        <TextView
+            android:id="@+id/detail_stockname"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="20sp"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <!--股票细节第一行（6个控件：3TextView和3EditView）-->
+    <LinearLayout
+        android:id="@+id/detaile_linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detaile_linearLayout1"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="0.8"
+            android:gravity="center"
+            android:text="现价:" />
+
+        <TextView
+            android:id="@+id/detail_nowprice"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:inputType="numberDecimal"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:text="TTM市盈率:"
+            android:textSize="13sp"/>
+
+        <EditText
+            android:id="@+id/detail_ttmPERatio"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.4"
+            android:gravity="center"
+            android:inputType="numberDecimal"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.3"
+            android:gravity="center"
+            android:text="每股股息:"
+            android:textSize="13sp"/>
+
+        <EditText
+            android:id="@+id/detail_perDividend"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="0dp"
+            android:layout_weight="1.4"
+            android:gravity="center"
+            android:inputType="numberDecimal"/>
+    </LinearLayout>
+
+    <!--股票细节第二行（3个控件：1TextView和2EditView）-->
+    <LinearLayout
+    android:id="@+id/detaile_linearLayout3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/detaile_linearLayout2"
+    android:layout_marginTop="10dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="十年期国债收益率/三分之一："
+        android:textSize="13sp"/>
+
+    <EditText
+        android:id="@+id/detail_tenYearNationalDebt"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:inputType="numberDecimal"/>
+
+    <TextView
+        android:id="@+id/detail_tenYearNationalDebtDevide3"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"/>
+
+
+</LinearLayout>
+
+    <!--股票细节第三行（4个控件：2TextView和2EditView）-->
+    <LinearLayout
+        android:id="@+id/detaile_linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detaile_linearLayout3"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="每股收益：" />
+
+        <TextView
+            android:id="@+id/detail_perEarnings"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="动态股息率：" />
+
+        <TextView
+            android:id="@+id/detail_drcDividendRatio"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+
+    </LinearLayout>
+
+    <!--股票细节第四行（2个控件：2TextView）-->
+    <LinearLayout
+        android:id="@+id/detaile_linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detaile_linearLayout4"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="TTM市盈率好价格：" />
+
+        <TextView
+            android:id="@+id/detail_ttmPrice"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+
+
+    </LinearLayout>
+
+    <!--股票细节第五行（2个控件：2TextView）-->
+    <LinearLayout
+        android:id="@+id/detaile_linearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detaile_linearLayout5"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="动态股息率好价格：" />
+
+        <TextView
+            android:id="@+id/detail_drcPrice"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+
+
+    </LinearLayout>
+
+    <!--股票细节第六行（2个控件：2TextView）-->
+    <LinearLayout
+        android:id="@+id/detaile_linearLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detaile_linearLayout6"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="最终计算出的好价格：" />
+
+        <TextView
+            android:id="@+id/detail_finalPrice"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+
+
+    </LinearLayout>
+
+    <!--股票细节第六行（2个控件：2TextView）-->
+    <LinearLayout
+        android:id="@+id/detaile_linearLayout8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detaile_linearLayout7"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="现价：" />
+
+        <TextView
+            android:id="@+id/detail_nowprice1"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+
+
+    </LinearLayout>
+
+    <!--股票细节第七行（2个控件：2Button）-->
+    <LinearLayout
+        android:id="@+id/detaile_linearLayout9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detaile_linearLayout8"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/updateData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="刷新数据"/>
+
+        <Button
+            android:id="@+id/saveData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_weight="1"
+            android:text="保存数据"/>
+
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -11,7 +11,7 @@ import com.example.financialfreedom.adapter.stockdataadapter.StockData
 import com.example.financialfreedom.database.stockdata.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import com.example.financialfreedom.internet.HttpUtils
-import com.example.financialfreedom.internet.parseOkHttpStockData
+import com.example.financialfreedom.internet.parseOkHttpStockDataForNowPrice
 import kotlinx.android.synthetic.main.detailed_data.*
 import java.lang.Exception
 import kotlin.concurrent.thread
@@ -231,7 +231,7 @@ class DetailActivity : BaseActivity(){
                             val msg = Message()
                             val bundle = Bundle()
                             bundle.putDouble("nowPrice",
-                                parseOkHttpStockData(
+                                parseOkHttpStockDataForNowPrice(
                                     responseData
                                 )
                             )

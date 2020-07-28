@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MyAttentionActivity"></activity>
+        <activity android:name=".activity.MyOptionalDetailActivity"></activity>
+        <activity android:name=".activity.MyAttentionActivity" />
         <activity android:name=".activity.MyOptionalActivity" />
         <activity android:name=".activity.HomePageActivity">
             <intent-filter>

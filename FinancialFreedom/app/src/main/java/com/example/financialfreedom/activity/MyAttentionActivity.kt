@@ -31,7 +31,7 @@ internal var removeStockCode = ""
  * 等值会导致在删除ArrayList和数据库值时大大增加操作难度，比如ArrayList的值已经在adapter中删除了，那么ArrayList
  * 此时的position对应的股票代码并不是数据库中对应position的股票代码，而是数据库中当前position的下一个；
  * 3.实现adapter和此活动的长按删除其共同操作的是ArrayList，每次添加和删除等操作都是先操作了ArrayList之后再去
- * 操作数据库，并且线程中每只股票的网络请求都不会从数据库中读取，而且ArrayList，总之，ArrayList总是adapter和
+ * 操作数据库，并且线程中每只股票的网络请求都不会从数据库中读取，而是ArrayList，总之，ArrayList总是adapter和
  * activity的首选操作目标；
  * TODO:1.添加和删除操作时，没有提供相同股票的识别功能；2.ArrayList没有进行判空操作，否则activity会崩溃；
  */
