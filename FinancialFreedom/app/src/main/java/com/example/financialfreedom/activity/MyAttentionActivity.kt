@@ -9,6 +9,7 @@ import com.example.financialfreedom.adapter.myattentionadapter.MyAttentionAdapte
 import com.example.financialfreedom.adapter.myattentionadapter.RealTimeStock
 import com.example.financialfreedom.database.myattention.MyAttentionBaseControl
 import com.example.financialfreedom.internet.HttpUtils
+import com.example.financialfreedom.internet.getSinaQueryUrl
 import com.example.financialfreedom.internet.parseRealTimeStockData
 import com.example.financialfreedom.utils.BaseActivity
 import com.example.financialfreedom.utils.onLongClickFlag
@@ -85,17 +86,8 @@ class MyAttentionActivity : BaseActivity() {
         addNewItem.setOnClickListener {
             val inputText = editView.text.toString()
             if (inputText != ""){
-                var url = "http://hq.sinajs.cn/list="
-                /* 从股票代码识别是上市还是深市 */
-                val shOrSz = when (inputText[0]){
-                    '6' -> "sh"
-                    '5' -> "sh" //上市基金
-                    else -> "sz"
-                }
-                /* 拼组URL */
-                url = url + shOrSz + inputText
                 /* 使用网络访问 */
-                HttpUtils.sendOkHttpRequest(url, object : Callback {
+                HttpUtils.sendOkHttpRequest(getSinaQueryUrl(inputText), object : Callback {
                     override fun onResponse(call: Call, response: Response) {
                         /* 进行网络访问 */
                         val responseData = response.body?.string()
@@ -142,17 +134,8 @@ class MyAttentionActivity : BaseActivity() {
                     for (i in 0 until realTimeStockList.size){
                         /* 从ArrayList中读取需要查询的数据 */
                         val targetData = realTimeStockList.get(i)
-                        /* 从股票代码识别是上市还是深市 */
-                        var url = "http://hq.sinajs.cn/list="
-                        val shOrSz = when (targetData.stockCode[0]){
-                            '6' -> "sh"
-                            '5' -> "sh"
-                            else -> "sz"
-                        }
-                        /* 拼组URL */
-                        url = url + shOrSz + targetData.stockCode
                         /* 使用网络访问 */
-                        HttpUtils.sendOkHttpRequest(url, object : Callback {
+                        HttpUtils.sendOkHttpRequest(getSinaQueryUrl(targetData.stockCode), object : Callback {
                             override fun onResponse(call: Call, response: Response) {
                                 /* 进行网络访问 */
                                 val responseData = response.body?.string()

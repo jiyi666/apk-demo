@@ -10,13 +10,12 @@ import com.example.financialfreedom.adapter.stockdataadapter.StockDataAdapter
 import com.example.financialfreedom.database.stockdata.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import com.example.financialfreedom.internet.HttpUtils
+import com.example.financialfreedom.internet.getSinaQueryUrl
 import com.example.financialfreedom.internet.parseOkHttpStockDataForNowPrice
 import com.example.financialfreedom.utils.onLongClickFlag
 import com.example.financialfreedom.utils.removeStockCode
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.addNewItem
 import kotlinx.android.synthetic.main.activity_main.recyclerView
-import kotlinx.android.synthetic.main.activity_my_optional.*
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -27,19 +26,15 @@ import kotlin.concurrent.thread
 class MainActivity : BaseActivity() {
 
     private val tag = "MainActivity"
-    private var stockList = ArrayList<StockData>()
-    /* 线程停止标志 */
+    /* 线程运行标志 */
     private var threadRun = true
-    /* 消息集 */
-    val updateDataFromInternet = 1
+    /* MainActivity的ArrayList */
+    private var stockList = ArrayList<StockData>()
     /*
      * 使用数据库
      */
     val databaseStock = StockDatabaseControl(this, "StockData", 1)
 
-    /**
-     * onCreate:显示数据库中的数据
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //supportRequestWindowFeature(Window.FEATURE_NO_TITLE) //去掉标题栏的代码
@@ -66,7 +61,7 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        /* 添加股票的listener */
+        /* "添加股票"的listener */
         addNewItem.setOnClickListener {
             val intent = Intent(this, DetailActivity::class.java)
             this.startActivity(intent) //开启活动
@@ -74,7 +69,7 @@ class MainActivity : BaseActivity() {
     }
 
     /**
-     *  onResume：从数据库读取最新的数据显示到view
+     *  onResume：从数据库读取最新的数据并启动线程进行实时查询，然后刷新view
      */
     override fun onResume() {
         super.onResume()
@@ -104,7 +99,7 @@ class MainActivity : BaseActivity() {
          */
         thread {
             while (threadRun){
-                /* 处理删除item事件 */
+                /* 确认是否需要处理删除item事件 */
                 if (onLongClickFlag == true){
                     if (removeStockCode != ""){
                         /* 删除数据库中的对应数据，注意，这里不需要删除ArrayList里面的了，因为adapter中已经删除了 */
@@ -116,18 +111,8 @@ class MainActivity : BaseActivity() {
                 }
                 for (i in 0 until stockList.size){
                     val targetData = stockList.get(i)
-                    var url = "http://hq.sinajs.cn/list="
-                    /*
-                     * 从股票代码识别是上市还是深市
-                     */
-                    val shOrSz = when (targetData.stockCode[0]){
-                        '6' -> "sh"
-                        else -> "sz"
-                    }
-                    /* 拼组URL */
-                    url = url + shOrSz + targetData.stockCode
                     /* 使用OkHttp进行网络数据请求 */
-                    HttpUtils.sendOkHttpRequest(url, object : Callback{
+                    HttpUtils.sendOkHttpRequest(getSinaQueryUrl(targetData.stockCode), object : Callback{
                         override fun onResponse(call: Call, response: Response) {
                             /* 进行网络访问 */
                             val responseData = response.body?.string()
@@ -166,102 +151,22 @@ class MainActivity : BaseActivity() {
      */
     private fun initStockData(){
 
-        stockList.add(
-            StockData(
-                "603658", "安图生物", 171.47,
-                98.94, 0.9, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "603288", "海天味业", 119.39,
-                70.478, 0.9, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "600519", "贵州茅台", 1439.84,
-                41.986, 17.025, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "002677", "浙江美大", 11.08,
-                17.671, 0.542, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "600566", "济川药业", 24.68,
-                12.754, 1.23, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "002372", "伟星新材", 12.07,
-                20.217, 0.5, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "603568", "伟明环保", 29.3,
-                30.175, 0.31, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "002508", "老板电器", 32.25,
-                20.19, 0.5, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "600167", "联美控股", 14.19,
-                19.00, 0.21, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "300015", "爱尔眼科", 46.30,
-                160.76, 0.115, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "002304", "洋河股份", 108.29,
-                22.16, 3.00, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "002117", "东港股份", 11.29,
-                26.44, 0.4, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "600660", "福耀玻璃", 21.45,
-                19.55, 0.75, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "603444", "吉比特", 453.90,
-                31.96, 5.00, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "603429", "集友股份", 31.70,
-                73.55, 0.186, 0.029
-            )
-        )
-        stockList.add(
-            StockData(
-                "603886", "元祖股份", 17.08,
-                35.54, 1.2, 0.029
-            )
-        )
+        stockList.add(StockData("603658", "安图生物", 171.47, 98.94, 0.9, 0.029))
+        stockList.add(StockData("603288", "海天味业", 119.39, 70.478, 0.9, 0.029))
+        stockList.add(StockData("600519", "贵州茅台", 1439.84, 41.986, 17.025, 0.029))
+        stockList.add(StockData("002677", "浙江美大", 11.08, 17.671, 0.542, 0.029))
+        stockList.add(StockData("600566", "济川药业", 24.68, 12.754, 1.23, 0.029))
+        stockList.add(StockData("002372", "伟星新材", 12.07, 20.217, 0.5, 0.029))
+        stockList.add(StockData("603568", "伟明环保", 29.3, 30.175, 0.31, 0.029))
+        stockList.add(StockData("002508", "老板电器", 32.25, 20.19, 0.5, 0.029))
+        stockList.add(StockData("600167", "联美控股", 14.19, 19.00, 0.21, 0.029))
+        stockList.add(StockData("300015", "爱尔眼科", 46.30, 160.76, 0.115, 0.029))
+        stockList.add(StockData("002304", "洋河股份", 108.29, 22.16, 3.00, 0.029))
+        stockList.add(StockData("002117", "东港股份", 11.29, 26.44, 0.4, 0.029))
+        stockList.add(StockData("600660", "福耀玻璃", 21.45, 19.55, 0.75, 0.029))
+        stockList.add(StockData("603444", "吉比特", 453.90, 31.96, 5.00, 0.029))
+        stockList.add(StockData("603429", "集友股份", 31.70, 73.55, 0.186, 0.029))
+        stockList.add(StockData("603886", "元祖股份", 17.08, 35.54, 1.2, 0.029))
     }
 
     /**
@@ -276,11 +181,12 @@ class MainActivity : BaseActivity() {
         /**
          * mainActivityTodo由外部类回调MainActivity操作
          * event：需要执行的操作
-         * position：响应控件对应数据库的id
+         * stockCode：响应控件对应的股票代码
          */
         @JvmStatic
         fun mainActivityTodo(event: String, stockCode: String){
             when (event){
+                /* 启动DetailActivity */
                 STARTDETAILACTIVITY -> {
                     /*
                      * 通过MainAvtivity的静态对象调用相关的方法
@@ -291,7 +197,7 @@ class MainActivity : BaseActivity() {
                     mainActivity.startActivity(intent) //开启活动
                     Log.d("MainActivity", "click stockCode:$stockCode")
                 }
-
+                /* 处理长按删除item事件 */
                 HANDLELONGCLIECK -> {
                     onLongClickFlag = true
                     removeStockCode = stockCode

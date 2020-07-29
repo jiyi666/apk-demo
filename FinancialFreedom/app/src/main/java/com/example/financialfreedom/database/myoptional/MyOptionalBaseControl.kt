@@ -152,6 +152,11 @@ class MyOptionalBaseControl(val context: Context, val name: String, val version:
             } while (cursor.moveToNext())
             cursor.close()
         }
+        /* 更新所有列的十年期国债收益率 */
+        val value1 = ContentValues().apply {
+            put("tenYearNationalDebt", stockData.tenYearNationalDebt)
+        }
+        db.update(name, value1, "", null)
     }
 
     /* 删除数据:根据股票代码来删除 */

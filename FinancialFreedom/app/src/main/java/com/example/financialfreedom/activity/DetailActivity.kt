@@ -11,6 +11,7 @@ import com.example.financialfreedom.adapter.stockdataadapter.StockData
 import com.example.financialfreedom.database.stockdata.StockDatabaseControl
 import com.example.financialfreedom.utils.BaseActivity
 import com.example.financialfreedom.internet.HttpUtils
+import com.example.financialfreedom.internet.getSinaQueryUrl
 import com.example.financialfreedom.internet.parseOkHttpStockDataForNowPrice
 import com.example.financialfreedom.internet.parseOkHttpStockDataForStockName
 import kotlinx.android.synthetic.main.detailed_data.detail_drcDividendRatio
@@ -44,14 +45,14 @@ class DetailActivity : BaseActivity(){
     private val updateUi = 1
     /* 使用数据库 */
     val stockbase = StockDatabaseControl(this, "StockData", 1)
-    /* 需要存入数据库的数据 */
+    /* 需要存入数据库的临时数据 */
     var saveStockData = StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detailed_data)
 
-        /* 拿到MyOptionalActivity送来的数据并送显 */
+        /* 拿到Maintivity的数据并送显 */
         val targetStockCode = intent.getIntExtra("stock_code", -1)
         val stockData = stockbase.queryData(targetStockCode.toString())
         if (stockData != null){
@@ -85,7 +86,7 @@ class DetailActivity : BaseActivity(){
         }
         /*
          * 刷新用户输入数据
-         * Note：对所有的数据进行判空输入处理，如果为空，则按照原来的数据进行计算
+         * Note：对所有的数据进行判空输入处理，如果为空，则发送吐司提醒
          */
         updateData.setOnClickListener {
             val stockCode = when (detail_stockcode.text.toString()){
@@ -117,18 +118,8 @@ class DetailActivity : BaseActivity(){
                 else -> detail_tenYearNationalDebt.text.toString()
             }
             if ((stockCode != null) && (ttmPERatio != null) && (perDividend != null) && (tenYearNationalDebt != null)){
-                /* 通过网络访问获取当前价格 */
-                var url = "http://hq.sinajs.cn/list="
-                /* 从股票代码识别是上市还是深市 */
-                val shOrSz = when (stockCode.toString()[0]){
-                    '6' -> "sh"
-                    '5' -> "sh" //上市基金
-                    else -> "sz"
-                }
-                /* 拼组URL */
-                url = url + shOrSz + stockCode
                 /* 使用网络访问 */
-                HttpUtils.sendOkHttpRequest(url, object : Callback {
+                HttpUtils.sendOkHttpRequest(getSinaQueryUrl(stockCode), object : Callback {
                     override fun onResponse(call: Call, response: Response) {
                         val responseData = response.body?.string()
                         /* 解析数据 */
@@ -186,16 +177,6 @@ class DetailActivity : BaseActivity(){
             } else {
                 takeToast("数据无效，不能保存！")
             }
-        }
-
-        /*
-         * nowprice触摸事件监听：清空内容 + 隐藏光标
-         * TODO:这个lambda表达式原理？
-         */
-        detail_nowprice.setOnTouchListener { _, _ ->
-            detail_nowprice.setText("")
-            detail_nowprice.isCursorVisible = true
-            false
         }
 
         /*
@@ -276,6 +257,7 @@ class DetailActivity : BaseActivity(){
         }
         detail_nowprice1.setTextColor(color)
     }
+
     /* 用于UI更新时的吐司动作 */
     private fun takeToast(text: String){
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()

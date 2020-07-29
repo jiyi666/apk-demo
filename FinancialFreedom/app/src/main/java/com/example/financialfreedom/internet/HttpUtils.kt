@@ -4,6 +4,26 @@ import com.example.financialfreedom.adapter.myattentionadapter.RealTimeStock
 import okhttp3.*
 
 /**
+ * 顶层函数：获取新浪服务器访问的URL
+ * param0->stockCode:需要访问的股票代码
+ * return：待访问的完整URL
+ */
+fun getSinaQueryUrl(stockCode: String): String{
+
+    var url = "http://hq.sinajs.cn/list="
+    /*
+     * 从股票代码识别是上市还是深市
+     */
+    val shOrSz = when (stockCode[0]){
+        '6' -> "sh"
+        '5' -> "sh"
+        else -> "sz"
+    }
+    /* 拼组URL */
+    return url + shOrSz + stockCode
+}
+
+/**
  * 顶层函数：服务器数据解析
  * param0->data:服务器响应的原始数据
  * param1->positon:需要获取的股票价格，这里使用默认参数方便单股查询

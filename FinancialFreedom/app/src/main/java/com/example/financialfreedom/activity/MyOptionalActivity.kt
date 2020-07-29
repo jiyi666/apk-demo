@@ -9,6 +9,7 @@ import com.example.financialfreedom.adapter.myoptionaladapter.MyOptionalAdapter
 import com.example.financialfreedom.adapter.stockdataadapter.StockData
 import com.example.financialfreedom.database.myoptional.MyOptionalBaseControl
 import com.example.financialfreedom.internet.HttpUtils
+import com.example.financialfreedom.internet.getSinaQueryUrl
 import com.example.financialfreedom.internet.parseOkHttpStockDataForNowPrice
 import com.example.financialfreedom.utils.BaseActivity
 import com.example.financialfreedom.utils.onLongClickFlag
@@ -101,18 +102,8 @@ class MyOptionalActivity : BaseActivity() {
                 for (i in 0 until myOptionalStockList.size){
                     /* 从ArrayList中读取需要查询的数据 */
                     val targetData = myOptionalStockList.get(i)
-                    /* 从股票代码识别是上市还是深市 */
-                    var url = "http://hq.sinajs.cn/list="
-                    val shOrSz = when (targetData.stockCode[0]){
-                        '6' -> "sh"
-                        '5' -> "sh"
-                        else -> "sz"
-                    }
-                    /* 拼组URL */
-                    url = url + shOrSz + targetData.stockCode
-
                     /* 使用网络访问 */
-                    HttpUtils.sendOkHttpRequest(url, object : Callback {
+                    HttpUtils.sendOkHttpRequest(getSinaQueryUrl(targetData.stockCode), object : Callback {
                         override fun onResponse(call: Call, response: Response) {
                             /* 进行网络访问 */
                             val responseData = response.body?.string()
@@ -182,6 +173,7 @@ class MyOptionalActivity : BaseActivity() {
         @JvmStatic
         fun myOptionalActivityTodo(event: String, stockCode: String){
             when (event){
+                /* 启动MyOptionalDetailActivity */
                 STARTDETAILACTIVITY -> {
                     /*
                      * 通过MyOptionalActivity的静态对象调用相关的方法
@@ -192,6 +184,7 @@ class MyOptionalActivity : BaseActivity() {
                     myOptionalActivity.startActivity(intent) //开启活动
                     Log.d("MyOptionalActivity", "click stockCode:$stockCode")
                 }
+                /* 处理长按删除item事件 */
                 HANDLELONGCLIECK -> {
                     onLongClickFlag = true
                     removeStockCode = stockCode

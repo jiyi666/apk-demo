@@ -11,6 +11,7 @@ import com.example.financialfreedom.R
 import com.example.financialfreedom.adapter.stockdataadapter.StockData
 import com.example.financialfreedom.database.myoptional.MyOptionalBaseControl
 import com.example.financialfreedom.internet.HttpUtils
+import com.example.financialfreedom.internet.getSinaQueryUrl
 import com.example.financialfreedom.internet.parseOkHttpStockDataForNowPrice
 import com.example.financialfreedom.internet.parseOkHttpStockDataForStockName
 import com.example.financialfreedom.utils.BaseActivity
@@ -94,18 +95,8 @@ class MyOptionalDetailActivity : BaseActivity() {
                 else -> detail_tenYearNationalDebt.text.toString()
             }
             if ((stockCode != null) && (ttmPERatio != null) && (perDividend != null) && (tenYearNationalDebt != null)){
-                /* 通过网络访问获取当前价格 */
-                var url = "http://hq.sinajs.cn/list="
-                /* 从股票代码识别是上市还是深市 */
-                val shOrSz = when (stockCode.toString()[0]){
-                    '6' -> "sh"
-                    '5' -> "sh" //上市基金
-                    else -> "sz"
-                }
-                /* 拼组URL */
-                url = url + shOrSz + stockCode
                 /* 使用网络访问 */
-                HttpUtils.sendOkHttpRequest(url, object : Callback {
+                HttpUtils.sendOkHttpRequest(getSinaQueryUrl(stockCode), object : Callback {
                     override fun onResponse(call: Call, response: Response) {
                         val responseData = response.body?.string()
                         /* 解析数据 */
