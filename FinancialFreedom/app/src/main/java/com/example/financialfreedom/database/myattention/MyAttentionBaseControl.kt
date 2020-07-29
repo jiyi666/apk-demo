@@ -1,5 +1,6 @@
 package com.example.financialfreedom.database.myattention
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import com.example.financialfreedom.adapter.myattentionadapter.RealTimeStock
@@ -9,11 +10,8 @@ import com.example.financialfreedom.adapter.myattentionadapter.RealTimeStock
  * 给MyAttentionActivity使用
  */
 class MyAttentionBaseControl(val context: Context, val name: String, val version: Int) {
-    private var dbHelper : MyAttentionBaseHelper
 
-    init {
-        dbHelper = MyAttentionBaseHelper(context, name, version)
-    }
+    private var dbHelper : MyAttentionBaseHelper = MyAttentionBaseHelper(context, name, version)
 
     /* 创建数据库 */
     fun create(){
@@ -102,6 +100,7 @@ class MyAttentionBaseControl(val context: Context, val name: String, val version
     }
 
     /* 获取数据库总数据条数 */
+    @SuppressLint("Recycle")
     fun getDataLengh() : Int{
         val db = dbHelper.writableDatabase
         /* 全局搜索 */

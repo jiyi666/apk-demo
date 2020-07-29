@@ -90,7 +90,7 @@ class MyOptionalActivity : BaseActivity() {
         thread {
             while (threadRun){
                 /* 处理删除item事件 */
-                if (onLongClickFlag == true){
+                if (onLongClickFlag){
                     if (removeStockCode != ""){
                         /* 删除数据库中的对应数据，注意，这里不需要删除ArrayList里面的了，因为adapter中已经删除了 */
                         myOptionalStockbase.deleteData(removeStockCode)
@@ -101,7 +101,7 @@ class MyOptionalActivity : BaseActivity() {
                 }
                 for (i in 0 until myOptionalStockList.size){
                     /* 从ArrayList中读取需要查询的数据 */
-                    val targetData = myOptionalStockList.get(i)
+                    val targetData = myOptionalStockList[i]
                     /* 使用网络访问 */
                     HttpUtils.sendOkHttpRequest(getSinaQueryUrl(targetData.stockCode), object : Callback {
                         override fun onResponse(call: Call, response: Response) {

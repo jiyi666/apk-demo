@@ -1,5 +1,6 @@
 package com.example.financialfreedom.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -46,6 +47,7 @@ class MyAttentionActivity : BaseActivity() {
     /* 启用数据库 */
     private val realTimeStockBase = MyAttentionBaseControl(this, "RealTimeStock", 1)
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_attention)
@@ -119,7 +121,7 @@ class MyAttentionActivity : BaseActivity() {
                     Thread.sleep(2000)
                 } else {
                     /* 处理删除item事件 */
-                    if (onLongClickFlag == true){
+                    if (onLongClickFlag){
                         if (removeStockCode != ""){
                             /* 删除数据库中的对应数据，注意，这里不需要删除ArrayList里面的了，因为
                              * adapter中已经删除了
@@ -133,7 +135,7 @@ class MyAttentionActivity : BaseActivity() {
                     Log.d(tag, "Now ArrayList size:${realTimeStockList.size}")
                     for (i in 0 until realTimeStockList.size){
                         /* 从ArrayList中读取需要查询的数据 */
-                        val targetData = realTimeStockList.get(i)
+                        val targetData = realTimeStockList[i]
                         /* 使用网络访问 */
                         HttpUtils.sendOkHttpRequest(getSinaQueryUrl(targetData.stockCode), object : Callback {
                             override fun onResponse(call: Call, response: Response) {

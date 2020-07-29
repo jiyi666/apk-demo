@@ -13,7 +13,7 @@ import com.example.financialfreedom.adapter.stockdataadapter.StockData
 
 class MyOptionalAdapter(list: ArrayList<StockData>) :
     RecyclerView.Adapter <MyOptionalAdapter.ViewHolder>() {
-    var stockDataList = ArrayList<StockData>()
+    private var stockDataList = ArrayList<StockData>()
 
     init {
         stockDataList = list
@@ -50,9 +50,9 @@ class MyOptionalAdapter(list: ArrayList<StockData>) :
             val position = viewHolder.adapterPosition
             /* 将长按item对应的股票代码发送至MyAttentionActivity */
             MyOptionalActivity.myOptionalActivityTodo(MyOptionalActivity.HANDLELONGCLIECK,
-                stockDataList.get(position).stockCode)
+                stockDataList[position].stockCode)
             /* 在ArrayList中移除此股 */
-            stockDataList.remove(stockDataList.get(position))
+            stockDataList.remove(stockDataList[position])
             /* 通知移除该item */
             notifyItemRemoved(position)
             /* 通知调制ArrayList顺序(此句删除也无影响) */
@@ -80,14 +80,14 @@ class MyOptionalAdapter(list: ArrayList<StockData>) :
             val drcPrice = priceList[2].split(":")[1]
             /* 设置文本颜色:由价格比较得出 */
             val color : Int
-            if ((nowPrice.toDouble() > ttmPrice.toDouble()) &&
+            color = if ((nowPrice.toDouble() > ttmPrice.toDouble()) &&
                 (nowPrice.toDouble() > drcPrice.toDouble())){
-                color = Color.RED
+                Color.RED
             } else if ((nowPrice.toDouble() < ttmPrice.toDouble()) &&
                 (nowPrice.toDouble() < drcPrice.toDouble())){
-                color = Color.GREEN
+                Color.GREEN
             } else {
-                color = Color.BLUE
+                Color.BLUE
             }
             holder.stockNowPrice.setTextColor(color)
             holder.stockNowPrice.text = nowPrice
@@ -101,9 +101,9 @@ class MyOptionalAdapter(list: ArrayList<StockData>) :
     override fun onBindViewHolder(holder: MyOptionalAdapter.ViewHolder, position: Int) {
         val stockData = stockDataList[position]
         holder.stockName.text = stockData.stockName
-        holder.stockNowPrice.setText(stockData.nowPrice.toString())
-        holder.stockTtmPrice.setText(stockData.ttmPrice)
-        holder.stockDrcPrice.setText(stockData.drcPrice)
+        holder.stockNowPrice.text = stockData.nowPrice.toString()
+        holder.stockTtmPrice.text = stockData.ttmPrice
+        holder.stockDrcPrice.text = stockData.drcPrice
         holder.stockDetails.text = stockData.detailes
 
         /*
@@ -113,14 +113,14 @@ class MyOptionalAdapter(list: ArrayList<StockData>) :
          * 当前价格介于TTM市盈率好价格和动态股息率好价格间 -> 蓝色
          */
         val color : Int
-        if ((stockData.nowPrice > stockData.ttmPrice.toDouble()) &&
+        color = if ((stockData.nowPrice > stockData.ttmPrice.toDouble()) &&
             (stockData.nowPrice > stockData.drcPrice.toDouble())){
-            color = Color.RED
+            Color.RED
         } else if ((stockData.nowPrice < stockData.ttmPrice.toDouble()) &&
             (stockData.nowPrice < stockData.drcPrice.toDouble())){
-            color = Color.GREEN
+            Color.GREEN
         } else {
-            color = Color.BLUE
+            Color.BLUE
         }
         holder.stockNowPrice.setTextColor(color)
 

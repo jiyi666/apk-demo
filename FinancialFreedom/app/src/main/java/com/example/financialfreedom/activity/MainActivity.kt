@@ -25,7 +25,6 @@ import kotlin.concurrent.thread
 
 class MainActivity : BaseActivity() {
 
-    private val tag = "MainActivity"
     /* 线程运行标志 */
     private var threadRun = true
     /* MainActivity的ArrayList */
@@ -100,7 +99,7 @@ class MainActivity : BaseActivity() {
         thread {
             while (threadRun){
                 /* 确认是否需要处理删除item事件 */
-                if (onLongClickFlag == true){
+                if (onLongClickFlag){
                     if (removeStockCode != ""){
                         /* 删除数据库中的对应数据，注意，这里不需要删除ArrayList里面的了，因为adapter中已经删除了 */
                         databaseStock.deleteData(removeStockCode)
@@ -110,7 +109,7 @@ class MainActivity : BaseActivity() {
                     Thread.sleep(500)
                 }
                 for (i in 0 until stockList.size){
-                    val targetData = stockList.get(i)
+                    val targetData = stockList[i]
                     /* 使用OkHttp进行网络数据请求 */
                     HttpUtils.sendOkHttpRequest(getSinaQueryUrl(targetData.stockCode), object : Callback{
                         override fun onResponse(call: Call, response: Response) {

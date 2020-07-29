@@ -1,5 +1,6 @@
 package com.example.financialfreedom.activity
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -44,10 +45,11 @@ class DetailActivity : BaseActivity(){
     /* 消息集 */
     private val updateUi = 1
     /* 使用数据库 */
-    val stockbase = StockDatabaseControl(this, "StockData", 1)
+    private val stockbase = StockDatabaseControl(this, "StockData", 1)
     /* 需要存入数据库的临时数据 */
     var saveStockData = StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detailed_data)
@@ -62,7 +64,8 @@ class DetailActivity : BaseActivity(){
         /**
          *  消息处理：获取传递过来的数据并更新UI
          */
-        val handler = object : Handler(){
+        val handler = @SuppressLint("HandlerLeak")
+        object : Handler(){
             override fun handleMessage(msg: Message) {
                 when (msg.what){
                     updateUi -> {
@@ -76,7 +79,7 @@ class DetailActivity : BaseActivity(){
 
                         val nowStockData = StockData(stockCode.toString(), stockName.toString(), nowPrice,
                             ttmPERatio, perDividend, tenYearNationalDebt)
-                        Log.d(tag, "new stockinfo:${nowStockData.toString()}")
+                        Log.d(tag, "new stockinfo:${nowStockData}")
                         putDataToView(nowStockData)
                         /* 暂存数据 */
                         saveStockData = nowStockData
@@ -227,11 +230,11 @@ class DetailActivity : BaseActivity(){
     fun putDataToView(stockData: StockData){
         detail_stockcode.setText(stockData.stockCode)
         detail_stockname.text = stockData.stockName
-        detail_nowprice.setText(stockData.nowPrice.toString())
+        detail_nowprice.text = stockData.nowPrice.toString()
         detail_ttmPERatio.setText(stockData.ttmPERatio.toString())
         detail_perEarnings.text = stockData.perEarnings
         detail_tenYearNationalDebt.setText(stockData.tenYearNationalDebt.toString())
-        detail_tenYearNationalDebtDevide3.text = stockData.tenYearNationalDebtDevide3.toString()
+        detail_tenYearNationalDebtDevide3.text = stockData.tenYearNationalDebtDavide3
         detail_perDividend.setText(stockData.perDividend.toString())
         detail_drcDividendRatio.text = stockData.drcDividendRatio
         detail_ttmPrice.text = stockData.ttmPrice
@@ -245,15 +248,14 @@ class DetailActivity : BaseActivity(){
          * 当前价格均小于TTM市盈率好价格和动态股息率好价格 -> 绿色
          * 当前价格介于TTM市盈率好价格和动态股息率好价格间 -> 蓝色
         */
-        val color : Int
-        if ((stockData.nowPrice > stockData.ttmPrice.toDouble()) &&
+        val color : Int = if ((stockData.nowPrice > stockData.ttmPrice.toDouble()) &&
             (stockData.nowPrice > stockData.drcPrice.toDouble())){
-            color = Color.RED
+            Color.RED
         } else if ((stockData.nowPrice < stockData.ttmPrice.toDouble()) &&
             (stockData.nowPrice < stockData.drcPrice.toDouble())){
-            color = Color.GREEN
+            Color.GREEN
         } else {
-            color = Color.BLUE
+            Color.BLUE
         }
         detail_nowprice1.setTextColor(color)
     }

@@ -1,7 +1,7 @@
 package com.example.financialfreedom.adapter.myattentionadapter
 
+import android.annotation.SuppressLint
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +18,7 @@ import com.example.financialfreedom.activity.MyAttentionActivity
 class MyAttentionAdapter(list: ArrayList<RealTimeStock>) :
     RecyclerView.Adapter <MyAttentionAdapter.ViewHolder>(){
 
-    var realTimeStockList = ArrayList<RealTimeStock>()
+    private var realTimeStockList = ArrayList<RealTimeStock>()
 
     init {
         realTimeStockList = list
@@ -45,9 +45,9 @@ class MyAttentionAdapter(list: ArrayList<RealTimeStock>) :
             val position = viewHolder.adapterPosition
             /* 将长按item对应的股票代码发送至MyAttentionActivity */
             MyAttentionActivity.myAttentionActivityTodo(MyAttentionActivity.HANDLELONGCLIECK,
-                realTimeStockList.get(position).stockCode)
+                realTimeStockList[position].stockCode)
             /* 在ArrayList中移除此股 */
-            realTimeStockList.remove(realTimeStockList.get(position))
+            realTimeStockList.remove(realTimeStockList[position])
             /* 通知移除该item */
             notifyItemRemoved(position)
             /* 通知调制ArrayList顺序(此句删除也无影响) */
@@ -60,6 +60,7 @@ class MyAttentionAdapter(list: ArrayList<RealTimeStock>) :
     /**
      * 调用adapter的notifyItemChanged时会调用此函数，用于更新局部控件
      */
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
         super.onBindViewHolder(holder, position, payloads)
         if (payloads.isEmpty()){
@@ -79,12 +80,16 @@ class MyAttentionAdapter(list: ArrayList<RealTimeStock>) :
              * 涨跌小于0 -> 绿色
              */
             val color: Int
-            if (upAndDown.toDouble() > 0){
-                color = Color.RED
-            } else if (upAndDown.toDouble() == 0.00){
-                color = Color.GRAY
-            } else {
-                color = Color.GREEN
+            color = when {
+                upAndDown.toDouble() > 0 -> {
+                    Color.RED
+                }
+                upAndDown.toDouble() == 0.00 -> {
+                    Color.GRAY
+                }
+                else -> {
+                    Color.GREEN
+                }
             }
             holder.upAndDown.setTextColor(color)
             holder.upAndDownRate.setTextColor(color)
@@ -97,6 +102,7 @@ class MyAttentionAdapter(list: ArrayList<RealTimeStock>) :
     }
 
     /* 对RecyclerView滚入屏幕的子项数据赋值 */
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val realTimeStock = realTimeStockList[position]
         holder.stockName.text = realTimeStock.stockName
@@ -111,12 +117,16 @@ class MyAttentionAdapter(list: ArrayList<RealTimeStock>) :
          * 涨跌小于0 -> 绿色
          */
         val color: Int
-        if (realTimeStock.upAndDown.toDouble() > 0){
-            color = Color.RED
-        } else if (realTimeStock.upAndDown.toDouble() == 0.00){
-            color = Color.GRAY
-        } else {
-            color = Color.GREEN
+        color = when {
+            realTimeStock.upAndDown.toDouble() > 0 -> {
+                Color.RED
+            }
+            realTimeStock.upAndDown.toDouble() == 0.00 -> {
+                Color.GRAY
+            }
+            else -> {
+                Color.GREEN
+            }
         }
         holder.upAndDown.setTextColor(color)
         holder.upAndDownRate.setTextColor(color)

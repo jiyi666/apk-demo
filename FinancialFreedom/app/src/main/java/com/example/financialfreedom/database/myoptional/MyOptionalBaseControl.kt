@@ -2,7 +2,6 @@ package com.example.financialfreedom.database.myoptional
 
 import android.content.ContentValues
 import android.content.Context
-import android.util.Log
 import com.example.financialfreedom.adapter.stockdataadapter.StockData
 import com.example.financialfreedom.database.stockdata.MyDataBaseHelper
 
@@ -11,12 +10,7 @@ import com.example.financialfreedom.database.stockdata.MyDataBaseHelper
  */
 class MyOptionalBaseControl(val context: Context, val name: String, val version: Int) {
 
-    private val tag = "MyOptionalBaseControl"
-    private var dbHelper : MyDataBaseHelper
-
-    init {
-        dbHelper = MyDataBaseHelper(context, name, version)
-    }
+    private var dbHelper : MyDataBaseHelper = MyDataBaseHelper(context, name, version)
 
     /* 创建数据库 */
     fun create(){
@@ -38,7 +32,7 @@ class MyOptionalBaseControl(val context: Context, val name: String, val version:
             put("perEarnings", stockData.perEarnings)
             put("perDividend", stockData.perDividend)
             put("tenYearNationalDebt", stockData.tenYearNationalDebt)
-            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDevide3)
+            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDavide3)
             put("drcDividendRatio", stockData.drcDividendRatio)
             put("ttmPrice", stockData.ttmPrice)
             put("drcPrice", stockData.drcPrice)
@@ -132,7 +126,7 @@ class MyOptionalBaseControl(val context: Context, val name: String, val version:
             put("perEarnings", stockData.perEarnings)
             put("perDividend", stockData.perDividend)
             put("tenYearNationalDebt", stockData.tenYearNationalDebt)
-            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDevide3)
+            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDavide3)
             put("drcDividendRatio", stockData.drcDividendRatio)
             put("ttmPrice", stockData.ttmPrice)
             put("drcPrice", stockData.drcPrice)

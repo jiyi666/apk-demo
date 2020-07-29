@@ -10,7 +10,7 @@ import okhttp3.*
  */
 fun getSinaQueryUrl(stockCode: String): String{
 
-    var url = "http://hq.sinajs.cn/list="
+    val url = "http://hq.sinajs.cn/list="
     /*
      * 从股票代码识别是上市还是深市
      */
@@ -117,7 +117,7 @@ object HttpUtils{
     /**
      *  异步方式
      */
-    fun sendOkHttpRequest(url: String, callback: okhttp3.Callback){
+    fun sendOkHttpRequest(url: String, callback: Callback){
         val request = Request.Builder()
             .url(url)
             .build()

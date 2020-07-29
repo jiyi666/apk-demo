@@ -1,5 +1,6 @@
 package com.example.financialfreedom.database.stockdata
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import com.example.financialfreedom.adapter.stockdataadapter.StockData
@@ -9,17 +10,7 @@ import com.example.financialfreedom.adapter.stockdataadapter.StockData
  */
 class StockDatabaseControl(val context: Context, val name: String, val versin: Int) {
 
-    private val tag = "DatabaseControler"
-    private var dbHelper : MyDataBaseHelper
-
-    init {
-         dbHelper =
-             MyDataBaseHelper(
-                 context,
-                 name,
-                 versin
-             )
-    }
+    private var dbHelper : MyDataBaseHelper = MyDataBaseHelper(context, name, versin)
 
     /*
      * 创建数据库
@@ -45,7 +36,7 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
             put("perEarnings", stockData.perEarnings)
             put("perDividend", stockData.perDividend)
             put("tenYearNationalDebt", stockData.tenYearNationalDebt)
-            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDevide3)
+            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDavide3)
             put("drcDividendRatio", stockData.drcDividendRatio)
             put("ttmPrice", stockData.ttmPrice)
             put("drcPrice", stockData.drcPrice)
@@ -138,7 +129,7 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
             put("perEarnings", stockData.perEarnings)
             put("perDividend", stockData.perDividend)
             put("tenYearNationalDebt", stockData.tenYearNationalDebt)
-            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDevide3)
+            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDavide3)
             put("drcDividendRatio", stockData.drcDividendRatio)
             put("ttmPrice", stockData.ttmPrice)
             put("drcPrice", stockData.drcPrice)
@@ -167,7 +158,7 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
             put("perEarnings", stockData.perEarnings)
             put("perDividend", stockData.perDividend)
             put("tenYearNationalDebt", stockData.tenYearNationalDebt)
-            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDevide3)
+            put("tenYearNationalDebtDevide3", stockData.tenYearNationalDebtDavide3)
             put("drcDividendRatio", stockData.drcDividendRatio)
             put("ttmPrice", stockData.ttmPrice)
             put("drcPrice", stockData.drcPrice)
@@ -190,6 +181,7 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
     }
 
     /* 获取数据库总数据条数 */
+    @SuppressLint("Recycle")
     fun getDataLengh() : Int{
         val db = dbHelper.writableDatabase
         /* 全局搜索 */

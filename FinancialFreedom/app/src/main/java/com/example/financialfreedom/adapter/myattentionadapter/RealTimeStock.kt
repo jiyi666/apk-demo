@@ -11,11 +11,10 @@ package com.example.financialfreedom.adapter.myattentionadapter
 class RealTimeStock(val stockCode: String, val stockName: String, val nowPrice: Double,
                     val basicPrice: Double) {
 
-    val upAndDown: String
+    val upAndDown: String = String.format("%.3f", nowPrice - basicPrice)
     val upAndDownRate : String
 
     init {
-        upAndDown = String.format("%.3f", nowPrice - basicPrice)
         upAndDownRate = String.format("%.4f",  upAndDown.toDouble() / basicPrice)
     }
 
