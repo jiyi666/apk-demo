@@ -135,14 +135,14 @@ class MyOptionalDetailActivity : BaseActivity() {
         saveData.setOnClickListener {
             if (saveStockData.stockCode != "?"){
                 /* 若数据库中无该数据，则添加数据，否则更新数据 */
-                if (stockbase.queryData(saveStockData.stockCode) == null){
+                saveStockData = if (stockbase.queryData(saveStockData.stockCode) == null){
                     stockbase.addData(saveStockData)
                     takeToast("数据保存成功！")
-                    saveStockData = StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
+                    StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
                 } else {
                     stockbase.updateData(saveStockData)
                     takeToast("查询到数据库中有该股票信息，已更新成功！")
-                    saveStockData = StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
+                    StockData("?", "?", 0.0, 0.0, 0.0, 0.0)
                 }
 
             } else {
