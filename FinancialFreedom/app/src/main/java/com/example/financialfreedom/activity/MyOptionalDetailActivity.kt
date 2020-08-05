@@ -151,12 +151,15 @@ class MyOptionalDetailActivity : BaseActivity() {
 
         }
 
-        /* 拿到MyOptionalActivity送来的数据并送显 */
-        val targetStockCode = intent.getIntExtra("stock_code", -1)
-        val stockData = stockbase.queryData(targetStockCode.toString())
-        if (stockData != null){
-            putDataToView(stockData)
+        /* MyOptionalActivity若是"添加"开启此活动，则什么也不做，若是通过股票代码开启此活动，则查询数据库并送显 */
+        val targetStockCode = intent.getStringExtra("stock_code")
+        if (targetStockCode != null){
+            val stockData = stockbase.queryData(targetStockCode)
+            if (stockData != null){
+                putDataToView(stockData)
+            }
         }
+
 
     }
 

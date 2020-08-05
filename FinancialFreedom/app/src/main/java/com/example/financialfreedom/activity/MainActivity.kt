@@ -191,8 +191,8 @@ class MainActivity : BaseActivity() {
                      * 通过MainAvtivity的静态对象调用相关的方法
                      */
                     val intent = Intent(mainActivity, DetailActivity::class.java)
-                    /* 向活动传递数据：注意为Int型 */
-                    intent.putExtra("stock_code", stockCode.toInt())
+                    /* 向活动传递数据：注意为确保"0"开头的如深市代码能正确传递，均使用String类型进行传递 */
+                    intent.putExtra("stock_code", stockCode)
                     mainActivity.startActivity(intent) //开启活动
                     Log.d("MainActivity", "click stockCode:$stockCode")
                 }

@@ -136,12 +136,6 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
             put("finalPrice", stockData.finalPrice)
         }
         db.update(name, value, "id = ?", arrayOf(position.toString()))
-
-        /* 更新所有列的十年期国债收益率 */
-        val value1 = ContentValues().apply {
-            put("tenYearNationalDebt", stockData.tenYearNationalDebt)
-        }
-        db.update(name, value1, "", null)
     }
 
     /*
@@ -178,6 +172,11 @@ class StockDatabaseControl(val context: Context, val name: String, val versin: I
             } while (cursor.moveToNext())
             cursor.close()
         }
+        /* 更新所有列的十年期国债收益率 */
+        val value1 = ContentValues().apply {
+            put("tenYearNationalDebt", stockData.tenYearNationalDebt)
+        }
+        db.update(name, value1, "", null)
     }
 
     /* 获取数据库总数据条数 */

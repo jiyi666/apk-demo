@@ -54,12 +54,15 @@ class DetailActivity : BaseActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detailed_data)
 
-        /* 拿到Maintivity的数据并送显 */
-        val targetStockCode = intent.getIntExtra("stock_code", -1)
-        val stockData = stockbase.queryData(targetStockCode.toString())
-        if (stockData != null){
-            putDataToView(stockData)
+        /* MainActivity若是"添加"开启此活动，则什么也不做，若是通过股票代码开启此活动，则查询数据库并送显 */
+        val targetStockCode = intent.getStringExtra("stock_code")
+        if (targetStockCode != null){
+            val stockData = stockbase.queryData(targetStockCode)
+            if (stockData != null){
+                putDataToView(stockData)
+            }
         }
+
 
         /**
          *  消息处理：获取传递过来的数据并更新UI
