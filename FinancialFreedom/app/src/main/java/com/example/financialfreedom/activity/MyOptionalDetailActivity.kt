@@ -210,8 +210,9 @@ class MyOptionalDetailActivity : BaseActivity() {
     /* 对外启动活动函数，附带信息为股票代码 */
     companion object{
         fun startActivity(context: Context, stockCode: String){
-            val intent = Intent(context, MyOptionalDetailActivity::class.java)
-            intent.putExtra("stock_code", stockCode)
+            val intent = Intent(context, MyOptionalDetailActivity::class.java).apply {
+                putExtra("stock_code", stockCode)
+            }
             context.startActivity(intent)
         }
     }
