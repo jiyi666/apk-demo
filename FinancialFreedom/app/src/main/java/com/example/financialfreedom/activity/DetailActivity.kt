@@ -1,6 +1,8 @@
 package com.example.financialfreedom.activity
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -34,6 +36,7 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
+import java.security.AccessControlContext
 
 /**
  *  具体数据展示页面的activity
@@ -266,5 +269,14 @@ class DetailActivity : BaseActivity(){
     /* 用于UI更新时的吐司动作 */
     private fun takeToast(text: String){
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+    }
+
+    /* 对外启动活动函数，附带信息为股票代码 */
+    companion object{
+        fun startActivity(context: Context, stockCode: String){
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("stock_code", stockCode)
+            context.startActivity(intent)
+        }
     }
 }

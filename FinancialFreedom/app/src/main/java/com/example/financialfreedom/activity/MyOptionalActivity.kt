@@ -175,14 +175,9 @@ class MyOptionalActivity : BaseActivity() {
             when (event){
                 /* 启动MyOptionalDetailActivity */
                 STARTDETAILACTIVITY -> {
-                    /*
-                     * 通过MyOptionalActivity的静态对象调用相关的方法
-                     */
-                    val intent = Intent(myOptionalActivity, MyOptionalDetailActivity::class.java)
-                    /* 向活动传递数据：注意为确保"0"开头的如深市代码能正确传递，均使用String类型进行传递 */
-                    intent.putExtra("stock_code", stockCode)
-                    myOptionalActivity.startActivity(intent) //开启活动
                     Log.d("MyOptionalActivity", "click stockCode:$stockCode")
+                    /* 向活动传递数据：注意为确保"0"开头的如深市代码能正确传递，均使用String类型进行传递 */
+                    MyOptionalDetailActivity.startActivity(myOptionalActivity, stockCode)
                 }
                 /* 处理长按删除item事件 */
                 HANDLELONGCLIECK -> {

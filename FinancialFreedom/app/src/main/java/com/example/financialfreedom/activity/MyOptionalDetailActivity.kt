@@ -2,6 +2,8 @@ package com.example.financialfreedom.activity
 
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -203,5 +205,14 @@ class MyOptionalDetailActivity : BaseActivity() {
             Color.BLUE
         }
         detail_nowprice1.setTextColor(color)
+    }
+
+    /* 对外启动活动函数，附带信息为股票代码 */
+    companion object{
+        fun startActivity(context: Context, stockCode: String){
+            val intent = Intent(context, MyOptionalDetailActivity::class.java)
+            intent.putExtra("stock_code", stockCode)
+            context.startActivity(intent)
+        }
     }
 }
