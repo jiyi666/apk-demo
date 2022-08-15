@@ -120,6 +120,7 @@ object HttpUtils{
     fun sendOkHttpRequest(url: String, callback: Callback){
         val request = Request.Builder()
             .url(url)
+            .addHeader("Referer", "http://finance.sina.com.cn")
             .build()
         client.newCall(request).enqueue(callback)
     }
