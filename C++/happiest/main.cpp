@@ -285,6 +285,9 @@ int main() {
             test->QueryRandomResultFive(3, 1, 1);
             test->QueryRandomResultTwo(1, 0, 1);
             test->PrintResult();
+        }else if (input == '2') {
+            int arr[ARRAY_SIZE] = {2, 6, 7, 8, 15, 7, 10};
+            test->CheckOneArray(arr);
         }else if (input == 'q') {
             delete test;
             break;

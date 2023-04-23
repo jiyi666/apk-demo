@@ -176,6 +176,12 @@ void HappyCash::QueryRandomResultFive(int head_choose, int mid_choose, int tail_
 //        cout << p << " ";
 //    }
 //    cout << endl;
+
+    //10.update length
+    memset(five_length, 0, sizeof(five_length));
+    five_length[0] = sum_head;
+    five_length[1] = sum_mid;
+    five_length[2] = sum_tail;
 }
 
 void HappyCash::QueryRandomResultTwo(int head_choose, int mid_choose, int tail_choose) {
@@ -277,6 +283,12 @@ void HappyCash::QueryRandomResultTwo(int head_choose, int mid_choose, int tail_c
 //        cout << p << " ";
 //    }
 //    cout << endl;
+
+    //10.update length
+    memset(two_length, 0, sizeof(two_length));
+    two_length[0] = sum_head;
+    two_length[1] = sum_mid;
+    two_length[2] = sum_tail;
 }
 
 void HappyCash::ClearResult() {
@@ -293,6 +305,45 @@ void HappyCash::PrintResult() {
         cout << p << " ";
     }
     cout << endl;
+}
+
+void HappyCash::CheckOneArray(int *array) {
+    cout << "head values: ";
+    for (int i = 0; i < 5; i++) {
+        //如果array[i]在five_selected_head中出现过，则打印出来
+        for (int j = 0; j < five_length[0]; j++) {
+            if (five_selected_head[j] == array[i]){
+                cout << array[i] << " ";
+                break;
+            }
+        }
+    }
+    cout << endl;
+
+    cout << "mid values: ";
+    for (int i = 0; i < 5; i++) {
+        //如果array[i]在five_selected_mid中出现过，则打印出来
+        for (int j = 0; j < five_length[1]; j++) {
+            if (five_selected_mid[j] == array[i]){
+                cout << array[i] << " ";
+                break;
+            }
+        }
+    }
+    cout << endl;
+
+    cout << "tail values: ";
+    for (int i = 0; i < 5; i++) {
+        //如果array[i]在five_selected_tail中出现过，则打印出来
+        for (int j = 0; j < five_length[2]; j++) {
+            if (five_selected_tail[j] == array[i]){
+                cout << array[i] << " ";
+                break;
+            }
+        }
+    }
+    cout << endl;
+
 }
 
 HappyCash::~HappyCash() {

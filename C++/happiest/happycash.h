@@ -38,7 +38,8 @@ private:
     int* two_selected_head = nullptr;  //head equel 1~4
     int* two_selected_mid = nullptr;   //mid equel 5~8
     int* two_selected_tail = nullptr;  //tail equel 9~12
-
+    int five_length[3];
+    int two_length[3];
     std::set<int> result_five;
     std::set<int> result_two;
 };
