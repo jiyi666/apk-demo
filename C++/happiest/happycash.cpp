@@ -157,7 +157,7 @@ void HappyCash::PrintResult() {
 }
 
 void HappyCash::CheckOneArray(int *array) {
-    cout << "head values: ";
+    cout << "five head values: ";
     for (int i = 0; i < 5; i++) {
         //如果array[i]在five_selected_head中出现过，则打印出来
         for (int j = 0; j < five_length[0]; j++) {
@@ -169,7 +169,7 @@ void HappyCash::CheckOneArray(int *array) {
     }
     cout << endl;
 
-    cout << "mid values: ";
+    cout << "five mid values: ";
     for (int i = 0; i < 5; i++) {
         //如果array[i]在five_selected_mid中出现过，则打印出来
         for (int j = 0; j < five_length[1]; j++) {
@@ -181,7 +181,7 @@ void HappyCash::CheckOneArray(int *array) {
     }
     cout << endl;
 
-    cout << "tail values: ";
+    cout << "five tail values: ";
     for (int i = 0; i < 5; i++) {
         //如果array[i]在five_selected_tail中出现过，则打印出来
         for (int j = 0; j < five_length[2]; j++) {
@@ -193,6 +193,41 @@ void HappyCash::CheckOneArray(int *array) {
     }
     cout << endl;
 
+    cout << "two head values: ";
+    for (int i = 5; i < 7; i++) {
+        //如果array[i]在two_selected_head中出现过，则打印出来
+        for (int j = 0; j < two_length[0]; j++) {
+            if (two_selected_head[j] == array[i]){
+                cout << array[i] << " ";
+                break;
+            }
+        }
+    }
+    cout << endl;
+
+    cout << "two mid values: ";
+    for (int i = 5; i < 7; i++) {
+        //如果array[i]在two_selected_mid中出现过，则打印出来
+        for (int j = 0; j < two_length[1]; j++) {
+            if (two_selected_mid[j] == array[i]){
+                cout << array[i] << " ";
+                break;
+            }
+        }
+    }
+    cout << endl;
+
+    cout << "two tail values: ";
+    for (int i = 5; i < 7; i++) {
+        //如果array[i]在two_selected_tail中出现过，则打印出来
+        for (int j = 0; j < two_length[2]; j++) {
+            if (two_selected_tail[j] == array[i]){
+                cout << array[i] << " ";
+                break;
+            }
+        }
+    }
+    cout << endl;
 }
 
 void HappyCash::PrintSortArray() {
