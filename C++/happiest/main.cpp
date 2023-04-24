@@ -46,10 +46,29 @@ int main() {
             cout << endl;
             test->CheckOneArray(arr);
         }else if (input == '3') {
-            test->ClearResult();
-            test->QueryRandomResultFive(3, 1, 1);
-            test->QueryRandomResultTwo(1, 0, 1);
-            test->PrintResult();
+            cout << "input six numbers in six region: ";
+            //接收终端输入的一串字符串
+            string str;
+            cin >> str;
+            //将字符串转换为int数组
+            int arr[6];
+            int i = 0;
+            for (int i = 0; i < 6; i++) {
+                arr[i] = stoi(str.substr(i * 1, 1));
+            }
+            cout << "input region: ";
+            for (int i = 0; i < 6; i++) {
+                cout << arr[i] << " ";
+            }
+            cout << endl;
+            cout << "ensure input y/n: ";
+            cin >> input;
+            if (input == 'y') {
+                test->ClearResult();
+                test->QueryRandomResultFive(arr[0], arr[1], arr[2]);
+                test->QueryRandomResultTwo(arr[3], arr[4], arr[5]);
+                test->PrintResult();
+            }
         }else if (input == 'q') {
             delete test;
             break;
