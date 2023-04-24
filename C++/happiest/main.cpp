@@ -276,18 +276,22 @@ int main() {
 
     char input;
     cout << "input cmd: " << endl;
-    cout << "   1->random generation" << endl;
+    cout << "   1->print sort arrays" << endl;
+    cout << "   2->check one array" << endl;
+    cout << "   3->get random data" << endl;
     cout << "   q->quit" << endl;
     while (true) {
         cin >> input;
         if (input == '1') {
+            test->PrintSortArray();
+        }else if (input == '2'){
+            int arr[ARRAY_SIZE] = {2, 6, 7, 8, 15, 7, 10};
+            test->CheckOneArray(arr);
+        }else if (input == '3') {
             test->ClearResult();
             test->QueryRandomResultFive(3, 1, 1);
             test->QueryRandomResultTwo(1, 0, 1);
             test->PrintResult();
-        }else if (input == '2') {
-            int arr[ARRAY_SIZE] = {2, 6, 7, 8, 15, 7, 10};
-            test->CheckOneArray(arr);
         }else if (input == 'q') {
             delete test;
             break;

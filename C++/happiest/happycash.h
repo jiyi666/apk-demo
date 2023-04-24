@@ -25,6 +25,7 @@ public:
     void ClearResult();
     void PrintResult();
     void CheckOneArray(int* array);
+    void PrintSortArray();
 
 private:
     int* source = nullptr;
@@ -42,5 +43,8 @@ private:
     int two_length[3];
     std::set<int> result_five;
     std::set<int> result_two;
+
+    void InitFiveData();
+    void InitTwoData();
 };
 #endif //HAPPIEST_HAPPYCASH_H

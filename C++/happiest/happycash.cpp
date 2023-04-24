@@ -62,7 +62,140 @@ HappyCash::HappyCash() {
     sort(freq_five_sort.rbegin(), freq_five_sort.rend());
     sort(freq_two_sort.rbegin(), freq_two_sort.rend());
 
-    //5.print freq_five_sort
+    //5.init data
+    InitFiveData();
+    InitTwoData();
+}
+
+void HappyCash::QueryRandomResultFive(int head_choose, int mid_choose, int tail_choose) {
+
+    //1.将five_selected_head中的元素随机打乱
+    random_shuffle(five_selected_head, five_selected_head + five_length[0]);
+    while (result_five.size() < head_choose) {
+        int index = rand() % five_length[0];
+        if (result_five.find(five_selected_head[index]) == result_five.end()) {  // 判断随机选取的数字是否已经在集合中出现过
+            result_five.insert(five_selected_head[index]);  // 将对应的数插入集合
+        }
+    }
+
+    //2.将five_selected_mid中的元素随机打乱
+    random_shuffle(five_selected_mid, five_selected_mid + five_length[1]);
+    while (result_five.size() < head_choose + mid_choose) {
+        int index = rand() % five_length[1];
+        if (result_five.find(five_selected_mid[index]) == result_five.end()) {  // 判断随机选取的数字是否已经在集合中出现过
+            result_five.insert(five_selected_mid[index]);  // 将对应的数插入集合
+        }
+    }
+
+    //3.将five_selected_tail中的元素随机打乱
+    random_shuffle(five_selected_tail, five_selected_tail + five_length[2]);
+    while (result_five.size() < head_choose + mid_choose + tail_choose) {
+        int index = rand() % five_length[2];
+        if (result_five.find(five_selected_tail[index]) == result_five.end()) {  // 判断随机选取的数字是否已经在集合中出现过
+            result_five.insert(five_selected_tail[index]);  // 将对应的数插入集合
+        }
+    }
+
+    //4.print result
+//    cout << "five result: " << endl;
+//    for (auto p : result_five) {
+//        cout << p << " ";
+//    }
+//    cout << endl;
+}
+
+void HappyCash::QueryRandomResultTwo(int head_choose, int mid_choose, int tail_choose) {
+    //1.将two_selected_head中的元素随机打乱
+    random_shuffle(two_selected_head, two_selected_head + two_length[0]);
+    while (result_two.size() < head_choose) {
+        int index = rand() % two_length[0];
+        if (result_two.find(two_selected_head[index]) == result_two.end()) {  // 判断随机选取的数字是否已经在集合中出现过
+            result_two.insert(two_selected_head[index]);  // 将对应的数插入集合
+        }
+    }
+
+    //2.将two_selected_mid中的元素随机打乱
+    random_shuffle(two_selected_mid, two_selected_mid + two_length[1]);
+    while (result_two.size() < head_choose + mid_choose) {
+        int index = rand() % two_length[1];
+        if (result_two.find(two_selected_mid[index]) == result_two.end()) {  // 判断随机选取的数字是否已经在集合中出现过
+            result_two.insert(two_selected_mid[index]);  // 将对应的数插入集合
+        }
+    }
+
+    //2.将two_selected_tail中的元素随机打乱
+    random_shuffle(two_selected_tail, two_selected_tail + two_length[2]);
+    while (result_two.size() < head_choose + mid_choose + tail_choose) {
+        int index = rand() % two_length[2];
+        if (result_two.find(two_selected_tail[index]) == result_two.end()) {  // 判断随机选取的数字是否已经在集合中出现过
+            result_two.insert(two_selected_tail[index]);  // 将对应的数插入集合
+        }
+    }
+
+    //4.print result
+//    cout << "two result: " << endl;
+//    for (auto p : result_two) {
+//        cout << p << " ";
+//    }
+//    cout << endl;
+}
+
+void HappyCash::ClearResult() {
+    result_five.clear();
+    result_two.clear();
+}
+
+void HappyCash::PrintResult() {
+    cout << "result: " << endl;
+    for (auto p : result_five) {
+        cout << p << " ";
+    }
+    for (auto p : result_two) {
+        cout << p << " ";
+    }
+    cout << endl;
+}
+
+void HappyCash::CheckOneArray(int *array) {
+    cout << "head values: ";
+    for (int i = 0; i < 5; i++) {
+        //如果array[i]在five_selected_head中出现过，则打印出来
+        for (int j = 0; j < five_length[0]; j++) {
+            if (five_selected_head[j] == array[i]){
+                cout << array[i] << " ";
+                break;
+            }
+        }
+    }
+    cout << endl;
+
+    cout << "mid values: ";
+    for (int i = 0; i < 5; i++) {
+        //如果array[i]在five_selected_mid中出现过，则打印出来
+        for (int j = 0; j < five_length[1]; j++) {
+            if (five_selected_mid[j] == array[i]){
+                cout << array[i] << " ";
+                break;
+            }
+        }
+    }
+    cout << endl;
+
+    cout << "tail values: ";
+    for (int i = 0; i < 5; i++) {
+        //如果array[i]在five_selected_tail中出现过，则打印出来
+        for (int j = 0; j < five_length[2]; j++) {
+            if (five_selected_tail[j] == array[i]){
+                cout << array[i] << " ";
+                break;
+            }
+        }
+    }
+    cout << endl;
+
+}
+
+void HappyCash::PrintSortArray() {
     cout << "freq_five_sort: " << endl;
     for (auto p : freq_five_sort) {
         cout << p.second << ":" << p.first << endl;
@@ -73,10 +206,9 @@ HappyCash::HappyCash() {
         cout << p.second << ":" << p.first << endl;
     }
     cout << endl;
-
 }
 
-void HappyCash::QueryRandomResultFive(int head_choose, int mid_choose, int tail_choose) {
+void HappyCash::InitFiveData() {
     //1.cal head, mid, tail sum
     int sum_head = 0;
     int sum_mid = 0;
@@ -143,48 +275,14 @@ void HappyCash::QueryRandomResultFive(int head_choose, int mid_choose, int tail_
 //    }
 //    cout << endl;
 
-    //6.将five_selected_head中的元素随机打乱
-    random_shuffle(five_selected_head, five_selected_head + sum_head);
-    while (result_five.size() < head_choose) {
-        int index = rand() % sum_head;
-        if (result_five.find(five_selected_head[index]) == result_five.end()) {  // 判断随机选取的数字是否已经在集合中出现过
-            result_five.insert(five_selected_head[index]);  // 将对应的数插入集合
-        }
-    }
-
-    //7.将five_selected_mid中的元素随机打乱
-    random_shuffle(five_selected_mid, five_selected_mid + sum_mid);
-    while (result_five.size() < head_choose + mid_choose) {
-        int index = rand() % sum_mid;
-        if (result_five.find(five_selected_mid[index]) == result_five.end()) {  // 判断随机选取的数字是否已经在集合中出现过
-            result_five.insert(five_selected_mid[index]);  // 将对应的数插入集合
-        }
-    }
-
-    //8.将five_selected_tail中的元素随机打乱
-    random_shuffle(five_selected_tail, five_selected_tail + sum_tail);
-    while (result_five.size() < head_choose + mid_choose + tail_choose) {
-        int index = rand() % sum_tail;
-        if (result_five.find(five_selected_tail[index]) == result_five.end()) {  // 判断随机选取的数字是否已经在集合中出现过
-            result_five.insert(five_selected_tail[index]);  // 将对应的数插入集合
-        }
-    }
-
-    //9.print result
-//    cout << "five result: " << endl;
-//    for (auto p : result_five) {
-//        cout << p << " ";
-//    }
-//    cout << endl;
-
-    //10.update length
+    //6.update length
     memset(five_length, 0, sizeof(five_length));
     five_length[0] = sum_head;
     five_length[1] = sum_mid;
     five_length[2] = sum_tail;
 }
 
-void HappyCash::QueryRandomResultTwo(int head_choose, int mid_choose, int tail_choose) {
+void HappyCash::InitTwoData() {
     //1.cal head, mid, tail sum
     int sum_head = 0;
     int sum_mid = 0;
@@ -249,101 +347,11 @@ void HappyCash::QueryRandomResultTwo(int head_choose, int mid_choose, int tail_c
 //        cout << two_selected_tail[i] << " ";
 //    }
 //    cout << endl;
-
-    //6.将two_selected_head中的元素随机打乱
-    random_shuffle(two_selected_head, two_selected_head + sum_head);
-    while (result_two.size() < head_choose) {
-        int index = rand() % sum_head;
-        if (result_two.find(two_selected_head[index]) == result_two.end()) {  // 判断随机选取的数字是否已经在集合中出现过
-            result_two.insert(two_selected_head[index]);  // 将对应的数插入集合
-        }
-    }
-
-    //7.将two_selected_mid中的元素随机打乱
-    random_shuffle(two_selected_mid, two_selected_mid + sum_mid);
-    while (result_two.size() < head_choose + mid_choose) {
-        int index = rand() % sum_mid;
-        if (result_two.find(two_selected_mid[index]) == result_two.end()) {  // 判断随机选取的数字是否已经在集合中出现过
-            result_two.insert(two_selected_mid[index]);  // 将对应的数插入集合
-        }
-    }
-
-    //8.将two_selected_tail中的元素随机打乱
-    random_shuffle(two_selected_tail, two_selected_tail + sum_tail);
-    while (result_two.size() < head_choose + mid_choose + tail_choose) {
-        int index = rand() % sum_tail;
-        if (result_two.find(two_selected_tail[index]) == result_two.end()) {  // 判断随机选取的数字是否已经在集合中出现过
-            result_two.insert(two_selected_tail[index]);  // 将对应的数插入集合
-        }
-    }
-
-    //9.print result
-//    cout << "two result: " << endl;
-//    for (auto p : result_two) {
-//        cout << p << " ";
-//    }
-//    cout << endl;
-
-    //10.update length
+    //6.update length
     memset(two_length, 0, sizeof(two_length));
     two_length[0] = sum_head;
     two_length[1] = sum_mid;
     two_length[2] = sum_tail;
-}
-
-void HappyCash::ClearResult() {
-    result_five.clear();
-    result_two.clear();
-}
-
-void HappyCash::PrintResult() {
-    cout << "result: " << endl;
-    for (auto p : result_five) {
-        cout << p << " ";
-    }
-    for (auto p : result_two) {
-        cout << p << " ";
-    }
-    cout << endl;
-}
-
-void HappyCash::CheckOneArray(int *array) {
-    cout << "head values: ";
-    for (int i = 0; i < 5; i++) {
-        //如果array[i]在five_selected_head中出现过，则打印出来
-        for (int j = 0; j < five_length[0]; j++) {
-            if (five_selected_head[j] == array[i]){
-                cout << array[i] << " ";
-                break;
-            }
-        }
-    }
-    cout << endl;
-
-    cout << "mid values: ";
-    for (int i = 0; i < 5; i++) {
-        //如果array[i]在five_selected_mid中出现过，则打印出来
-        for (int j = 0; j < five_length[1]; j++) {
-            if (five_selected_mid[j] == array[i]){
-                cout << array[i] << " ";
-                break;
-            }
-        }
-    }
-    cout << endl;
-
-    cout << "tail values: ";
-    for (int i = 0; i < 5; i++) {
-        //如果array[i]在five_selected_tail中出现过，则打印出来
-        for (int j = 0; j < five_length[2]; j++) {
-            if (five_selected_tail[j] == array[i]){
-                cout << array[i] << " ";
-                break;
-            }
-        }
-    }
-    cout << endl;
-
 }
 
 HappyCash::~HappyCash() {
