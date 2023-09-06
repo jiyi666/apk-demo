@@ -231,14 +231,53 @@ void HappyCash::CheckOneArray(int *array) {
 }
 
 void HappyCash::PrintSortArray() {
+//    cout << "freq_five_sort: " << endl;
+////    for (auto p : freq_five_sort) {
+////        cout << p.second << ":" << p.first << endl;
+////    }
+////    cout << endl;
+////    cout << "freq_two_sort: " << endl;
+////    for (auto p : freq_two_sort) {
+////        cout << p.second << ":" << p.first << endl;
+////    }
+////    cout << endl;
     cout << "freq_five_sort: " << endl;
-    for (auto p : freq_five_sort) {
-        cout << p.second << ":" << p.first << endl;
+    cout << "head: ";
+    for (int i = 0; i < 12; i++) {
+        cout << " ";
+        cout << freq_five_sort[i].second << "(" << freq_five_sort[i].first << ")";
     }
     cout << endl;
+    cout << "mid:  ";
+    for (int i = 12; i < 24; i++) {
+        cout << " ";
+        cout << freq_five_sort[i].second << "(" << freq_five_sort[i].first << ")";
+    }
+    cout << endl;
+    cout << "tail: ";
+    for (int i = 24; i < 35; i++) {
+        cout << " ";
+        cout << freq_five_sort[i].second << "(" << freq_five_sort[i].first << ")";
+    }
+    cout << endl;
+    cout << endl;
     cout << "freq_two_sort: " << endl;
-    for (auto p : freq_two_sort) {
-        cout << p.second << ":" << p.first << endl;
+    cout << "head: ";
+    for (int i = 0; i < 4; i++) {
+        cout << " ";
+        cout << freq_two_sort[i].second << "(" << freq_two_sort[i].first << ")";
+    }
+    cout << endl;
+    cout << "mid:  ";
+    for (int i = 4; i < 8; i++) {
+        cout << " ";
+        cout << freq_two_sort[i].second << "(" << freq_two_sort[i].first << ")";
+    }
+    cout << endl;
+    cout << "tail: ";
+    for (int i = 8; i < 12; i++) {
+        cout << " ";
+        cout << freq_two_sort[i].second << "(" << freq_two_sort[i].first << ")";
     }
     cout << endl;
 }
