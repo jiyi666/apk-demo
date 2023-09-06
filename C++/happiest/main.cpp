@@ -35,7 +35,6 @@ int main() {
             cin >> str;
             //将字符串转换为int数组
             int arr[ARRAY_SIZE];
-            int i = 0;
             for (int i = 0; i < ARRAY_SIZE; i++) {
                 arr[i] = stoi(str.substr(i * 2, 2));
             }

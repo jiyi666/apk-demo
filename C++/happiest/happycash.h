@@ -25,6 +25,7 @@ public:
     void ClearResult();
     void PrintResult();
     void CheckOneArray(int* array);
+    void CheckOneArrayOnlyPrintTotal(int* array);
     void PrintSortArray();
 
 private:

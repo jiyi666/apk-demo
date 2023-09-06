@@ -230,6 +230,89 @@ void HappyCash::CheckOneArray(int *array) {
     cout << endl;
 }
 
+void HappyCash::CheckOneArrayOnlyPrintTotal(int *array) {
+    int arr[6] = {0};
+    //cout << "five head values: ";
+    for (int i = 0; i < 5; i++) {
+        //如果array[i]在five_selected_head中出现过，则打印出来
+        for (int j = 0; j < five_length[0]; j++) {
+            if (five_selected_head[j] == array[i]){
+                //cout << array[i] << " ";
+                arr[0]++;
+                break;
+            }
+        }
+    }
+    //cout << endl;
+
+    //cout << "five mid values: ";
+    for (int i = 0; i < 5; i++) {
+        //如果array[i]在five_selected_mid中出现过，则打印出来
+        for (int j = 0; j < five_length[1]; j++) {
+            if (five_selected_mid[j] == array[i]){
+                //cout << array[i] << " ";
+                arr[1]++;
+                break;
+            }
+        }
+    }
+    //cout << endl;
+
+    //cout << "five tail values: ";
+    for (int i = 0; i < 5; i++) {
+        //如果array[i]在five_selected_tail中出现过，则打印出来
+        for (int j = 0; j < five_length[2]; j++) {
+            if (five_selected_tail[j] == array[i]){
+                //cout << array[i] << " ";
+                arr[2]++;
+                break;
+            }
+        }
+    }
+    //cout << endl;
+
+    //cout << "two head values: ";
+    for (int i = 5; i < 7; i++) {
+        //如果array[i]在two_selected_head中出现过，则打印出来
+        for (int j = 0; j < two_length[0]; j++) {
+            if (two_selected_head[j] == array[i]){
+                //cout << array[i] << " ";
+                arr[3]++;
+                break;
+            }
+        }
+    }
+    //cout << endl;
+
+    //cout << "two mid values: ";
+    for (int i = 5; i < 7; i++) {
+        //如果array[i]在two_selected_mid中出现过，则打印出来
+        for (int j = 0; j < two_length[1]; j++) {
+            if (two_selected_mid[j] == array[i]){
+                //cout << array[i] << " ";
+                arr[4]++;
+                break;
+            }
+        }
+    }
+    //cout << endl;
+
+    //cout << "two tail values: ";
+    for (int i = 5; i < 7; i++) {
+        //如果array[i]在two_selected_tail中出现过，则打印出来
+        for (int j = 0; j < two_length[2]; j++) {
+            if (two_selected_tail[j] == array[i]){
+                //cout << array[i] << " ";
+                arr[5]++;
+                break;
+            }
+        }
+    }
+    //cout << endl;
+
+    cout << "total: " << arr[0] << " " << arr[1] << " " << arr[2] << " " << arr[3] << " " << arr[4] << " " << arr[5] << endl;
+}
+
 void HappyCash::PrintSortArray() {
 //    cout << "freq_five_sort: " << endl;
 ////    for (auto p : freq_five_sort) {
@@ -280,6 +363,19 @@ void HappyCash::PrintSortArray() {
         cout << freq_two_sort[i].second << "(" << freq_two_sort[i].first << ")";
     }
     cout << endl;
+
+
+    //debug:
+    for (int i = 0; i < 10; i++) {
+        int arr[ARRAY_SIZE];
+        memcpy(arr, source + i * ARRAY_SIZE, sizeof(int) * ARRAY_SIZE);
+        cout << "source[" << i << "]: ";
+//        for (int j = 0; j < ARRAY_SIZE; j++) {
+//            cout << arr[j] << " ";
+//        }
+        CheckOneArrayOnlyPrintTotal(arr);
+    }
+
 }
 
 void HappyCash::InitFiveData() {
