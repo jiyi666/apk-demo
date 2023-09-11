@@ -366,15 +366,15 @@ void HappyCash::PrintSortArray() {
 
 
     //debug:
-    for (int i = 0; i < 10; i++) {
-        int arr[ARRAY_SIZE];
-        memcpy(arr, source + i * ARRAY_SIZE, sizeof(int) * ARRAY_SIZE);
-        cout << "source[" << i << "]: ";
-//        for (int j = 0; j < ARRAY_SIZE; j++) {
-//            cout << arr[j] << " ";
-//        }
-        CheckOneArrayOnlyPrintTotal(arr);
-    }
+//    for (int i = 0; i < 10; i++) {
+//        int arr[ARRAY_SIZE];
+//        memcpy(arr, source + i * ARRAY_SIZE, sizeof(int) * ARRAY_SIZE);
+//        cout << "source[" << i << "]: ";
+////        for (int j = 0; j < ARRAY_SIZE; j++) {
+////            cout << arr[j] << " ";
+////        }
+//        CheckOneArrayOnlyPrintTotal(arr);
+//    }
 
 }
 
